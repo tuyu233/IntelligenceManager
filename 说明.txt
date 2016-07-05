@@ -1,0 +1,9 @@
+﻿本项目统一使用UTF-8编码，请将eclipse编码方式设为UTF-8：Window-Preference-General-Workspace-Text file encoding-Other-UTF-8
+
+将项目文件同步到本地后，
+你可以选择直接将.classpath.config和.project.config两个文件的.config后缀删去，直接作为项目的配置文件（若eclipse版本不同可能有潜在风险）；
+也可以选择在eclipse中自行配置build path：将/lib中的所有jar包添加进Libraries，并将JRE版本设为JavaSE-1.7。
+
+请将不必要的文件添加进.gitignore中，避免上传到远端仓库中。
+
+在以后的开发过程中，请养成使用分支的习惯，尽量保证master分支中是一个稳定版本。
