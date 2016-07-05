@@ -1,8 +1,28 @@
 ﻿本项目统一使用UTF-8编码，请将eclipse编码方式设为UTF-8：Window-Preference-General-Workspace-Text file encoding-Other-UTF-8
 
 将项目文件同步到本地后，
-你可以选择直接将.classpath.config和.project.config两个文件的.config后缀删去，直接作为项目的配置文件（若eclipse版本不同可能有潜在风险）；
+请先将所有第三方库添加进/lib目录下。
+关于项目的配置，
+你可以选择直接将.classpath.config和.project.config两个文件的.config后缀删去，覆盖本地的.classpath文件和.project文件，直接作为项目的配置文件（若eclipse版本不同可能有潜在风险）；
 也可以选择在eclipse中自行配置build path：将/lib中的所有jar包添加进Libraries，并将JRE版本设为JavaSE-1.7。
+
+项目目录：
+/src - 源码目录
+	/spider - 爬虫相关
+	/database - 数据库相关
+	/service - 业务相关
+		/statistics - 统计
+		/motion - 情感分析
+		/keyword - 关键词分析
+		/chart - 图表相关
+	/vision - UI相关
+	/reportfactory - 报告相关
+	/properties - 属性
+/lib - 第三方库
+/bin - 目标文件（可能需要在build path里设置）
+/output - 输出文件，包括图表和报告
+/resouce - 资源文件，包括logo等
+	/dict - 情感分析可能用到的词典
 
 请将不必要的文件添加进.gitignore中，避免上传到远端仓库中。
 
