@@ -1,0 +1,20 @@
+数据库相关
+	root密码：123456
+	表名：intel
+	列：id(key) url title content type savetime author access（新增），各列类型可参见原项目文档
+	基本数据对象 Intel
+	接口方法：
+		向数据库添加条目 void insert(Intel)
+		查询 List<Intel> search(String keyword, int type)：keyword是查询的关键词，type是查询的类型，具体待完善
+		统计 int count(String keyword, int type)：具体待完善
+
+motion
+	接口方法：
+		计算某字符串的情感评估值 float getAssessment(String)
+		计算输入的所有字符串的情感评估值的平均值 float getAssessmentAve(List<String>)
+		计算输入的所有字符串的情感评估值的分布 int[] getAssessmentMap(List<String>)
+		
+keyword
+	接口方法
+		计算某字符串的关键词（词频最高的十个词） List<String> getKeywords(String)
+		计算输入的所有字符串的关键词 List<String> getKeywords(List<String>)
