@@ -1,0 +1,24 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+	<class name="entity.Record" table="record" >
+	
+		<id name="id" column="id">
+			<generator class="native"></generator>
+
+		</id>
+		<property name="baseUrl" column="baseUrl"></property>
+		<property name="content" column="content"></property>
+		<property name="title" column="title"></property>
+		<property name="author" column="author"></property>
+		<property name="saveTime" column="saveTime"></property>
+		<property name="type" column="type"></property>
+		<property name="access" column="access"></property>
+		<property name="other" column="other"></property>
+		
+
+	</class>
+   
+</hibernate-mapping> 
