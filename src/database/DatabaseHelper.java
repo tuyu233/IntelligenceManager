@@ -3,9 +3,6 @@ package database;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.criteria.Order;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;

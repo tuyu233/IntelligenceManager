@@ -5,8 +5,8 @@
 	基本数据对象 Intel
 	接口方法：
 		向数据库添加条目 void insert(Intel)
-		查询 List<Intel> search(String keyword, int type)：keyword是查询的关键词，type是查询的类型，具体待完善
-		统计 int count(String keyword, int type)：具体待完善
+		查询 List<Intel> search(String keyword, SearchType type)：keyword是查询的关键词，type是查询的类型，具体待完善
+		统计 int count(String keyword, SearchType type)：具体待完善
 
 motion
 	接口方法：
