@@ -6,11 +6,16 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
-
 import entity.Record;
 import util.ClassUtil;
 
+
+//readme: 具体用法可以参考 database.TestDataBase 的测试用例
+/**
+ * recommend use static function instead of use non static function. 
+ * @author czn
+ *
+ */
 public class DatabaseHelper {
 	
 //simple query	
@@ -36,22 +41,42 @@ public class DatabaseHelper {
 		return new DatabaseHelper(Command.query,c);
 	}
 	
+	/**
+	 * add query limit
+	 * @param pair key-value pair
+	 * @return
+	 */
 	public DatabaseHelper where(QueryPair pair){
 		whereLimit.add(pair);
 		return this;
 	}
 	
+	/**
+	 * 设置 条件间是与还是或，默认是与逻辑
+	 * @param logic
+	 * @return
+	 */
 	public DatabaseHelper WhereLogic(QueryLogic logic){
 		whereLogic = logic;
 		return this;
 	}
 	
+	/**
+	 * order the result by attribute of object with order asc/desc
+	 * @param attr
+	 * @param order
+	 * @return
+	 */
 	public DatabaseHelper orderBy(String attr,SortOrder order){
 		sortKey = attr;
 		this.order = order;
 		return this;
 	}
 	
+	/**
+	 * get result
+	 * @return
+	 */
 	public List<?> list(){
 		String hql = "from ";
 		hql += ClassUtil.classToName(TargetClass);
@@ -89,7 +114,12 @@ public class DatabaseHelper {
 	}
 	
 //static
-	
+	/**
+	 * search key word in field content and title with type gov/news ...
+	 * @param keyWord
+	 * @param type
+	 * @return
+	 */
 	public static List<Record> search(String keyWord,SearchType type){
 		Session session = HibernateUtil.getSession();
 		String hql = "from Record a";
@@ -114,7 +144,13 @@ public class DatabaseHelper {
 		return list;
 	}
 	
-	public static long count(String keyWord,SearchType type){
+	/**
+	 * count number of record with given conditions.
+	 * @param keyWord
+	 * @param type
+	 * @return
+	 */
+	public static int count(String keyWord,SearchType type){
 		Session session = HibernateUtil.getSession();
 		String hql = "select count(*) from Record a";
 		hql += " where (a.content like '%"
@@ -133,9 +169,13 @@ public class DatabaseHelper {
 		long count = (long) query.uniqueResult();
 		session.close();
 		//System.err.println(query.uniqueResult()+" "+query.uniqueResult().getClass().getName());
-		return count;
+		return (int) count;
 	}
 	
+	/**
+	 * save object to database
+	 * @param object
+	 */
 	public static void save(Object object){
 		Session session = HibernateUtil.getSession();
 		Transaction transaction = session.beginTransaction();
@@ -144,6 +184,10 @@ public class DatabaseHelper {
 		session.close();
 	}
 	
+	/**
+	 * update object in database with the same id
+	 * @param object
+	 */
 	public static void update(Object object){
 		Session session = HibernateUtil.getSession();
 		Transaction transaction = session.beginTransaction();
@@ -151,7 +195,10 @@ public class DatabaseHelper {
 		transaction.commit();
 		session.close();
 	}
-	
+	/**
+	 * delete object in database with the same id
+	 * @param object
+	 */
 	public static void delete(Object object){
 		Session session = HibernateUtil.getSession();
 		Transaction transaction = session.beginTransaction();
@@ -159,7 +206,11 @@ public class DatabaseHelper {
 		transaction.commit();
 		session.close();
 	}
-
+	
+	/**
+	 * clear table with given class
+	 * @param c
+	 */
 	public static void clear(Class<?> c){
 		String packages[] = c.getName().split("\\.");
 		String className = packages[packages.length-1];
@@ -170,103 +221,5 @@ public class DatabaseHelper {
 		transaction.commit();
 		session.close();
 	}
-	
-	
-	//test
-	public static void main(String args[]) {
-		//clear(Record.class);
-		
-		//testSave();
-		//testDelete();
-		//testUpdate();
-		//testHql();
-		testSearch1();
-		//testCount();
-	}
-	
-	private static void testSave(){
-		Record record = new Record();
-		record.setAuthor("czn");
-		record.setBaseUrl("baidu.com");
-		record.setTitle("testSave");
-		save(record);
-	}
-	
-	private static void testDelete(){
-		Record record = new Record();
-		record.setAuthor("czn");
-		record.setBaseUrl("baidu.com");
-		record.setTitle("testSave");
-		save(record);
-		delete(record);
-	}
-	
-	private static void testUpdate(){
-		Record record = new Record();
-		record.setAuthor("cznnn");
-		record.setBaseUrl("baidu.com");
-		record.setTitle("testSave");
-		save(record);
-		record.setTitle("aaa");
-		update(record);
-	}
-	
-	private static void testHql(){
-		clear(Record.class);
-		Record record = new Record();
-		record.setAuthor("cznnn");
-		record.setBaseUrl("baidu.com");
-		record.setTitle("1");
-		save(record);
-		record.setTitle("2");
-		save(record);
-		
-		DatabaseHelper helper = DatabaseHelper.query(Record.class);
-		helper.where(new QueryPair("title",1));
-		System.out.println(helper.list().size());
-		
-		helper = DatabaseHelper.query(Record.class);
-		//helper.where(new QueryPair("title",1));
-		System.out.println(helper.list().size());
-		
-		helper = DatabaseHelper.query(Record.class);
-		helper.orderBy("title",SortOrder.asc);
-		System.out.println(helper.list());
-		
-		helper = DatabaseHelper.query(Record.class);
-		helper.orderBy("title",SortOrder.desc);
-		System.out.println(helper.list());
-	}
-	
-	private static void testSearch1(){
-		clear(Record.class);
-		Record record = new Record();
-		record.setAuthor("cznnn");
-		record.setBaseUrl("baidu.com");
-		record.setContent("buaa");
-		record.setTitle("1");
-		record.setType("工信部");
-		record.setSaveTime(new Date(1000));
-		save(record);
-		record.setSaveTime(new Date(999000000));
-		save(record);
-		
-		List<Record> list = search("ua",SearchType.gov);
-		System.out.println(list);
-	}
-	
-	private static void testCount(){
-		clear(Record.class);
-		Record record = new Record();
-		record.setAuthor("cznnn");
-		record.setBaseUrl("baidu.com");
-		record.setContent("buaa");
-		record.setTitle("1");
-		record.setType("工信部");
-		save(record);
-		record.setContent("aaauaa");
-		save(record);
-		long r  = count("ua",SearchType.gov);
-		System.out.println(r);
-	}
+
 }
