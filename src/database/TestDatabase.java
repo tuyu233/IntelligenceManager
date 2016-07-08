@@ -109,7 +109,7 @@ public class TestDatabase {
 		record.setSaveTime(new Date(999000000));
 		DatabaseHelper.save(record);
 		
-		List<Record> list = DatabaseHelper.search("ua",SearchType.gov);
+		List<Record> list = DatabaseHelper.search("ua",SearchType.GOV);
 		assertEquals(2, list.size());
 	}	
 	@Test
@@ -123,7 +123,7 @@ public class TestDatabase {
 		DatabaseHelper.save(record);
 		record.setContent("aaauaa");
 		DatabaseHelper.save(record);
-		long r  = DatabaseHelper.count("ua",SearchType.gov);
+		long r  = DatabaseHelper.count("ua",SearchType.GOV);
 		assertEquals(2, r);
 	}
 	

@@ -37,7 +37,8 @@ import org.jfree.chart.renderer.category.LineRenderer3D;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
 
-import database.SQLop;
+import database.DatabaseHelper;
+import database.SearchType;
 
 ;
 
@@ -61,14 +62,12 @@ public class Chart {
 	static final int VERTICAL = 0;
 	static final int HORIZONTAL = 1;
 
-	SQLop sqlop = new SQLop();
 	String keyword = new String();
 	Motion motion;
 
 	public Chart(String kw, Motion motion) {
 		keyword = kw;
 		this.motion = motion;
-		sqlop.initialize();
 		// System.out.println(sqlop.countAllResult(keyword));
 		//barChart(SITE, "site.jpg", VERTICAL);
 		//lineChart(YEAR_gov, "year_gov.jpg");
@@ -82,9 +81,8 @@ public class Chart {
 		//barChart(PATENT_applicant, "patent_applicant.jpg", HORIZONTAL);
 		lineChart(MOTION, "motion.jpg");
 		lineChart(YEAR_comments, "year_comments.jpg");
-		sqlop.close();
 	}
-
+/*
 	public void barChart(int type, String fileName, int orient) {
 		CategoryDataset dataset = getSiteDataset(type);
 		String head = "统计";
@@ -157,7 +155,7 @@ public class Chart {
 			dataset.addValue(i.getValue().intValue(), "source", i.getKey());
 		}
 		return dataset;
-	}
+	}*/
 
 	public void lineChart(int type, String fileName) {
 		DefaultCategoryDataset dataset = getYearDataset(type);
@@ -237,7 +235,7 @@ public class Chart {
 			for (int i=0;i<=10;i++)
 				hashmap.put(Integer.toString(i-5), (Integer)t.get_count()[i]);
 		} else {
-			hashmap = sqlop.count(type, keyword);
+			hashmap = DatabaseHelper.count(keyword);
 		}
 		List<Map.Entry<String, Integer>> entry = new ArrayList<Map.Entry<String, Integer>>(
 				hashmap.entrySet());
@@ -312,7 +310,7 @@ public class Chart {
 
 	private PieDataset getJournalDataset(int type) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
-		HashMap<String, Integer> hashmap;
+		/*HashMap<String, Integer> hashmap;
 		hashmap = sqlop.count(type, keyword);
 		List<Map.Entry<String, Integer>> entry = new ArrayList<Map.Entry<String, Integer>>(
 				hashmap.entrySet());
@@ -325,7 +323,10 @@ public class Chart {
 
 		for (Map.Entry<String, Integer> i : entry) {
 			dataset.setValue(i.getKey(), i.getValue());
-		}
+		}*/
+		dataset.setValue("政府", DatabaseHelper.count(keyword, SearchType.GOV));
+		dataset.setValue("媒体", DatabaseHelper.count(keyword, SearchType.MEDIA));
+		dataset.setValue("公众", DatabaseHelper.count(keyword, SearchType.PUBLIC));
 
 		return dataset;
 	}

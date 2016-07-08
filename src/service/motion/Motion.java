@@ -6,7 +6,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import database.SQLop;
+import database.DatabaseHelper;
+import database.SearchType;
+import entity.Record;
 
 public class Motion {
 	private int[] count = new int[11];
@@ -14,10 +16,9 @@ public class Motion {
 	private double aver_media;
 	private double aver_gov;
 	private double aver_public;
-	private SQLop sqlop;
-	private List<Map<String, String>> result_media;
-	private List<Map<String, String>> result_gov;
-	private List<Map<String, String>> result_public;
+	private List<Record> result_media;
+	private List<Record> result_gov;
+	private List<Record> result_public;
 	
 	Dict opt_motion;
 	Dict content1;
@@ -61,12 +62,9 @@ public class Motion {
 		//Dict reviews = new Dict("reviews.txt"); 
 
 
-		sqlop = new SQLop();
-		sqlop.initialize();
-		result_media = sqlop.search(keyword, 3);
-		result_gov = sqlop.search(keyword, 0);
-		result_public = sqlop.search(keyword, 4);
-		sqlop.close();
+		result_media = DatabaseHelper.search(keyword, SearchType.MEDIA);
+		result_gov = DatabaseHelper.search(keyword, SearchType.GOV);
+		result_public = DatabaseHelper.search(keyword, SearchType.PUBLIC);
 		int resultSize_media = result_media.size();
 		int resultSize_public = result_public.size();
 		int resultSize_gov = result_gov.size();
@@ -80,7 +78,7 @@ public class Motion {
 				+ " aver_media:"+Double.toString(aver_media)
 				+ " aver_total:"+Double.toString(aver_total)); 
 	}
-	private double calculate(List<Map<String, String>> result, int resultSize){
+	private double calculate(List<Record> result, int resultSize){
 
 		double sum = 0.0;
 		int n = 0;
@@ -100,7 +98,7 @@ public class Motion {
 //		System.out.println(p.matches(regEx, "a"));
 		String reg = "[，。！？~（）《》……、：——【】；’”‘“]";
 		for (int row = 0;row<resultSize;row++){
-			String review = result.get(row).get("content");
+			String review = result.get(row).getContent();
 			//System.out.println(review);
 			char[] chars=review.toCharArray(); 
 			String sentence = "";

@@ -9,7 +9,7 @@
 		List<Record> search(String keyWord,String year) :search keyword by year
 		List<Record> getAllRecord():get all record
 		统计 int count(String keyword, SearchType type)
-		Map<String,Integer> count(String keyWord):count keyword by year
+		HashMap<String,Integer> count(String keyWord):count keyword by year
 
 motion
 	接口方法：

@@ -219,8 +219,8 @@ public class DatabaseHelper {
 	 * @param keyWord
 	 * @return
 	 */
-	public static Map<String,Integer> count(String keyWord){
-		Map<String,Integer> map = new HashMap<>();
+	public static HashMap<String,Integer> count(String keyWord){
+		HashMap<String,Integer> map = new HashMap<>();
 		SimpleDateFormat sf = new SimpleDateFormat("YYYY");
 		
 		Session session = HibernateUtil.getSession();
