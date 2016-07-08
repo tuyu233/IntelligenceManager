@@ -3,7 +3,10 @@ package database;
 import static org.junit.Assert.*;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 import org.junit.After;
@@ -111,7 +114,6 @@ public class TestDatabase {
 	}	
 	@Test
 	public void testCount(){
-		DatabaseHelper.clear(Record.class);
 		Record record = new Record();
 		record.setAuthor("cznnn");
 		record.setBaseUrl("baidu.com");
@@ -123,6 +125,24 @@ public class TestDatabase {
 		DatabaseHelper.save(record);
 		long r  = DatabaseHelper.count("ua",SearchType.gov);
 		assertEquals(2, r);
+	}
+	
+	@Test
+	public void testCountByYear() throws ParseException{
+		Record record = new Record();
+		record.setTitle("1"); 
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-mm-dd");
+		record.setSaveTime(sf.parse("2010-1-2"));
+		DatabaseHelper.save(record);
+		record.setSaveTime(sf.parse("2010-1-2"));
+		DatabaseHelper.save(record);
+		record.setSaveTime(sf.parse("2011-1-2"));
+		DatabaseHelper.save(record);
+		
+		Map<String,Integer> map = DatabaseHelper.count("1");
+		assertTrue(2 == map.get("2010"));
+		assertTrue(1 == map.get("2011"));
+		
 	}
 	
 	private int countAll(){
