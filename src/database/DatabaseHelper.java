@@ -308,9 +308,13 @@ public class DatabaseHelper {
 	}
 
 	public static void main(String args[]) {
+//		Session session = HibernateUtil.getSession();
+//		Query query = session.createQuery("select distinct a.author  from Record a");
+//		System.out.println(query.list());
+//		session.close();
 		Session session = HibernateUtil.getSession();
-		Query query = session.createQuery("select distinct a.author  from Record a");
-		System.out.println(query.list());
-		session.close();
+		List<Record> list = session.createQuery("from Record").list();
+		System.err.println(list);
+		
 	}
 }
