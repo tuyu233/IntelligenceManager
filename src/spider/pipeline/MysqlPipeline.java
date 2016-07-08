@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import database.DatabaseHelper;
+import entity.Record;
+
 //import database.SQLop;
 
 /**
@@ -114,14 +117,12 @@ public class MysqlPipeline implements Pipeline {
 			}
 
 		}
-		/*if (comments != null) {
+		if (comments != null) {
 			for (String comment : comments) {
 				for (Date atime : times)
-					database.insert(url, comment, atime, comment, author,
-							"公众", other);
+					DatabaseHelper.save(new Record("公众", comment, comment, url, atime, author, other, 0));
 			}
 		} else if (content != null && !content.replaceAll("\n", "").equals(""))
-			database.insert(url, content, time, title, author, type, other);
-		database.close();*/
+			DatabaseHelper.save(new Record(type, title, content, url, time, author, other, 0));
 	}
 }

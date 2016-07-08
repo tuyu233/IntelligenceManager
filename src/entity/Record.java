@@ -14,6 +14,18 @@ public class Record
 	private String other;
 	private int access;
 	
+	public Record(){}
+	public Record(String type, String title, String content, String baseUrl, Date saveTime, String author, String other, int access){
+		this.type = type;
+		this.title = title;
+		this.content = content;
+		this.baseUrl = baseUrl;
+		this.saveTime = saveTime;
+		this.author = author;
+		this.other = other;
+		this.access = access;
+	}
+	
 	public int getId() {
 		return id;
 	}
