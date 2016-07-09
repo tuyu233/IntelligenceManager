@@ -11,7 +11,7 @@
 		</id>
 		<property name="baseUrl" column="baseUrl"></property>
 		<property name="content" column="content"></property>
-		<property name="title" column="title"></property>
+		<property name="title" column="title" type="text" ></property>
 		<property name="author" column="author"></property>
 		<property name="saveTime" column="saveTime"></property>
 		<property name="type" column="type"></property>

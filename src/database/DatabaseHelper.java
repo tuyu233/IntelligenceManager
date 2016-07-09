@@ -262,11 +262,16 @@ public class DatabaseHelper {
 	 * @param object
 	 */
 	public static void save(Object object){
-		Session session = HibernateUtil.getSession();
-		Transaction transaction = session.beginTransaction();
-		session.save(object);
-		transaction.commit();
-		session.close();
+		try {
+			Session session = HibernateUtil.getSession();
+			Transaction transaction = session.beginTransaction();
+			session.save(object);
+			transaction.commit();
+			session.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -312,9 +317,14 @@ public class DatabaseHelper {
 //		Query query = session.createQuery("select distinct a.author  from Record a");
 //		System.out.println(query.list());
 //		session.close();
-		Session session = HibernateUtil.getSession();
-		List<Record> list = session.createQuery("from Record").list();
-		System.err.println(list);
 		
+//		Session session = HibernateUtil.getSession();
+//		List<Record> list = session.createQuery("from Record").list();
+//		System.err.println(list);
+		
+		Record record = new Record();
+		record.setContent("内容");
+		record.setTitle("标题");
+		DatabaseHelper.save(record);
 	}
 }

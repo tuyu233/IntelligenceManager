@@ -1,6 +1,8 @@
 package entity;
  
-import java.util.Date;;
+import java.util.Date;
+
+import org.hibernate.annotations.*;;
 
 public class Record 
 {
