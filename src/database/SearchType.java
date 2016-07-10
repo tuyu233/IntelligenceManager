@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum SearchType {
-	GOV(0),MEDIA(1),PUBLIC(2),GOVMEDIA(3);
+	GOV(0),MEDIA(1),PUBLIC(2),GOVMEDIA(3),ALL(4);
 	
 	private List<String> words = new ArrayList<>();
 	private SearchType(int type) {
