@@ -133,15 +133,19 @@ public class DatabaseHelper {
 		hql += " where (a.content like '%"
 				+ keyWord + "%' or a.title like '%" + keyWord + "%')";
 		
-		hql += " and (";
 		List<String> word = type.getWords();
-		for(int i=0; i < word.size();i++){
-			hql += "a.type = '"+word.get(i)+"' ";
-			if(i != word.size()-1){
-				hql += " or ";
+		if(!word.isEmpty()){
+			hql += " and (";
+			
+			for(int i=0; i < word.size();i++){
+				hql += "a.type = '"+word.get(i)+"' ";
+				if(i != word.size()-1){
+					hql += " or ";
+				}
 			}
+			hql += ")";
 		}
-		hql += ")";
+
 		hql += "order by a.saveTime desc";
 		//System.out.println(hql);
 		Query query = session.createQuery(hql);
@@ -187,6 +191,15 @@ public class DatabaseHelper {
 		return list;
 	}
 	
+	/**
+	 * search keyword by year and type<br/>
+	 * to add multiple keywords insert space between keywords <br/>
+	 * to select all record without year , argument year should be "".
+	 * @param keyWords
+	 * @param year
+	 * @param type
+	 * @return
+	 */
 	public static List<Record> search(String keyWords,String year,SearchType type){
 		Session session = HibernateUtil.getSession();
 		String hql = "from Record a";
