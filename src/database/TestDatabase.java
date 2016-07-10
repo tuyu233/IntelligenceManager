@@ -23,7 +23,7 @@ public class TestDatabase {
 	public static void setUpBeforeClass() throws Exception {
 		
 	}
-
+ 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 	}
@@ -103,7 +103,7 @@ public class TestDatabase {
 		record.setBaseUrl("baidu.com");
 		record.setContent("buaa");
 		record.setTitle("1");
-		record.setType("工信部");
+		record.setType("政府");
 		record.setSaveTime(new Date(1000));
 		DatabaseHelper.save(record);
 		record.setSaveTime(new Date(999000000));
@@ -119,7 +119,7 @@ public class TestDatabase {
 		record.setBaseUrl("baidu.com");
 		record.setContent("buaa");
 		record.setTitle("1");
-		record.setType("工信部");
+		record.setType("政府");
 		DatabaseHelper.save(record);
 		record.setContent("aaauaa");
 		DatabaseHelper.save(record);
@@ -143,6 +143,42 @@ public class TestDatabase {
 		assertTrue(2 == map.get("2010"));
 		assertTrue(1 == map.get("2011"));
 		
+	}
+	
+	@Test
+	public void testSearch2(){
+		Record record = new Record();
+		record.setTitle("asdd"); 
+		DatabaseHelper.save(record);
+		record.setTitle("asddd ssff");
+		DatabaseHelper.save(record);
+		List<Record> list = DatabaseHelper.search("asd", "", SearchType.ALL);
+		assertEquals(2, list.size());
+	}
+	
+	@Test
+	public void testSearch3() throws ParseException{
+		Record record = new Record();
+		record.setTitle("asdd"); 
+		DatabaseHelper.save(record);
+		record.setTitle("asddd ssff");
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-mm-dd");
+		record.setSaveTime(sf.parse("2010-1-2"));
+		DatabaseHelper.save(record);
+		List<Record> list = DatabaseHelper.search("asd", "2010", SearchType.ALL);
+		assertEquals(1, list.size());
+	}
+	
+	@Test
+	public void testSearch4() throws ParseException{
+		Record record = new Record();
+		record.setTitle("asdd"); 
+		DatabaseHelper.save(record);
+		record.setTitle("asddd ssff");
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-mm-dd");
+		DatabaseHelper.save(record);
+		List<Record> list = DatabaseHelper.search("asd sf", "", SearchType.ALL);
+		assertEquals(1, list.size());
 	}
 	
 	private int countAll(){
