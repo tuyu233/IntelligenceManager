@@ -31,7 +31,7 @@ public class DatabaseHelper {
 	}
 	private Command currentCommand;
 	private Class<?> TargetClass;
-	private List<QueryPair> whereLimit = new ArrayList<>();
+	private List<Pair> whereLimit = new ArrayList<>();
 	private QueryLogic whereLogic = QueryLogic.and;
 	private String sortKey = null;
 	private SortOrder order = null;
@@ -52,7 +52,7 @@ public class DatabaseHelper {
 	 * @param pair key-value pair
 	 * @return
 	 */
-	public DatabaseHelper where(QueryPair pair){
+	public DatabaseHelper where(Pair pair){
 		whereLimit.add(pair);
 		return this;
 	}
@@ -91,7 +91,7 @@ public class DatabaseHelper {
 			hql += " where ";
 			int size = whereLimit.size();
 			for(int i=0;i<size;i++){
-				QueryPair pair = whereLimit.get(i);
+				Pair pair = whereLimit.get(i);
 				hql += " a."+pair.key+" = :"+pair.key+" ";
 				if(i != size-1){
 					hql += " "+whereLogic+" ";
@@ -105,7 +105,7 @@ public class DatabaseHelper {
 		System.out.println("hql: "+hql);
 		Session session = HibernateUtil.getSession();
 		Query query = session.createQuery(hql);
-		for(QueryPair pair : whereLimit){
+		for(Pair pair : whereLimit){
 			if(pair.value instanceof String){
 				query.setString(pair.key, (String)pair.value);
 			}

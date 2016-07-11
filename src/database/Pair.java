@@ -1,10 +1,10 @@
 package database;
 
-public class QueryPair {
+public class Pair {
 	public String key;
 	public Object value;
 	
-	public QueryPair(String key,Object value) {
+	public Pair(String key,Object value) {
 		this.key = key;
 		this.value = value;
 	}
