@@ -82,7 +82,7 @@ public class TestDatabase {
 		DatabaseHelper.save(record);
 		
 		DatabaseHelper helper = DatabaseHelper.query(Record.class);
-		helper.where(new QueryPair("title",1));
+		helper.where(new Pair("title",1));
 		assertEquals(1,helper.list().size());
 		
 		helper = DatabaseHelper.query(Record.class);
