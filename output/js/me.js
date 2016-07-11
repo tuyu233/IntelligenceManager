@@ -137,7 +137,7 @@ function convertToPipeData(data){
 }
 
 
-require(['require','test','echarts.min','macarons'],function(require,test,echarts,macarons){
+require(['require','echarts.min','macarons'],function(require,echarts,macarons){
     console.log(macarons);
     initPieChart(echarts,macarons,pipData);
     initLineChart(echarts,macarons,yearData,'main2');
