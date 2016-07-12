@@ -75,6 +75,9 @@ function convertToLineData(data){
     result.title.text = data.title;
     result.series[0].data = seriesArray;
     result.xAxis[0].data = xAxisArray;
+    result.series[0].name = data.legendName;
+    result.legend.data = [data.legendName];
+    console.log(result.series[0].name);
     return result;
 }
 
