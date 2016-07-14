@@ -54,6 +54,8 @@ public class SearchResult extends JPanel
 		updateRowHeights();
 		this.add(searchResultTable,BorderLayout.CENTER);
 		
+		this.validate();
+		this.repaint();
 	}
 	//tabelModel
 	private class MyTableModel extends DefaultTableModel{
