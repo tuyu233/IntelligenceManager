@@ -65,7 +65,7 @@ public class TagCloudGenerator extends PApplet {
             printDebug();
         }
 
-        //save(Configuration.getInstance().getOutputFile());
+        save(Configuration.getInstance().getOutputFile());
         //this.stop();
         //TagCloud.tagcloud.stop();
         //noLoop();
