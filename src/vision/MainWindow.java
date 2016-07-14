@@ -1,6 +1,8 @@
 package vision;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -8,6 +10,7 @@ import javax.swing.*;
 
 import properties.Attributes;
 import properties.Fonts;
+import service.Controller;
 import service.chart.tagcloud.Configuration;
 import service.chart.tagcloud.TagCloud;
 import service.chart.tagcloud.TagCloudGenerator;
@@ -17,13 +20,10 @@ import service.chart.tagcloud.TagCloudHelper;
 public class MainWindow  
 {
 	static JFrame mainFrame;
-    private static void setLookAndFeel() {
-        try {
-        	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());  
-        } catch (Exception e) {
-            e.printStackTrace();}
-            // handle exception
-        } 
+	JTextField searchBar_textField;
+	SearchResult tab_panel1;
+	ResultStatistic tab_panel2;
+	AllData tab_panel3;
 	public MainWindow()
 	{
 		setLookAndFeel();
@@ -60,7 +60,7 @@ public class MainWindow
 		search_panel.add(searchBar_panel,BorderLayout.EAST);
 		searchBar_panel.setLayout(new BoxLayout(searchBar_panel,BoxLayout.X_AXIS));
 		
-		JTextField searchBar_textField=new JTextField();
+		searchBar_textField=new JTextField();
 		searchBar_panel.add(searchBar_textField);
 		searchBar_textField.setFont(Fonts.searchBar);
 		searchBar_textField.setToolTipText(Attributes.TOOLTIP);
@@ -76,6 +76,20 @@ public class MainWindow
 		button_panel.add(result_button);
 		search_button.setFont(Fonts.normal);
 		result_button.setFont(Fonts.normal);
+		search_button.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				super.mouseClicked(arg0);
+				Controller.startCrawl(getInput());
+			}
+		});
+		result_button.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				super.mouseClicked(arg0);
+				Controller.showResult(getInput(), tab_panel1, tab_panel2, tab_panel3);
+			}
+		});
 		
 		//内容panel
 		JPanel content_panel=new JPanel();
@@ -87,17 +101,17 @@ public class MainWindow
 		content_panel.add(tab_pane,BorderLayout.CENTER);
 		
 		//三个tab(搜索结果)
-		SearchResult tab_panel1=new SearchResult();
+		tab_panel1=new SearchResult();
 		JScrollPane tab1 = new JScrollPane(tab_panel1);
 		tab_pane.addTab(Attributes.SEARCHRESULTTAB, null,tab1,null);
 		
 		//结果统计
-		ResultStatistic tab_panel2 = new ResultStatistic();
+		tab_panel2 = new ResultStatistic();
 		JScrollPane tab2 = new JScrollPane(tab_panel2);
 		tab_pane.addTab(Attributes.RESULTSTATISTIC, null,tab2,null);
 		
 		//全体数据
-		AllData tab_panel3 = new AllData();
+		tab_panel3 = new AllData();
 		JScrollPane tab3 = new JScrollPane(tab_panel3);
 		tab_pane.addTab(Attributes.ALLDATA, null,tab3,null);
 		
@@ -121,5 +135,18 @@ public class MainWindow
 		tagCloud.stop();
 		*/
 	}
+	
+	//拿到输入框里的内容
+	public String getInput(){
+		return searchBar_textField.getText();
+	}
+	
+    private static void setLookAndFeel() {
+        try {
+        	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());  
+        } catch (Exception e) {
+            e.printStackTrace();}
+            // handle exception
+        } 
 
 }
