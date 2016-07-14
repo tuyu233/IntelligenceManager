@@ -1,6 +1,7 @@
 package vision;
 
 import service.chart.tagcloud.TagCloudHelper;
+import spider.helper.Crawler;
 
 public class Main 
 {
@@ -22,7 +23,9 @@ public class Main
 
 	public static void main(String[] args) 
 	{
-		new Main();
+		//new Main();
+		boolean[] options = {true,true,true,true,false,false};
+		new Crawler("公车改革", options);
 	}
 
 }
