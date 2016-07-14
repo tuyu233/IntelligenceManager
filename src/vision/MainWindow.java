@@ -16,7 +16,7 @@ import service.chart.tagcloud.TagCloudHelper;
 
 public class MainWindow  
 {
-	JFrame mainFrame;
+	static JFrame mainFrame;
     private static void setLookAndFeel() {
         try {
         	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());  
@@ -83,34 +83,43 @@ public class MainWindow
 		frame_panel.add(content_panel,BorderLayout.CENTER);
 		
 		JTabbedPane tab_pane=new JTabbedPane(JTabbedPane.TOP);
-		tab_pane.setFont(Fonts.normal);
+		//tab_pane.setFont(Fonts.normal);
 		content_panel.add(tab_pane,BorderLayout.CENTER);
 		
-		//三个tab
+		//三个tab(搜索结果)
 		SearchResult tab_panel1=new SearchResult();
-		tab_pane.addTab(Attributes.SEARCHRESULTTAB, null,tab_panel1,null);
+		JScrollPane tab1 = new JScrollPane(tab_panel1);
+		tab_pane.addTab(Attributes.SEARCHRESULTTAB, null,tab1,null);
 		
-		JPanel tmp_panel=new JPanel();
-		tmp_panel.setLayout(new BorderLayout());
-		tab_pane.addTab("suibian", null,tmp_panel,null);
+		//结果统计
+		ResultStatistic tab_panel2 = new ResultStatistic();
+		JScrollPane tab2 = new JScrollPane(tab_panel2);
+		tab_pane.addTab(Attributes.RESULTSTATISTIC, null,tab2,null);
 		
-		String str="神话中,25\n孩子,25\n柠檬水,25\n压缩,25\n美国,25\n柠檬,25\n就出,25\n黑暗中,25\n大脑,25\n小狗,24";
+		//全体数据
+		AllData tab_panel3 = new AllData();
+		JScrollPane tab3 = new JScrollPane(tab_panel3);
+		tab_pane.addTab(Attributes.ALLDATA, null,tab3,null);
+		
+		
+		//TODO
+		/*String str="神话中,25\n孩子,25\n柠檬水,25\n压缩,25\n美国,25\n柠檬,25\n就出,25\n黑暗中,25\n大脑,25\n小狗,24";
 		TagCloudHelper.getInstance().makeTagcloud(str,"./output/tagcloud.png");
 		try
 		{
-            Configuration.getInstance().load(new FileInputStream("config.properties"));
+            Configuration.getInstance().load(new FileInputStream("./resource/config.properties"));
         } catch (IOException e) 
         {
             e.printStackTrace();
             return;
         }
-		TagCloudGenerator tmp;
-		tmp = new TagCloudGenerator();
-		tmp.frame=mainFrame;
-		tmp.init();
-		tmp_panel.add(tmp,BorderLayout.CENTER);
-		tmp.stop();
-		
+		TagCloudGenerator tagCloud;
+		tagCloud = new TagCloudGenerator();
+		tagCloud.frame=mainFrame;
+		tagCloud.init();
+		tab_panel2.add(tagCloud,BorderLayout.CENTER);
+		tagCloud.stop();
+		*/
 	}
 
 }
