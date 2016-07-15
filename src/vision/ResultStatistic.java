@@ -9,6 +9,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -24,6 +25,19 @@ import service.chart.tagcloud.TagCloudHelper;
 
 public class ResultStatistic extends JPanel
 {
+	public void setResult(float[] index, List<String>[] keywords)
+	{
+		this.index=index;
+		this.keywords=keywords;
+		this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+		module1Setup();
+		module2Setup();
+		module3Setup();	
+		this.invalidate();
+		this.repaint();
+	}
+	private float[] index;
+	private List<String>[] keywords;
 	private JLabel[] note = new JLabel[9];
 	private JLabel[] label = new JLabel[9];
 	private JPanel[] panel = new JPanel[9];
@@ -40,7 +54,7 @@ public class ResultStatistic extends JPanel
 		module1.add(a);
 	}
 	
-	private void module1_setup()
+	private void module1Setup()
 	{
 		this.add(module1);
 		module1.setLayout(gbl1);
@@ -69,7 +83,7 @@ public class ResultStatistic extends JPanel
 		label[0].setText(Attributes.WHOLEWEB);
 		gbc1.gridwidth=10;
 		addComponent(label[1]);
-		label[1].setText("4.11");//TODO
+		label[1].setText(Float.toString(index[0]));//全网评分
 		
 		gbc1.gridwidth=1;
 		addComponent(panel[3]);
@@ -77,7 +91,7 @@ public class ResultStatistic extends JPanel
 		label[2].setText(Attributes.GOVERNMENT);
 		gbc1.gridwidth=10;
 		addComponent(label[3]);
-		label[3].setText("4.22");//TODO
+		label[3].setText(Float.toString(index[1]));//政府评分
 		
 		gbc1.gridwidth=1;
 		addComponent(panel[4]);
@@ -85,7 +99,7 @@ public class ResultStatistic extends JPanel
 		label[4].setText(Attributes.MEDIA);
 		gbc1.gridwidth=10;
 		addComponent(label[5]);
-		label[5].setText("4.33");//TODO
+		label[5].setText(Float.toString(index[2]));//媒体评分
 		
 		gbc1.gridwidth=1;
 		addComponent(panel[5]);
@@ -93,7 +107,7 @@ public class ResultStatistic extends JPanel
 		label[6].setText(Attributes.PUBLIC);
 		gbc1.gridwidth=10;
 		addComponent(label[7]);
-		label[7].setText("4.44");//TODO
+		label[7].setText(Float.toString(index[3]));//公众评分
 		
 		gbc1.weightx=1;
 		gbc1.gridwidth = GridBagConstraints.REMAINDER;
@@ -118,7 +132,8 @@ public class ResultStatistic extends JPanel
 	private void tagcloud()
 	{
 		//TODO
-		String str="神话中,25\n孩子,25\n柠檬水,25\n压缩,25\n美国,25\n柠檬,25\n就出,25\n黑暗中,25\n大脑,25\n小狗,24白色,18\n小部件,18\n企鹅,18\n薄荷,18\n低,18\n屋顶,17\n合资企业,17\n最爱,17\n鼻子,17\n太阳,17\n客户,17\n狗,17\n海洋,16\n处理,16\n粉色,16\n发现,15\n风险,15";
+		String str=Util.tagCloudTrans(keywords[0]);//全部的关键词
+				//"神话中,25\n孩子,25\n柠檬水,25\n压缩,25\n美国,25\n柠檬,25\n就出,25\n黑暗中,25\n大脑,25\n小狗,24白色,18\n小部件,18\n企鹅,18\n薄荷,18\n低,18\n屋顶,17\n合资企业,17\n最爱,17\n鼻子,17\n太阳,17\n客户,17\n狗,17\n海洋,16\n处理,16\n粉色,16\n发现,15\n风险,15";
 		TagCloudHelper.getInstance().makeTagcloud(str,"./output/tagcloud.png");
 		try
 		{
@@ -136,7 +151,7 @@ public class ResultStatistic extends JPanel
 		tagCloud.stop();
 	}
 	
-	private void module2_setup()
+	private void module2Setup()
 	{
 		this.add(module2);
 		module2.setLayout(gbl2);
@@ -193,7 +208,7 @@ public class ResultStatistic extends JPanel
 		gbc2.weightx=1;
 		gbc2.gridwidth = GridBagConstraints.REMAINDER;
 		addComponent2(note[4]);
-		note[4].setText("随便  随便  随便  随便  随便");
+		note[4].setText(Util.transFormat(keywords[1]));//政府关键词
 		note[4].setFont(Fonts.KEYWORD);
 		
 		//媒体
@@ -207,7 +222,7 @@ public class ResultStatistic extends JPanel
 		gbc2.weightx=1;
 		gbc2.gridwidth = GridBagConstraints.REMAINDER;
 		addComponent2(note[6]);
-		note[6].setText("随便  随便  随便  随便  随便");
+		note[6].setText(Util.transFormat(keywords[2]));//媒体关键词
 		note[6].setFont(Fonts.KEYWORD);
 		
 		//公众
@@ -221,7 +236,7 @@ public class ResultStatistic extends JPanel
 		gbc2.weightx=1;
 		gbc2.gridwidth = GridBagConstraints.REMAINDER;
 		addComponent2(note[8]);
-		note[8].setText("随便  随便  随便  随便  随便");
+		note[8].setText(Util.transFormat(keywords[3]));//公众关键词
 		note[8].setFont(Fonts.KEYWORD);
 		
 		//第六行
@@ -239,7 +254,7 @@ public class ResultStatistic extends JPanel
 		module3.add(a);
 	}
 	
-	private void module3_setup()
+	private void module3Setup()
 	{
 		this.add(module3);
 		module3.setLayout(gbl3);
@@ -288,10 +303,8 @@ public class ResultStatistic extends JPanel
 			else
 				label[i].setFont(Fonts.opinion_title);
 		}
-		this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-		module1_setup();
-		module2_setup();
-		module3_setup();		
+			
+		
 	}
 
 }
