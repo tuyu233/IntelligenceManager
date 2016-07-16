@@ -60,7 +60,7 @@ public class MainWindow
 		search_panel.add(searchBar_panel,BorderLayout.EAST);
 		searchBar_panel.setLayout(new BoxLayout(searchBar_panel,BoxLayout.X_AXIS));
 		
-		searchBar_textField=new JTextField();
+		searchBar_textField=new JTextField("公车改革");
 		searchBar_panel.add(searchBar_textField);
 		searchBar_textField.setFont(Fonts.searchBar);
 		searchBar_textField.setToolTipText(Attributes.TOOLTIP);
