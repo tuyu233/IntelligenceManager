@@ -56,6 +56,17 @@ public class MainWindow
 		north_panel.add(search_panel);
 		search_panel.setLayout(new BorderLayout());
 		
+		JButton makeReport_button = new JButton();
+		makeReport_button.setText(Attributes.MAKEREPORT);
+		makeReport_button.setFont(Fonts.searchButton);
+		makeReport_button.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0){
+				Controller.makeReport();
+			}
+		});
+		search_panel.add(makeReport_button, BorderLayout.WEST);
+		
 		JPanel searchBar_panel=new JPanel();
 		search_panel.add(searchBar_panel,BorderLayout.EAST);
 		searchBar_panel.setLayout(new BoxLayout(searchBar_panel,BoxLayout.X_AXIS));

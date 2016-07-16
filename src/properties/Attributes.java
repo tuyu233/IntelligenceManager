@@ -37,5 +37,7 @@ public class Attributes
 	public static final String KEYWORD = "关键词";
 	
 	public static final String CHART = "统计图表";
+	
+	public static final String MAKEREPORT = "输出报告";
 			
 }
