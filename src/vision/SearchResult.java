@@ -4,11 +4,19 @@ package vision;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.GridLayout;
 import java.awt.Panel;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 
 import javax.swing.Box;
@@ -29,6 +37,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.text.AbstractDocument.Content;
 
 import properties.*;
+import service.keyword.NLP;
 import entity.*; 
 
 public class SearchResult extends JPanel 
@@ -45,11 +54,12 @@ public class SearchResult extends JPanel
 		this.setLayout(new BorderLayout());
 		searchResultTable=new JTable();
 		MyTableModel model = new MyTableModel(resultSize,1);
+		MyTableCellRenderer renderer = new MyTableCellRenderer();
 		searchResultTable.setModel(model);
 		searchResultTable.getColumnModel().getColumn(0).setPreferredWidth((int) (Attributes.MAIN_FRAME_WIDTH*0.905));
 		searchResultTable.setEnabled(true);
 		searchResultTable.getTableHeader().setVisible(false);
-		searchResultTable.setDefaultRenderer(Object.class,new MyTableCellRenderer());
+		searchResultTable.setDefaultRenderer(Object.class,renderer);
 		searchResultTable.setDefaultEditor(Object.class, new myTableCellEditor(new JCheckBox()));
 		updateRowHeights();
 		this.add(searchResultTable,BorderLayout.CENTER);
@@ -91,7 +101,7 @@ public class SearchResult extends JPanel
 			JPanel searchResult_Panel = new JPanel();
 			JLabel style = new JLabel();
 			JLabel title = new JLabel();
-			searchResult_Panel.setLayout(new GridLayout(3,1));
+			searchResult_Panel.setLayout(new BorderLayout());
 			Box whole =  Box.createVerticalBox();
 			Box line1 = Box.createHorizontalBox();
 			Box line2 = Box.createHorizontalBox();
@@ -114,25 +124,27 @@ public class SearchResult extends JPanel
 			time.setFont(Fonts.TIME);
 			time.setForeground(Color.GRAY);
 			line2.add(time);
+			JLabel url = new JLabel();
+			String baseUrl = resultList.get(row).getBaseUrl();
+			url.setText("<html>"+baseUrl+"<html>");
+			url.setFont(Fonts.normal);
+			url.setForeground(Colors.URL_COLOR);
+			line2.add(Box.createHorizontalStrut(20));
+			line2.add(url);
 			line2.add(Box.createHorizontalGlue());
 			 
-			String str =resultList.get(row).getContent();
+			String str =NLP.stringSummary(resultList.get(row).getContent());//摘要内容
 			JTextArea content = new JTextArea(str,4,5);
 			content.setSelectedTextColor(Color.GRAY);
 			content.setLineWrap(true);        //激活自动换行功能 
 			content.setWrapStyleWord(true);            // 激活断行不断字功能
 			content.setFont(Fonts.normal);
-			JLabel tmp = new JLabel();
-			tmp.setText(str);
-			tmp.setFont(Fonts.normal);
-			int hei=tmp.getPreferredSize().height;
-			tmp.setSize(Attributes.MAIN_FRAME_WIDTH, hei);
 			line3.add(content);
 			
 			whole.add(line1);
 			whole.add(line2);
 			whole.add(line3);
-			searchResult_Panel.add(whole);
+			searchResult_Panel.add(whole,BorderLayout.CENTER);
 			
 			return searchResult_Panel;
 		}
@@ -153,12 +165,14 @@ public class SearchResult extends JPanel
 			JPanel searchResult_Panel = new JPanel();
 			JLabel style = new JLabel();
 			JLabel title = new JLabel();
-			searchResult_Panel.setLayout(new GridLayout(3,1));
+			searchResult_Panel.setLayout(new BorderLayout());
 			Box whole =  Box.createVerticalBox();
 			Box line1 = Box.createHorizontalBox();
 			Box line2 = Box.createHorizontalBox();
 			Box line3 = Box.createHorizontalBox();
 			
+			//line1
+			//类型
 			style.setText(resultList.get(row).getType());//TODO
 			style.setFont(Fonts.STYLE_TITLE);
 			style.setForeground(Color.WHITE);
@@ -166,35 +180,74 @@ public class SearchResult extends JPanel
 			style.setOpaque(true);
 			line1.add(style);
 			line1.add(Box.createHorizontalStrut(20));
+			//题目
 			title.setText(resultList.get(row).getTitle());
 			title.setFont(Fonts.STYLE_TITLE);
 			line1.add(title);
 			line1.add(Box.createHorizontalGlue());
 			
+			//line2
+			//时间
 			JLabel time = new JLabel();
 			time.setText(resultList.get(row).getSaveTime().toString());
 			time.setFont(Fonts.TIME);
 			time.setForeground(Color.GRAY);
 			line2.add(time);
+			JLabel url = new JLabel();
+			
+			url.setText("<html>"+resultList.get(row).getBaseUrl()+"<html>");
+			url.setFont(Fonts.normal);
+			url.setText(resultList.get(row).getBaseUrl());
+			url.setFont(Fonts.normal);
+			url.setForeground(Colors.URL_COLOR);		
+			try {
+				url.addMouseListener(new MouseAdapter()
+				{
+					String baseUrl = resultList.get(row).getBaseUrl();
+					URL link = new URL(baseUrl);
+					public void mouseExited(MouseEvent e)
+					{
+						setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+					}
+					public void mouseEntered(MouseEvent e)
+					{
+						setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+					}
+					public void mouseClicked(MouseEvent e) 
+					{
+						try
+						{
+							Desktop.getDesktop().browse(link.toURI());	
+						}catch(IOException err)
+						{
+							err.printStackTrace();
+						}catch(URISyntaxException err)
+						{
+							err.printStackTrace();
+						}
+					}
+					
+				});
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			line2.add(Box.createHorizontalStrut(20));
+			line2.add(url);
 			line2.add(Box.createHorizontalGlue());
 			 
-			String str =resultList.get(row).getContent();
+			String str =NLP.stringSummary(resultList.get(row).getContent());//摘要内容
 			JTextArea content = new JTextArea(str,4,5);
 			content.setSelectedTextColor(Color.GRAY);
 			content.setLineWrap(true);        //激活自动换行功能 
 			content.setWrapStyleWord(true);            // 激活断行不断字功能
 			content.setFont(Fonts.normal);
-			JLabel tmp = new JLabel();
-			tmp.setText(str);
-			tmp.setFont(Fonts.normal);
-			int hei=tmp.getPreferredSize().height;
-			tmp.setSize(Attributes.MAIN_FRAME_WIDTH, hei);
 			line3.add(content);
 			
 			whole.add(line1);
 			whole.add(line2);
 			whole.add(line3);
-			searchResult_Panel.add(whole);
+			searchResult_Panel.add(whole,BorderLayout.CENTER);
 			
 			return searchResult_Panel;
 		}
