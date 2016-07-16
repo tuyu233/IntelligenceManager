@@ -25,7 +25,7 @@ import service.chart.tagcloud.TagCloudHelper;
 
 public class ResultStatistic extends JPanel
 {
-	public void setResult(float[] index, List<String>[] keywords)
+	public void setResult(float[] index, List<List<String>> keywords)
 	{
 		this.index=index;
 		this.keywords=keywords;
@@ -37,7 +37,7 @@ public class ResultStatistic extends JPanel
 		this.repaint();
 	}
 	private float[] index;
-	private List<String>[] keywords;
+	private List<List<String>> keywords;
 	private JLabel[] note = new JLabel[9];
 	private JLabel[] label = new JLabel[9];
 	private JPanel[] panel = new JPanel[9];
@@ -132,7 +132,7 @@ public class ResultStatistic extends JPanel
 	private void tagcloud()
 	{
 		//TODO
-		String str=Util.tagCloudTrans(keywords[0]);//全部的关键词
+		String str=Util.tagCloudTrans(keywords.get(0));//全部的关键词
 				//"神话中,25\n孩子,25\n柠檬水,25\n压缩,25\n美国,25\n柠檬,25\n就出,25\n黑暗中,25\n大脑,25\n小狗,24白色,18\n小部件,18\n企鹅,18\n薄荷,18\n低,18\n屋顶,17\n合资企业,17\n最爱,17\n鼻子,17\n太阳,17\n客户,17\n狗,17\n海洋,16\n处理,16\n粉色,16\n发现,15\n风险,15";
 		TagCloudHelper.getInstance().makeTagcloud(str,"./output/tagcloud.png");
 		try
@@ -208,7 +208,7 @@ public class ResultStatistic extends JPanel
 		gbc2.weightx=1;
 		gbc2.gridwidth = GridBagConstraints.REMAINDER;
 		addComponent2(note[4]);
-		note[4].setText(Util.transFormat(keywords[1]));//政府关键词
+		note[4].setText(Util.transFormat(keywords.get(1)));//政府关键词
 		note[4].setFont(Fonts.KEYWORD);
 		
 		//媒体
@@ -222,7 +222,7 @@ public class ResultStatistic extends JPanel
 		gbc2.weightx=1;
 		gbc2.gridwidth = GridBagConstraints.REMAINDER;
 		addComponent2(note[6]);
-		note[6].setText(Util.transFormat(keywords[2]));//媒体关键词
+		note[6].setText(Util.transFormat(keywords.get(2)));//媒体关键词
 		note[6].setFont(Fonts.KEYWORD);
 		
 		//公众
@@ -236,7 +236,7 @@ public class ResultStatistic extends JPanel
 		gbc2.weightx=1;
 		gbc2.gridwidth = GridBagConstraints.REMAINDER;
 		addComponent2(note[8]);
-		note[8].setText(Util.transFormat(keywords[3]));//公众关键词
+		note[8].setText(Util.transFormat(keywords.get(3)));//公众关键词
 		note[8].setFont(Fonts.KEYWORD);
 		
 		//第六行
