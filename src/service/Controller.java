@@ -1,5 +1,6 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -24,6 +25,18 @@ public class Controller {
 		List<Record> records;
 		records = DatabaseHelper.search(keyword, SearchType.GOVMEDIA);
 		panel1.setResult(records);
+		
+		float[] index = {0.0f,0.0f,0.0f,0.0f};
+		List<List<String>> keywords = new ArrayList<List<String>>();
+		records = DatabaseHelper.search(keyword, SearchType.ALL);
+		keywords.add(service.keyword.Keyword.getKeyword(records, properties.Configure.KEYWORD_SIZE_WHOLEWEB));
+		records = DatabaseHelper.search(keyword, SearchType.GOV);
+		keywords.add(service.keyword.Keyword.getKeyword(records, properties.Configure.KEYWORD_SIZE_NORMAL));
+		records = DatabaseHelper.search(keyword, SearchType.MEDIA);
+		keywords.add(service.keyword.Keyword.getKeyword(records, properties.Configure.KEYWORD_SIZE_NORMAL));
+		records = DatabaseHelper.search(keyword, SearchType.PUBLIC);
+		keywords.add(service.keyword.Keyword.getKeyword(records, properties.Configure.KEYWORD_SIZE_NORMAL));
+		panel2.setResult(index, keywords);
 	}
 	
 }

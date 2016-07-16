@@ -26,9 +26,4 @@ public class NLP
 		}
 		return summary;
 	}
-	
-	//提取关键词
-	public static List<String> getKeyword(String document, int size){
-		return HanLP.extractKeyword(document, size);
-	}
 }
