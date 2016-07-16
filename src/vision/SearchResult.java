@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Desktop;
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.Panel;
 import java.awt.TextArea;
@@ -29,6 +30,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
@@ -53,14 +55,17 @@ public class SearchResult extends JPanel
 		
 		this.setLayout(new BorderLayout());
 		searchResultTable=new JTable();
-		MyTableModel model = new MyTableModel(resultSize,1);
+		MyTableModel model = new MyTableModel(resultSize,2);
 		MyTableCellRenderer renderer = new MyTableCellRenderer();
+		myTableCellEditor editor = new myTableCellEditor(new JCheckBox());
 		searchResultTable.setModel(model);
-		searchResultTable.getColumnModel().getColumn(0).setPreferredWidth((int) (Attributes.MAIN_FRAME_WIDTH*0.905));
+		searchResultTable.getColumnModel().getColumn(0).setPreferredWidth((int) (Attributes.MAIN_FRAME_WIDTH*0.89));
 		searchResultTable.setEnabled(true);
 		searchResultTable.getTableHeader().setVisible(false);
-		searchResultTable.setDefaultRenderer(Object.class,renderer);
-		searchResultTable.setDefaultEditor(Object.class, new myTableCellEditor(new JCheckBox()));
+		searchResultTable.getColumnModel().getColumn(0).setCellRenderer(renderer);
+		searchResultTable.getColumnModel().getColumn(1).setCellRenderer(new MyButtonRenderer());
+		searchResultTable.getColumnModel().getColumn(0).setCellEditor(editor);
+		searchResultTable.getColumnModel().getColumn(1).setCellEditor(new myButtonEditor(new JCheckBox()));
 		updateRowHeights();
 		this.add(searchResultTable,BorderLayout.CENTER);
 		
@@ -120,7 +125,7 @@ public class SearchResult extends JPanel
 			line1.add(Box.createHorizontalGlue());
 			
 			JLabel time = new JLabel();
-			time.setText(resultList.get(row).getSaveTime().toString());
+			time.setText(resultList.get(row).getSaveTime().toString().substring(0, 10));
 			time.setFont(Fonts.TIME);
 			time.setForeground(Color.GRAY);
 			line2.add(time);
@@ -129,6 +134,7 @@ public class SearchResult extends JPanel
 			url.setText("<html>"+baseUrl+"<html>");
 			url.setFont(Fonts.normal);
 			url.setForeground(Colors.URL_COLOR);
+			
 			line2.add(Box.createHorizontalStrut(20));
 			line2.add(url);
 			line2.add(Box.createHorizontalGlue());
@@ -153,7 +159,6 @@ public class SearchResult extends JPanel
 	
 	private class myTableCellEditor extends DefaultCellEditor
 	{
-		
 		public myTableCellEditor(JCheckBox checkBox) 
 		{
 			super(checkBox);
@@ -162,6 +167,7 @@ public class SearchResult extends JPanel
 		public JComponent getTableCellEditorComponent(JTable table, Object value,
 	              boolean isSelected, final int row, int column)
 		{
+			
 			JPanel searchResult_Panel = new JPanel();
 			JLabel style = new JLabel();
 			JLabel title = new JLabel();
@@ -171,8 +177,6 @@ public class SearchResult extends JPanel
 			Box line2 = Box.createHorizontalBox();
 			Box line3 = Box.createHorizontalBox();
 			
-			//line1
-			//类型
 			style.setText(resultList.get(row).getType());//TODO
 			style.setFont(Fonts.STYLE_TITLE);
 			style.setForeground(Color.WHITE);
@@ -180,24 +184,19 @@ public class SearchResult extends JPanel
 			style.setOpaque(true);
 			line1.add(style);
 			line1.add(Box.createHorizontalStrut(20));
-			//题目
 			title.setText(resultList.get(row).getTitle());
 			title.setFont(Fonts.STYLE_TITLE);
 			line1.add(title);
 			line1.add(Box.createHorizontalGlue());
 			
-			//line2
-			//时间
 			JLabel time = new JLabel();
-			time.setText(resultList.get(row).getSaveTime().toString());
+			time.setText(resultList.get(row).getSaveTime().toString().substring(0, 10));
 			time.setFont(Fonts.TIME);
 			time.setForeground(Color.GRAY);
 			line2.add(time);
 			JLabel url = new JLabel();
-			
-			url.setText("<html>"+resultList.get(row).getBaseUrl()+"<html>");
-			url.setFont(Fonts.normal);
-			url.setText(resultList.get(row).getBaseUrl());
+			String baseUrl = resultList.get(row).getBaseUrl();
+			url.setText("<html>"+baseUrl+"<html>");
 			url.setFont(Fonts.normal);
 			url.setForeground(Colors.URL_COLOR);		
 			try {
@@ -205,14 +204,6 @@ public class SearchResult extends JPanel
 				{
 					String baseUrl = resultList.get(row).getBaseUrl();
 					URL link = new URL(baseUrl);
-					public void mouseExited(MouseEvent e)
-					{
-						setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-					}
-					public void mouseEntered(MouseEvent e)
-					{
-						setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-					}
 					public void mouseClicked(MouseEvent e) 
 					{
 						try
@@ -256,26 +247,35 @@ public class SearchResult extends JPanel
 	//MyButtonEditor
 	private class myButtonEditor extends DefaultCellEditor
 	{
-		JPanel tmp_panel=new JPanel();
-		JButton tmp_button=new JButton(Attributes.WHOLEPASSAGE);
+
 	      public myButtonEditor(JCheckBox checkBox)
 	      {
 	        super(checkBox);
-	        tmp_button.setOpaque(true);
-	    	tmp_button.setFont(Fonts.searchButton);
 	      }
 	      public JComponent getTableCellEditorComponent(JTable table, Object value,
 	              boolean isSelected, final int row, int column) 
 	      {
-	    	  tmp_button.addActionListener
+	  		JPanel tmp_panel=new JPanel();
+			JButton tmp_button=new JButton(Attributes.WHOLEPASSAGE);
+	        tmp_button.setOpaque(true);
+	    	tmp_button.setFont(Fonts.searchButton);
+	    	tmp_button.addActionListener
 		        (new ActionListener() 
 		        {
 			          public void actionPerformed(ActionEvent e) 
 			          {
 			        	  JFrame f=new JFrame();
-			        	  f.show();
+			        	  f.setVisible(true);
 			        	  f.setBounds(500, 120, 600, 500);
-			        	  f.setTitle("第"+row+"行");
+			        	  f.setTitle(resultList.get(row).getType()+" - "+resultList.get(row).getTitle());
+			        	  f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			        	  JTextArea wholePage = new JTextArea(resultList.get(row).getContent());
+			        	  wholePage.setLineWrap(true);
+			        	  wholePage.setWrapStyleWord(true);
+			        	  wholePage.setFont(Fonts.normal);
+			        	  JScrollPane scroll = new JScrollPane(wholePage);
+			        	  f.add(scroll);
+			        	 
 			          }
 		        });
 	    	  
