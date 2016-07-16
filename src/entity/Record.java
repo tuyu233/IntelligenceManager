@@ -47,25 +47,29 @@ public class Record
 		this.baseUrl = baseUrl;
 	}
 	public String getContent() {
-		return content;
+		if(content!=null) return content;
+		else return "无内容";
 	}
 	public void setContent(String content) {
 		this.content = content;
 	}
 	public Date getSaveTime() {
-		return saveTime;
+		if(saveTime!=null) return saveTime;
+		else return new Date();
 	}
 	public void setSaveTime(Date savetime) {
 		this.saveTime = savetime;
 	}
 	public String getTitle() {
-		return title;
+		if(title!=null) return title;
+		else return "无标题";
 	}
 	public void setTitle(String title) {
 		this.title = title;
 	}
 	public String getAuthor() {
-		return author;
+		if(author!=null) return author;
+		else return "未知作者";
 	}
 	public void setAuthor(String author) {
 		this.author = author;
