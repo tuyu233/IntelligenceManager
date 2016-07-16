@@ -39,4 +39,7 @@ public class Controller {
 		panel2.setResult(index, keywords);
 	}
 	
+	public static void makeReport(){
+		
+	}
 }
