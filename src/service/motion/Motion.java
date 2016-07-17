@@ -169,7 +169,7 @@ public class Motion {
 			fStruct fSTemp = new fStruct();
 			fSTemp.sw1=sa[0];
 			fSTemp.sw2=sa[1];
-			if(sa[0].equals("的")){
+			if(sa[0].equals("的") && al!=null){
 				al.get(i).sw1+="的";
 				continue;
 			}

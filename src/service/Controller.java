@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import service.chart.Chart;
+import service.chart.tagcloud.TagCloud;
 import service.motion.Motion;
 import spider.helper.Crawler;
 import util.RecordTrans;
@@ -34,8 +35,7 @@ public class Controller {
 		
 		dataManager.setKeyword(keyword);
 		
-		
-		//TODO tagcloud
+		TagCloud.TagCloud(dataManager.getKeywords().get(0));
 		new Chart();
 		
 		panel1.setResult(dataManager.getRecordsGovMedia());

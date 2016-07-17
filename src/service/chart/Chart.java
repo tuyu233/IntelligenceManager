@@ -78,7 +78,7 @@ public class Chart {
 		//pieChart(PATENT_type, "patent_type.jpg");
 		pieChart(SOURCE, "source.jpg");
 		//barChart(PATENT_applicant, "patent_applicant.jpg", HORIZONTAL);
-		//lineChart(MOTION, "motion.jpg");
+		lineChart(MOTION, "motion.jpg");
 		lineChart(YEAR_comments, "year_comments.jpg");
 	}
 /*
@@ -230,10 +230,11 @@ public class Chart {
 		HashMap<String, Integer> hashmap;
 		if (type == MOTION) {
 			hashmap =new HashMap();
+			int[] tmp = DataManager.getInstance().getOpinionIndexDistribution();
 			for (int i=0;i<=10;i++)
-				hashmap.put(Integer.toString(i-5), (Integer)DataManager.getInstance().getOpinionIndexDistribution()[i]);
+				hashmap.put(Integer.toString(i-5), (Integer)tmp[i]);
 		} else {
-			hashmap = DatabaseHelper.count(keyword);
+			hashmap = DataManager.getInstance().getYearRecordNums();
 		}
 		List<Map.Entry<String, Integer>> entry = new ArrayList<Map.Entry<String, Integer>>(
 				hashmap.entrySet());
@@ -322,9 +323,10 @@ public class Chart {
 		for (Map.Entry<String, Integer> i : entry) {
 			dataset.setValue(i.getKey(), i.getValue());
 		}*/
-		dataset.setValue("政府", DatabaseHelper.count(keyword, SearchType.GOV));
-		dataset.setValue("媒体", DatabaseHelper.count(keyword, SearchType.MEDIA));
-		dataset.setValue("公众", DatabaseHelper.count(keyword, SearchType.PUBLIC));
+		int[] recordNums = DataManager.getInstance().getRecordNum();
+		dataset.setValue("政府", recordNums[1]);
+		dataset.setValue("媒体", recordNums[2]);
+		dataset.setValue("公众", recordNums[3]);
 
 		return dataset;
 	}
