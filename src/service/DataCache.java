@@ -19,6 +19,18 @@ public class DataCache {
 		else return instance;
 	}
 	
+	//关键词
+	private String keyword = null;
+	public String getKeyword(){
+		return keyword;
+	}
+	public void setKeyword(String keyword){
+		this.keyword = keyword;
+	}
+	public boolean haveKeyword(){
+		return keyword != null;
+	}
+	
 	//各类别记录数量，顺序为全网、政府、媒体、公众
 	private int[] recordNums;
 	public int[] getRecordNum(){
