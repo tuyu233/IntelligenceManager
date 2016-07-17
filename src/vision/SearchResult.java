@@ -91,7 +91,7 @@ public class SearchResult extends JPanel
 			JPanel tmp_panel=new JPanel();
 			tmp_panel.setLayout(null);
 			JButton tmp_button=new JButton(Attributes.WHOLEPASSAGE);
-			tmp_button.setBounds(0,30,100,30);
+			tmp_button.setBounds(0,10,100,30);
 			tmp_button.setFont(Fonts.searchButton);
 			tmp_panel.add(tmp_button);
 			return tmp_panel;
@@ -280,7 +280,7 @@ public class SearchResult extends JPanel
 		        });
 	    	  
 				tmp_panel.setLayout(null);
-		    	tmp_button.setBounds(0,30,100,30);
+		    	tmp_button.setBounds(0,10,100,30);
 				tmp_panel.add(tmp_button);
 				return tmp_panel;
 	      }
