@@ -21,7 +21,7 @@ import entity.Record;
 public class Controller {
 	
 	public static void startCrawl(String keyword){
-		DataManager.getInstance().setKeyword(keyword);
+		DataManager.setKeyword(keyword);
 		boolean[] options = {true,true,true,true,false,false};
 		new Crawler(keyword, options);
 	}
@@ -31,16 +31,15 @@ public class Controller {
 	}
 
 	public static void showResult(String keyword, SearchResult panel1, ResultStatistic panel2, AllData panel3){
-		DataManager dataManager = DataManager.getInstance();
 		
-		dataManager.setKeyword(keyword);
+		DataManager.setKeyword(keyword);
 		
-		TagCloud.TagCloud(dataManager.getKeywords().get(0));
+		TagCloud.TagCloud(DataManager.getKeywords().get(0));
 		new Chart();
 		
-		panel1.setResult(dataManager.getRecordsGovMedia());
-		panel2.setResult(dataManager.getOpinionIndex(), dataManager.getKeywords());
-		panel3.setResult(dataManager.getRecordsAll());
+		panel1.setResult(DataManager.getRecordsGovMedia());
+		panel2.setResult(DataManager.getOpinionIndex(), DataManager.getKeywords());
+		panel3.setResult(DataManager.getRecordsAll());
 	}
 	
 	public static void makeReport(){

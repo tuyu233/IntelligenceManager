@@ -66,7 +66,7 @@ public class Chart {
 	String keyword = new String();
 
 	public Chart() {
-		keyword = DataManager.getInstance().getKeyword();
+		keyword = DataManager.getKeyword();
 		// System.out.println(sqlop.countAllResult(keyword));
 		//barChart(SITE, "site.jpg", VERTICAL);
 		//lineChart(YEAR_gov, "year_gov.jpg");
@@ -230,11 +230,11 @@ public class Chart {
 		HashMap<String, Integer> hashmap;
 		if (type == MOTION) {
 			hashmap =new HashMap();
-			int[] tmp = DataManager.getInstance().getOpinionIndexDistribution();
+			int[] tmp = DataManager.getOpinionIndexDistribution();
 			for (int i=0;i<=10;i++)
 				hashmap.put(Integer.toString(i-5), (Integer)tmp[i]);
 		} else {
-			hashmap = DataManager.getInstance().getYearRecordNums();
+			hashmap = DataManager.getYearRecordNums();
 		}
 		List<Map.Entry<String, Integer>> entry = new ArrayList<Map.Entry<String, Integer>>(
 				hashmap.entrySet());
@@ -323,7 +323,7 @@ public class Chart {
 		for (Map.Entry<String, Integer> i : entry) {
 			dataset.setValue(i.getKey(), i.getValue());
 		}*/
-		int[] recordNums = DataManager.getInstance().getRecordNum();
+		int[] recordNums = DataManager.getRecordNum();
 		dataset.setValue("政府", recordNums[1]);
 		dataset.setValue("媒体", recordNums[2]);
 		dataset.setValue("公众", recordNums[3]);
