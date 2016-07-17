@@ -86,6 +86,14 @@ public class Motion {
 		
 	}
 	
+	protected float getAssessmentAve(List<String> ls){
+		int sum =0 ,len = ls.size();
+		for(int i=0 ;i<len;i++){
+			sum+=getAssessment(ls.get(i));
+		}
+		return (float)sum/len;
+	}
+	
 	private void getMotion(ArrayList<wStruct> alwTemp) {
 		float pos=0, neg=0, plus=1;
 		int not=0;
