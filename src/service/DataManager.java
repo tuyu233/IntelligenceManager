@@ -43,8 +43,10 @@ public class DataManager {
 	//各类别记录
 	private List<Record> recordsAll = null;
 	public List<Record> getRecordsAll(){
+		System.out.print("getRecordAll called\n");
 		if(recordsAll == null){
 			recordsAll = DatabaseHelper.search(getKeyword(), SearchType.ALL);
+			System.out.print("RecordsAll get!\n");
 		}
 		return recordsAll;
 	}
@@ -54,8 +56,10 @@ public class DataManager {
 	
 	private List<Record> recordsGov = null;
 	public List<Record> getRecordsGov(){
+		System.out.print("getRecordGov called\n");
 		if(recordsGov == null){
 			recordsGov = DatabaseHelper.search(getKeyword(), SearchType.GOV);
+			System.out.print("RecordsGov get!\n");
 		}
 		return recordsGov;
 	}
@@ -65,8 +69,10 @@ public class DataManager {
 	
 	private List<Record> recordsMedia = null;
 	public List<Record> getRecordsMedia(){
+		System.out.print("getRecordMedia called\n");
 		if(recordsMedia == null){
 			recordsMedia = DatabaseHelper.search(getKeyword(), SearchType.MEDIA);
+			System.out.print("RecordsMedia get!\n");
 		}
 		return recordsMedia;
 	}
@@ -76,8 +82,10 @@ public class DataManager {
 	
 	private List<Record> recordsPublic = null;
 	public List<Record> getRecordsPublic(){
+		System.out.print("getRecordPublic called\n");
 		if(recordsPublic == null){
 			recordsPublic = DatabaseHelper.search(getKeyword(), SearchType.PUBLIC);
+			System.out.print("RecordsPublic get!\n");
 		}
 		return recordsPublic;
 	}
@@ -87,8 +95,11 @@ public class DataManager {
 	
 	private List<Record> recordsGovMedia = null;
 	public List<Record> getRecordsGovMedia(){
+		System.out.print("getRecordGovMedia called\n");
 		if(recordsGovMedia == null){
 			recordsGovMedia = DatabaseHelper.search(getKeyword(), SearchType.GOVMEDIA);
+			System.out.print("RecordsGovMedia get!\n");
+			
 		}
 		return recordsGovMedia;
 	}
@@ -99,6 +110,7 @@ public class DataManager {
 	//各类别舆论评分，顺序为全网、政府、媒体、公众
 	private float[] opinionIndexes = null;
 	public float[] getOpinionIndex(){
+		System.out.print("getOpinionIndex called\n");
 		if(opinionIndexes == null){
 			Motion motion = new Motion();
 			float[] opinionIndexes = {
@@ -108,6 +120,8 @@ public class DataManager {
 					motion.getAssessmentAve(RecordTrans.records2strings(getRecordsPublic()))
 			};
 			this.opinionIndexes = opinionIndexes;
+			System.out.print("OpinionIndex:");
+			System.out.print(opinionIndexes[0] + "\n");
 		}
 		return opinionIndexes;
 	}
@@ -118,6 +132,7 @@ public class DataManager {
 	//各类别关键词，顺序为全网、政府、媒体、公众
 	private List<List<String>> keywords = null;
 	public List<List<String>> getKeywords(){
+		System.out.print("getKeywords called\n");
 		if(keywords == null){
 			keywords = new ArrayList<List<String>>();
 			keywords.add(service.keyword.Keyword.getKeyword(getRecordsAll(), properties.Configure.KEYWORD_SIZE_WHOLEWEB));
@@ -134,7 +149,9 @@ public class DataManager {
 	//各类别记录数量，顺序为全网、政府、媒体、公众
 	private int[] recordNums = null;
 	public int[] getRecordNum(){
+		System.out.print("getRecordNum called\n");
 		if(recordNums == null){
+			recordNums = new int[4];
 			recordNums[0] = getRecordsAll().size();
 			recordNums[1] = getRecordsGov().size();
 			recordNums[2] = getRecordsMedia().size();
@@ -149,6 +166,7 @@ public class DataManager {
 	//各年份记录数量
 	private HashMap<String, Integer> yearRecordNums = null;
 	public HashMap<String, Integer> getYearRecordNums(){
+		System.out.print("getYearRecordNums called\n");
 		if(yearRecordNums == null){
 			yearRecordNums = DatabaseHelper.count(getKeyword());
 		}
@@ -161,9 +179,13 @@ public class DataManager {
 	//舆情分数分布
 	private int[] opinionIndexDistribution = null;
 	public int[] getOpinionIndexDistribution(){
+		System.out.print("getOpinionIndexDistribution called\n");
 		if(opinionIndexDistribution == null){
 			Motion motion = new Motion();
-			opinionIndexDistribution = motion.getAssessmentMap(util.RecordTrans.records2strings(getRecordsAll()));
+			opinionIndexDistribution = motion.getAssessmentMap(RecordTrans.records2strings(getRecordsAll()));
+			System.out.print("OpinionIndexDistribution: ");
+			System.out.print(opinionIndexDistribution[0]);
+			System.out.print("\n");
 		}
 		return opinionIndexDistribution;
 	}
