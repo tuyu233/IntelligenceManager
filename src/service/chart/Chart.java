@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import service.DataManager;
 import service.motion.Motion;
 
 import org.jfree.data.*;
@@ -63,11 +64,9 @@ public class Chart {
 	static final int HORIZONTAL = 1;
 
 	String keyword = new String();
-	Motion motion;
 
-	public Chart(String kw, Motion motion) {
-		keyword = kw;
-		this.motion = motion;
+	public Chart() {
+		keyword = DataManager.getInstance().getKeyword();
 		// System.out.println(sqlop.countAllResult(keyword));
 		//barChart(SITE, "site.jpg", VERTICAL);
 		//lineChart(YEAR_gov, "year_gov.jpg");
@@ -79,7 +78,7 @@ public class Chart {
 		//pieChart(PATENT_type, "patent_type.jpg");
 		pieChart(SOURCE, "source.jpg");
 		//barChart(PATENT_applicant, "patent_applicant.jpg", HORIZONTAL);
-		lineChart(MOTION, "motion.jpg");
+		//lineChart(MOTION, "motion.jpg");
 		lineChart(YEAR_comments, "year_comments.jpg");
 	}
 /*
@@ -231,9 +230,8 @@ public class Chart {
 		HashMap<String, Integer> hashmap;
 		if (type == MOTION) {
 			hashmap =new HashMap();
-			Motion t = motion;
 			for (int i=0;i<=10;i++)
-				hashmap.put(Integer.toString(i-5), (Integer)t.get_count()[i]);
+				hashmap.put(Integer.toString(i-5), (Integer)DataManager.getInstance().getOpinionIndexDistribution()[i]);
 		} else {
 			hashmap = DatabaseHelper.count(keyword);
 		}
