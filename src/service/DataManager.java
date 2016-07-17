@@ -17,32 +17,25 @@ import entity.Record;
  * 该类用于暂存数据，以完成数据从计算部分到UI部分的传递。
  */
 public class DataManager {
-
-	static DataManager instance;
-	
-	public static DataManager getInstance(){
-		if(instance == null) return new DataManager();
-		else return instance;
-	}
 	
 	//关键词
-	private String keyword = null;
-	public String getKeyword(){
+	static private String keyword = null;
+	static public String getKeyword(){
 		if(keyword == null){
 			keyword = "";
 		}
 		return keyword;
 	}
-	public void setKeyword(String keyword){
-		if(keyword != null) this.keyword = keyword;
+	static public void setKeyword(String arg){
+		if(arg != null) keyword = arg;
 	}
-	public boolean haveKeyword(){
+	static public boolean haveKeyword(){
 		return keyword != null;
 	}
 	
 	//各类别记录
-	private List<Record> recordsAll = null;
-	public List<Record> getRecordsAll(){
+	static private List<Record> recordsAll = null;
+	static public List<Record> getRecordsAll(){
 		System.out.print("getRecordAll called\n");
 		if(recordsAll == null){
 			recordsAll = DatabaseHelper.search(getKeyword(), SearchType.ALL);
@@ -50,12 +43,9 @@ public class DataManager {
 		}
 		return recordsAll;
 	}
-	public void setRecordsAll(List<Record> recordsAll){
-		this.recordsAll = recordsAll;
-	}
 	
-	private List<Record> recordsGov = null;
-	public List<Record> getRecordsGov(){
+	static private List<Record> recordsGov = null;
+	static public List<Record> getRecordsGov(){
 		System.out.print("getRecordGov called\n");
 		if(recordsGov == null){
 			recordsGov = DatabaseHelper.search(getKeyword(), SearchType.GOV);
@@ -63,12 +53,9 @@ public class DataManager {
 		}
 		return recordsGov;
 	}
-	public void setRecordsGov(List<Record> recordsGov){
-		this.recordsGov = recordsGov;
-	}
 	
-	private List<Record> recordsMedia = null;
-	public List<Record> getRecordsMedia(){
+	static private List<Record> recordsMedia = null;
+	static public List<Record> getRecordsMedia(){
 		System.out.print("getRecordMedia called\n");
 		if(recordsMedia == null){
 			recordsMedia = DatabaseHelper.search(getKeyword(), SearchType.MEDIA);
@@ -76,12 +63,9 @@ public class DataManager {
 		}
 		return recordsMedia;
 	}
-	public void setRecordsMedia(List<Record> recordsMedia){
-		this.recordsMedia = recordsMedia;
-	}
 	
-	private List<Record> recordsPublic = null;
-	public List<Record> getRecordsPublic(){
+	static private List<Record> recordsPublic = null;
+	static public List<Record> getRecordsPublic(){
 		System.out.print("getRecordPublic called\n");
 		if(recordsPublic == null){
 			recordsPublic = DatabaseHelper.search(getKeyword(), SearchType.PUBLIC);
@@ -89,12 +73,9 @@ public class DataManager {
 		}
 		return recordsPublic;
 	}
-	public void setRecordsPublic(List<Record> recordsPublic){
-		this.recordsPublic = recordsPublic;
-	}
 	
-	private List<Record> recordsGovMedia = null;
-	public List<Record> getRecordsGovMedia(){
+	static private List<Record> recordsGovMedia = null;
+	static public List<Record> getRecordsGovMedia(){
 		System.out.print("getRecordGovMedia called\n");
 		if(recordsGovMedia == null){
 			recordsGovMedia = DatabaseHelper.search(getKeyword(), SearchType.GOVMEDIA);
@@ -103,35 +84,29 @@ public class DataManager {
 		}
 		return recordsGovMedia;
 	}
-	public void setRecordsGovMedia(List<Record> recordsGovMedia){
-		this.recordsGovMedia = recordsGovMedia;
-	}
 	
 	//各类别舆论评分，顺序为全网、政府、媒体、公众
-	private float[] opinionIndexes = null;
-	public float[] getOpinionIndex(){
+	static private float[] opinionIndexes = null;
+	static public float[] getOpinionIndex(){
 		System.out.print("getOpinionIndex called\n");
 		if(opinionIndexes == null){
 			Motion motion = new Motion();
-			float[] opinionIndexes = {
+			float[] tmp = {
 					motion.getAssessmentAve(RecordTrans.records2strings(getRecordsAll())),
 					motion.getAssessmentAve(RecordTrans.records2strings(getRecordsGov())),
 					motion.getAssessmentAve(RecordTrans.records2strings(getRecordsMedia())),
 					motion.getAssessmentAve(RecordTrans.records2strings(getRecordsPublic()))
 			};
-			this.opinionIndexes = opinionIndexes;
+			opinionIndexes = tmp;
 			System.out.print("OpinionIndex:");
-			System.out.print(opinionIndexes[0] + "\n");
+			System.out.print(tmp[0] + "\n");
 		}
 		return opinionIndexes;
 	}
-	public void setOpinionIndex(float[] opinionIndexes){
-		this.opinionIndexes = opinionIndexes;
-	}
 	
 	//各类别关键词，顺序为全网、政府、媒体、公众
-	private List<List<String>> keywords = null;
-	public List<List<String>> getKeywords(){
+	static private List<List<String>> keywords = null;
+	static public List<List<String>> getKeywords(){
 		System.out.print("getKeywords called\n");
 		if(keywords == null){
 			keywords = new ArrayList<List<String>>();
@@ -142,13 +117,10 @@ public class DataManager {
 		}
 		return keywords;
 	}
-	public void setKeywords(List<List<String>> keywords){
-		this.keywords = keywords;
-	}
 
 	//各类别记录数量，顺序为全网、政府、媒体、公众
-	private int[] recordNums = null;
-	public int[] getRecordNum(){
+	static private int[] recordNums = null;
+	static public int[] getRecordNum(){
 		System.out.print("getRecordNum called\n");
 		if(recordNums == null){
 			recordNums = new int[4];
@@ -159,26 +131,20 @@ public class DataManager {
 		}
 		return recordNums;
 	}
-	public void setRecordNum(int[] recordNum){
-		this.recordNums = recordNum;
-	}
 	
 	//各年份记录数量
-	private HashMap<String, Integer> yearRecordNums = null;
-	public HashMap<String, Integer> getYearRecordNums(){
+	static private HashMap<String, Integer> yearRecordNums = null;
+	static public HashMap<String, Integer> getYearRecordNums(){
 		System.out.print("getYearRecordNums called\n");
 		if(yearRecordNums == null){
 			yearRecordNums = DatabaseHelper.count(getKeyword());
 		}
 		return yearRecordNums;
 	}
-	public void setYearRecordNums(HashMap<String, Integer> yearRecordNums){
-		this.yearRecordNums = yearRecordNums;
-	}
 	
 	//舆情分数分布
-	private int[] opinionIndexDistribution = null;
-	public int[] getOpinionIndexDistribution(){
+	static private int[] opinionIndexDistribution = null;
+	static public int[] getOpinionIndexDistribution(){
 		System.out.print("getOpinionIndexDistribution called\n");
 		if(opinionIndexDistribution == null){
 			Motion motion = new Motion();
