@@ -68,7 +68,7 @@ public class Motion {
 	private float posMot = 0;
 	private float negMot = 0;
 	
-	protected float getAssessment(String s){
+	public float getAssessment(String s){
 		/*
 		 * 计算传入的字符串s的情感评估值
 		 */
@@ -86,13 +86,30 @@ public class Motion {
 		
 	}
 	
-	protected float getAssessmentAve(List<String> ls){
+	public float getAssessmentAve(List<String> ls){
 		int sum =0 ,len = ls.size();
 		for(int i=0 ;i<len;i++){
 			sum+=getAssessment(ls.get(i));
 		}
 		return (float)sum/len;
 	}
+	
+	
+	public int[] getAssessmentMap(List<String> ls){
+		int array[]=new int[11];
+		for(int i=0;i<11;i++)
+			array[i]=0;
+		
+		for(int i =0 , len = ls.size(); i < len ;i++){
+			float temp = getAssessment(ls.get(i));
+			int x = (int)(temp*10);
+			array[x]++;
+		}
+
+		return array;
+		
+	}
+	
 	
 	private void getMotion(ArrayList<wStruct> alwTemp) {
 		float pos=0, neg=0, plus=1;
