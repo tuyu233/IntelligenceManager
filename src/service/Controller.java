@@ -37,6 +37,8 @@ public class Controller {
 		records = DatabaseHelper.search(keyword, SearchType.PUBLIC);
 		keywords.add(service.keyword.Keyword.getKeyword(records, properties.Configure.KEYWORD_SIZE_NORMAL));
 		panel2.setResult(index, keywords);
+		
+		panel3.setResult(DatabaseHelper.search(keyword, SearchType.ALL));
 	}
 	
 	public static void makeReport(){
