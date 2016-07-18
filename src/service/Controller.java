@@ -21,12 +21,12 @@ import entity.Record;
 public class Controller {
 	
 	public static boolean isrunning = false;
-	private static Crawler crawler;
+	private static Crawler crawler = new Crawler();
 	public static void startCrawl(String keyword)
 	{
 		isrunning = true;
 		boolean[] options = {true,true,true,true,false,false};
-		crawler = new Crawler(keyword, options);
+		crawler.start(keyword, options);
 	}
 	
 	public static void stopCrawl()
