@@ -14,27 +14,18 @@ public class newTest {
 			InputStreamReader isr = new InputStreamReader(file,"gbk");
 			BufferedReader br = new BufferedReader (isr);
 			String sFile = null, stemp=null;
-			int i=1;
-			List<String> ls = new ArrayList<String>() ;
-			while(i<9){
-				i++;
-				sFile=null;
-				while((stemp=br.readLine())!=null){
-					if(stemp.equals(new Integer(i).toString()))
-						break;
-					sFile +=stemp;
-				}
-				ls.add(sFile);
+			while((stemp = br.readLine())!=null){
+				sFile += stemp;
 			}
 			file.close();
 			Motion nm = new Motion();
-			nm.DicInit();
-			int a[]=nm.getAssessmentMap(ls);
-			for( i =0 ;i<11;i++)
-				System.out.println(a[i]);
+			System.out.println(nm.getAssessment(null));
+			System.out.println(nm.getAssessmentAve(null));
+			nm.getAssessmentMap(null);
 		} catch (Exception e) {
 			e.printStackTrace();
-			
+
 		}
+		
 	}
 }
