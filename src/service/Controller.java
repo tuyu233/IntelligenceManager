@@ -5,7 +5,11 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import service.chart.Chart;
+import service.chart.tagcloud.TagCloud;
+import service.motion.Motion;
 import spider.helper.Crawler;
+import util.RecordTrans;
 import vision.AllData;
 import vision.MainWindow;
 import vision.ResultStatistic;
@@ -17,12 +21,12 @@ import entity.Record;
 public class Controller {
 	
 	public static boolean isrunning = false;
-	private static Crawler crawler;
+	private static Crawler crawler = new Crawler();
 	public static void startCrawl(String keyword)
 	{
 		isrunning = true;
 		boolean[] options = {true,true,true,true,false,false};
-		crawler = new Crawler(keyword, options);
+		crawler.start(keyword, options);
 	}
 	
 	public static void stopCrawl()
@@ -30,23 +34,17 @@ public class Controller {
 		isrunning = false;
 		crawler.stop();
 	}
-	
+
 	public static void showResult(String keyword, SearchResult panel1, ResultStatistic panel2, AllData panel3){
-		List<Record> records;
-		records = DatabaseHelper.search(keyword, SearchType.GOVMEDIA);
-		panel1.setResult(records);
 		
-		float[] index = {0.0f,0.0f,0.0f,0.0f};
-		List<List<String>> keywords = new ArrayList<List<String>>();
-		records = DatabaseHelper.search(keyword, SearchType.ALL);
-		keywords.add(service.keyword.Keyword.getKeyword(records, properties.Configure.KEYWORD_SIZE_WHOLEWEB));
-		records = DatabaseHelper.search(keyword, SearchType.GOV);
-		keywords.add(service.keyword.Keyword.getKeyword(records, properties.Configure.KEYWORD_SIZE_NORMAL));
-		records = DatabaseHelper.search(keyword, SearchType.MEDIA);
-		keywords.add(service.keyword.Keyword.getKeyword(records, properties.Configure.KEYWORD_SIZE_NORMAL));
-		records = DatabaseHelper.search(keyword, SearchType.PUBLIC);
-		keywords.add(service.keyword.Keyword.getKeyword(records, properties.Configure.KEYWORD_SIZE_NORMAL));
-		panel2.setResult(index, keywords);
+		DataManager.setKeyword(keyword);
+		
+		TagCloud.TagCloud(DataManager.getKeywords().get(0));
+		new Chart();
+		
+		panel1.setResult(DataManager.getRecordsGovMedia());
+		panel2.setResult(DataManager.getOpinionIndex(), DataManager.getKeywords());
+		panel3.setResult(DataManager.getRecordsAll());
 	}
 	
 	public static void makeReport(){

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import database.Pair;
-import service.motion.test;
 
 public class ChartData {
 	public String title = "title";

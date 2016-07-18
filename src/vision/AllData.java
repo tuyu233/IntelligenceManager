@@ -42,11 +42,11 @@ public class AllData extends JPanel
 		{
 			model.setValueAt(resultList.get(i).getType(), i, 0);
 			model.setValueAt(resultList.get(i).getTitle(), i, 1);
-			model.setValueAt(resultList.get(i).getSaveTime().toString().substring(0, 10), i, 2);
-			model.setValueAt(resultList.get(i).getAuthor(), i, 3);
-			model.setValueAt(resultList.get(i).getOther(), i, 4);
-			model.setValueAt(resultList.get(0).getContent(), i, 5);
-			model.setValueAt(resultList.get(i).getBaseUrl(), i,6);
+			model.setValueAt(resultList.get(i).getContent(), i, 2);
+			model.setValueAt(resultList.get(i).getSaveTime().toString().substring(0, 10), i, 3);
+			model.setValueAt(resultList.get(i).getBaseUrl(), i,4);
+			model.setValueAt(resultList.get(i).getAuthor(), i, 5);
+			model.setValueAt(resultList.get(i).getOther(), i, 6);
 		}
 		
 		menu = new JPopupMenu();
@@ -102,11 +102,10 @@ public class AllData extends JPanel
 		}
 
 		public String getColumnName(int n) {
-			String columnNames[] = { "类型", "标题", "时间", "作者", "其他",
-					"正文", "源地址" };
+			String columnNames[] = { "类型", "标题", "正文", "时间", "源地址", "作者", "其他"};
 			return columnNames[n];
 		}
 	};
 	
-
+	
 }
