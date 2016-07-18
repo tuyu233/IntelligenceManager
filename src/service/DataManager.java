@@ -3,6 +3,7 @@ package service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.mysql.jdbc.Util;
 
@@ -90,25 +91,106 @@ public class DataManager {
 		return recordsGovMedia;
 	}
 	
+	static private List<Record> recordsHottestYear = null;
+	static public List<Record> getRecordsHottestYear(){
+		if(recordsHottestYear == null){
+			recordsHottestYear = DatabaseHelper.search(getKeyword(), getHottestYear());
+		}
+		return recordsHottestYear;
+	}
+	
+	static private String hottestYear = null;
+	static public String getHottestYear(){
+		if(hottestYear == null){
+			Map<String, Integer> count = getYearRecordNums();
+			int max = 0;
+			for(int i=2016;i>2000;i--){
+				int tmp = 0;
+				if(count.get(Integer.toString(i))!=null) tmp = count.get(Integer.toString(i));
+				if(tmp>max){
+					max = tmp;
+					hottestYear = Integer.toString(i);
+				}
+			}
+		}
+		return hottestYear;
+	}
+
+	//各舆论分数段记录集
+	static private List<List<Record>> recordsOpinionIndexDistribution = null;
+	static public List<List<Record>> getRecordsOpinionIndexDistribution(){
+		if(recordsOpinionIndexDistribution == null){
+			ArrayList<List<Record>> tmp = new ArrayList<List<Record>>(11);
+			for(int i=0;i<11;i++) tmp.add(new ArrayList<Record>());
+			for (Record record : getRecordsAll()) {
+				int i = Math.round(Float.valueOf(record.getOther())*10);
+				tmp.get(i).add(record);
+			}
+			recordsOpinionIndexDistribution = tmp;
+		}
+		return recordsOpinionIndexDistribution;
+	}
+	
+	
 	//各类别舆论评分，顺序为全网、政府、媒体、公众
 	static private float[] opinionIndexes = null;
 	static public float[] getOpinionIndex(){
 		System.out.print("getOpinionIndex called\n");
 		if(opinionIndexes == null){
-			Motion motion = new Motion();
-			float indexAll = motion.getAssessmentAve(RecordTrans.records2strings(getRecordsAll()));
-			motion = new Motion();
-			float indexGov = motion.getAssessmentAve(RecordTrans.records2strings(getRecordsGov()));
-			motion = new Motion();
-			float indexMedia = motion.getAssessmentAve(RecordTrans.records2strings(getRecordsMedia()));
-			motion = new Motion();
-			float indexPublic = motion.getAssessmentAve(RecordTrans.records2strings(getRecordsPublic()));
+			float sum = 0;
+			for (Record record : getRecordsAll()) {
+				sum += Float.valueOf(record.getOther());
+			}
+			float indexAll = sum/getRecordsAll().size();
+			sum = 0;
+			for (Record record : getRecordsGov()) {
+				sum += Float.valueOf(record.getOther());
+			}
+			float indexGov = sum/getRecordsGov().size();
+			sum = 0;
+			for (Record record : getRecordsMedia()) {
+				sum += Float.valueOf(record.getOther());
+			}
+			float indexMedia = sum/getRecordsMedia().size();
+			sum = 0;
+			for (Record record : getRecordsPublic()) {
+				sum += Float.valueOf(record.getOther());
+			}
+			float indexPublic = sum/getRecordsPublic().size();
+			
 			float[] tmp = {indexAll, indexGov, indexMedia, indexPublic};
 			opinionIndexes = tmp;
 			System.out.print("OpinionIndex:");
 			System.out.print(tmp[0] +" "+ tmp[1] +" "+ tmp[2] +" "+ tmp[3] + "\n");
 		}
 		return opinionIndexes;
+	}
+	
+	//舆情分数分布
+	static private int[] opinionIndexDistribution = null;
+	static public int[] getOpinionIndexDistribution(){
+		System.out.print("getOpinionIndexDistribution called\n");
+		if(opinionIndexDistribution == null){
+			opinionIndexDistribution = new int[11];
+			for(int i=0;i<11;i++) opinionIndexDistribution[i] = 0;
+			for (Record record : getRecordsAll()) {
+				opinionIndexDistribution[Math.round(Float.valueOf(record.getOther())*10)]++;
+			}
+			System.out.print("OpinionIndexDistribution: ");
+			System.out.print(opinionIndexDistribution[0] +" "+ 
+					opinionIndexDistribution[1] +" "+ 
+					opinionIndexDistribution[2] +" "+ 
+					opinionIndexDistribution[3] +" "+ 
+					opinionIndexDistribution[4] +" "+ 
+					opinionIndexDistribution[5] +" "+ 
+					opinionIndexDistribution[6] +" "+ 
+					opinionIndexDistribution[7] +" "+ 
+					opinionIndexDistribution[8] +" "+ 
+					opinionIndexDistribution[9] +" "+ 
+					opinionIndexDistribution[10]);
+			System.out.print("\n");
+		}
+		return opinionIndexDistribution;
 	}
 	
 	//各类别关键词，顺序为全网、政府、媒体、公众
@@ -121,7 +203,13 @@ public class DataManager {
 			keywords.add(service.keyword.Keyword.getKeyword(getRecordsGov(), properties.Configure.KEYWORD_SIZE_NORMAL));
 			keywords.add(service.keyword.Keyword.getKeyword(getRecordsMedia(), properties.Configure.KEYWORD_SIZE_NORMAL));
 			keywords.add(service.keyword.Keyword.getKeyword(getRecordsPublic(), properties.Configure.KEYWORD_SIZE_NORMAL));
+			List<String> tmp = service.keyword.Keyword.getKeyword(getRecordsHottestYear(), properties.Configure.KEYWORD_SIZE_NORMAL);
+			tmp.add(0, getHottestYear());
+			keywords.add(tmp);
 		}
+		System.out.print("Hottest year keywords:");
+		System.out.print(keywords.get(4));
+		System.out.print("\n");
 		return keywords;
 	}
 
@@ -149,36 +237,15 @@ public class DataManager {
 		return yearRecordNums;
 	}
 	
-	//舆情分数分布
-	static private int[] opinionIndexDistribution = null;
-	static public int[] getOpinionIndexDistribution(){
-		System.out.print("getOpinionIndexDistribution called\n");
-		if(opinionIndexDistribution == null){
-			Motion motion = new Motion();
-			opinionIndexDistribution = motion.getAssessmentMap(RecordTrans.records2strings(getRecordsAll()));
-			System.out.print("OpinionIndexDistribution: ");
-			System.out.print(opinionIndexDistribution[0] +" "+ 
-					opinionIndexDistribution[1] +" "+ 
-					opinionIndexDistribution[2] +" "+ 
-					opinionIndexDistribution[3] +" "+ 
-					opinionIndexDistribution[4] +" "+ 
-					opinionIndexDistribution[5] +" "+ 
-					opinionIndexDistribution[6] +" "+ 
-					opinionIndexDistribution[7] +" "+ 
-					opinionIndexDistribution[8] +" "+ 
-					opinionIndexDistribution[9] +" "+ 
-					opinionIndexDistribution[10]);
-			System.out.print("\n");
-		}
-		return opinionIndexDistribution;
-	}
-	
 	static private void reset(){
 		recordsAll = null;
 		recordsGov = null;
 		recordsMedia = null;
 		recordsPublic = null;
 		recordsGovMedia = null;
+		recordsHottestYear = null;
+		hottestYear = null;
+		recordsOpinionIndexDistribution = null;
 		opinionIndexes = null;
 		keywords = null;
 		recordNums = null;

@@ -59,7 +59,9 @@ class wStruct{
 
 public class Motion {
 	
+	//负面词的系数
 	private static final int NEG_FACTOR = 2;
+	
 	/*
 	 * 计算某字符串的情感评估值 float getAssessment(String)
 		计算输入的所有字符串的情感评估值的平均值 float getAssessmentAve(List<String>)

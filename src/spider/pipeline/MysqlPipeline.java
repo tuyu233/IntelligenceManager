@@ -1,6 +1,7 @@
 package spider.pipeline;
 
 import service.DataManager;
+import service.motion.Motion;
 import spider.ResultItems;
 import spider.Task;
 import spider.pipeline.Pipeline;
@@ -121,11 +122,13 @@ public class MysqlPipeline implements Pipeline {
 			for (String comment : comments) {
 				//TODO 这里会出现评论重复写入数据库的情况，所以进行了修改，不知原写法作用何在故没有删去，若没用可及时删去 by qiji
 				//for (Date atime : times){
-					DatabaseHelper.save(new Record("公众", keyword, comment, url, times.get(comments.indexOf(comment)), author, other, 0));
-					//TODO 这里能不能将评论所在文章标题写入title？
+				other = Float.toString(Motion.getAssessment(comment));
+				DatabaseHelper.save(new Record("公众", keyword, comment, url, times.get(comments.indexOf(comment)), author, other, 0));
+				//TODO 这里能不能将评论所在文章标题写入title？
 				//}
 			}
 		} else if (content != null && !content.replaceAll("\n", "").equals("")){
+			other = Float.toString(Motion.getAssessment(content));
 			DatabaseHelper.save(new Record(type, title, content, url, time, author, other, 0));
 		}
 	}
