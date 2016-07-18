@@ -232,7 +232,8 @@ public class Chart {
 			hashmap =new HashMap();
 			int[] tmp = DataManager.getOpinionIndexDistribution();
 			for (int i=0;i<=10;i++)
-				hashmap.put(Integer.toString(i-5), (Integer)tmp[i]);
+				dataset.addValue((Integer)tmp[i], "year", Integer.toString(i-5));
+				//hashmap.put(Integer.toString(i-5), (Integer)tmp[i]);
 		} else {
 			hashmap = DataManager.getYearRecordNums();
 		}
