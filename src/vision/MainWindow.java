@@ -25,7 +25,6 @@ public class MainWindow
 	ResultStatistic tab_panel2;
 	AllData tab_panel3;
 	JButton search_button;
-	LoadingPanel loadingPanel;
 	JButton result_button;
 	
 	public MainWindow()
@@ -116,15 +115,18 @@ public class MainWindow
 			public void mouseClicked(MouseEvent arg0) {
 				super.mouseClicked(arg0);
 				if(getInput()!=null){
-					result_button.setText("正在处理");
+					result_button.setText(Attributes.RESULTBUTTON_PROCESSING);
 					result_button.invalidate();
 					result_button.repaint();
 					new Thread(new Runnable() {
 						
 						@Override
 						public void run() {
-							Controller.showResult(getInput(), tab_panel1, tab_panel2, tab_panel3, result_button);
-							
+							Controller.showResult(getInput(), tab_panel1, tab_panel2, tab_panel3);
+
+							result_button.setText(Attributes.RESULTBUTTON);
+							result_button.invalidate();
+							result_button.repaint();
 						}
 					}).start();
 				}
@@ -135,11 +137,6 @@ public class MainWindow
 		JPanel content_panel=new JPanel();
 		content_panel.setLayout(new BorderLayout());
 		frame_panel.add(content_panel,BorderLayout.CENTER);
-		
-		//加载标志
-		loadingPanel = new LoadingPanel();
-		content_panel.add(loadingPanel,BorderLayout.CENTER);
-		//loadingPanel.setVisible(false);
 		
 		JTabbedPane tab_pane=new JTabbedPane(JTabbedPane.TOP);
 		//tab_pane.setFont(Fonts.normal);
