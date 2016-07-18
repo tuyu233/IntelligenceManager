@@ -37,7 +37,7 @@ public class Controller {
 		crawler.stop();
 	}
 
-	public static void showResult(String keyword, SearchResult panel1, ResultStatistic panel2, AllData panel3, JButton result_button){
+	public static void showResult(String keyword, SearchResult panel1, ResultStatistic panel2, AllData panel3){
 		
 		DataManager.setKeyword(keyword);
 		
@@ -48,10 +48,6 @@ public class Controller {
 		panel2.setResult(DataManager.getOpinionIndex(), DataManager.getKeywords());
 		panel3.setResult(DataManager.getRecordsAll());
 		
-
-		result_button.setText("显示结果");
-		result_button.invalidate();
-		result_button.repaint();
 	}
 	
 	public static void makeReport(){
