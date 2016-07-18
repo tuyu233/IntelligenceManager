@@ -1,5 +1,6 @@
 package spider.pipeline;
 
+import service.DataManager;
 import spider.ResultItems;
 import spider.Task;
 import spider.pipeline.Pipeline;
@@ -115,12 +116,12 @@ public class MysqlPipeline implements Pipeline {
 			}
 
 		}
-		Record record = new Record();
 		if (comments != null) {
+			String keyword = DataManager.getKeyword() + "公众评论";
 			for (String comment : comments) {
 				//TODO 这里会出现评论重复写入数据库的情况，所以进行了修改，不知原写法作用何在故没有删去，若没用可及时删去 by qiji
 				//for (Date atime : times){
-					DatabaseHelper.save(new Record("公众", title, comment, url, times.get(comments.indexOf(comment)), author, other, 0));
+					DatabaseHelper.save(new Record("公众", keyword, comment, url, times.get(comments.indexOf(comment)), author, other, 0));
 					//TODO 这里能不能将评论所在文章标题写入title？
 				//}
 			}

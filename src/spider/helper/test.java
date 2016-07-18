@@ -12,7 +12,7 @@ public class test extends JFrame implements ActionListener {
 	JButton button0 = new JButton("start");
 	String key = "数控机床";
 	boolean[] option = { true, false, false, false, false, false };
-	Crawler crawler = new Crawler(key, option);
+	Crawler crawler = new Crawler();
 
 	public test() throws HeadlessException {
 		setSize(225, 80);
@@ -33,7 +33,7 @@ public class test extends JFrame implements ActionListener {
 			System.out.println("stop now!");
 		}
 		if (object == button0) {
-			crawler.start();
+			crawler.start(key, option);
 		}
 	}
 
