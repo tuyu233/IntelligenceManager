@@ -58,6 +58,8 @@ class wStruct{
 }
 
 public class Motion {
+	
+	int NEG_FACTOR = 2;
 	/*
 	 * 计算某字符串的情感评估值 float getAssessment(String)
 		计算输入的所有字符串的情感评估值的平均值 float getAssessmentAve(List<String>)
@@ -88,7 +90,7 @@ public class Motion {
 		if(posMot==0 && negMot==0)
 			return (float)0.5;
 		else 
-			return posMot/(posMot+negMot*3);
+			return posMot/(posMot+negMot*NEG_FACTOR);
 		
 	}
 	
@@ -102,7 +104,7 @@ public class Motion {
 			//System.out.println("i: "+i+" "+getAssessment(ls.get(i))+ " sum "+sum);
 		}
 		//System.out.println("sum: "+sum+" len: "+len);
-		return (float)(sum/len);
+		return (float)(((sum/len)-0.5)*10);
 	}
 	
 	
