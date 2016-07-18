@@ -68,10 +68,16 @@ public class Motion {
 	private float posMot = 0;
 	private float negMot = 0;
 	
+	public Motion(){
+		DicInit();
+	}
+	
 	public float getAssessment(String s){
 		/*
 		 * 计算传入的字符串s的情感评估值
 		 */
+		if(s==null)
+			return (float)0.5;
 		String [] sArray = stringIntoWord(s);//分成句号为单位
 		for(int i = 0, len = sArray.length , posMot = 0 , negMot = 0 ; i < len ; i++){
 			ArrayList<fStruct> alfTemp = getWord(sArray[i]);//一句话分成单词为单位
@@ -87,6 +93,8 @@ public class Motion {
 	}
 	
 	public float getAssessmentAve(List<String> ls){
+		if(ls==null)
+			return (float)0.5;
 		int sum =0 ,len = ls.size();
 		for(int i=0 ;i<len;i++){
 			sum+=getAssessment(ls.get(i));
@@ -96,6 +104,8 @@ public class Motion {
 	
 	
 	public int[] getAssessmentMap(List<String> ls){
+		if(ls==null)
+			return null;
 		int array[]=new int[11];
 		for(int i=0;i<11;i++)
 			array[i]=0;
@@ -184,6 +194,9 @@ public class Motion {
 	}
 	
 	protected void DicInit(){
+		/*
+		 * 将 词典存入map中
+		 */
 		FileInputStream file1 = null,file2 = null, file3 = null, file4 =null,file5 =null,file6 = null;
 		try {
 			file1= new FileInputStream("./resource/dict/term.txt");
