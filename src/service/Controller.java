@@ -42,7 +42,7 @@ public class Controller {
 		TagCloud.TagCloud(DataManager.getKeywords().get(0));
 		new Chart();
 		
-		panel1.setResult(DataManager.getRecordsGovMedia());
+		panel1.setResult(DataManager.getRecordsAll());
 		panel2.setResult(DataManager.getOpinionIndex(), DataManager.getKeywords());
 		panel3.setResult(DataManager.getRecordsAll());
 	}
