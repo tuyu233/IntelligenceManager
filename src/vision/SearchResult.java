@@ -48,14 +48,17 @@ public class SearchResult extends JPanel
 	private JTable searchResultTable;
 	private CheckBox filter;
 	private JScrollPane scroll;
+	private void updateTable()
+	{
+		
+	}
 	public void setResult(List<Record> resultList)
 	{
 		this.resultList=resultList;
 		
 		int resultSize=resultList.size();//TODO resultSize
 		
-		this.setLayout(new BorderLayout());
-		searchResultTable=new JTable();
+		Box vertBox = Box.createVerticalBox();
 		filter = new CheckBox();
 		scroll = new JScrollPane(searchResultTable);
 		MyTableModel model = new MyTableModel(resultSize,2);
@@ -70,8 +73,9 @@ public class SearchResult extends JPanel
 		searchResultTable.getColumnModel().getColumn(0).setCellEditor(editor);
 		searchResultTable.getColumnModel().getColumn(1).setCellEditor(new myButtonEditor(new JCheckBox()));
 		updateRowHeights();
-		this.add(filter,BorderLayout.NORTH);
-		this.add(scroll,BorderLayout.CENTER);
+		vertBox.add(filter,BorderLayout.NORTH);
+		vertBox.add(scroll,BorderLayout.CENTER);
+		this.add(vertBox);
 		this.validate();
 		this.repaint();
 	}
