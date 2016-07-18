@@ -46,7 +46,8 @@ public class SearchResult extends JPanel
 {
 	private List<Record> resultList; 
 	private JTable searchResultTable;
-	
+	private CheckBox filter;
+	private JScrollPane scroll;
 	public void setResult(List<Record> resultList)
 	{
 		this.resultList=resultList;
@@ -55,6 +56,8 @@ public class SearchResult extends JPanel
 		
 		this.setLayout(new BorderLayout());
 		searchResultTable=new JTable();
+		filter = new CheckBox();
+		scroll = new JScrollPane(searchResultTable);
 		MyTableModel model = new MyTableModel(resultSize,2);
 		MyTableCellRenderer renderer = new MyTableCellRenderer();
 		myTableCellEditor editor = new myTableCellEditor(new JCheckBox());
@@ -67,8 +70,8 @@ public class SearchResult extends JPanel
 		searchResultTable.getColumnModel().getColumn(0).setCellEditor(editor);
 		searchResultTable.getColumnModel().getColumn(1).setCellEditor(new myButtonEditor(new JCheckBox()));
 		updateRowHeights();
-		this.add(searchResultTable,BorderLayout.CENTER);
-		
+		this.add(filter,BorderLayout.NORTH);
+		this.add(scroll,BorderLayout.CENTER);
 		this.validate();
 		this.repaint();
 	}
@@ -91,7 +94,7 @@ public class SearchResult extends JPanel
 			JPanel tmp_panel=new JPanel();
 			tmp_panel.setLayout(null);
 			JButton tmp_button=new JButton(Attributes.WHOLEPASSAGE);
-			tmp_button.setBounds(0,30,100,30);
+			tmp_button.setBounds(0,10,100,30);
 			tmp_button.setFont(Fonts.searchButton);
 			tmp_panel.add(tmp_button);
 			return tmp_panel;
@@ -131,7 +134,7 @@ public class SearchResult extends JPanel
 			line2.add(time);
 			JLabel url = new JLabel();
 			String baseUrl = resultList.get(row).getBaseUrl();
-			url.setText("<html>"+baseUrl+"<html>");
+			url.setText("<html>"+baseUrl+"<html>" + " 双击打开原网页");
 			url.setFont(Fonts.normal);
 			url.setForeground(Colors.URL_COLOR);
 			
@@ -196,7 +199,7 @@ public class SearchResult extends JPanel
 			line2.add(time);
 			JLabel url = new JLabel();
 			String baseUrl = resultList.get(row).getBaseUrl();
-			url.setText("<html>"+baseUrl+"<html>");
+			url.setText("<html>"+baseUrl+"<html>" + " 双击打开原网页");
 			url.setFont(Fonts.normal);
 			url.setForeground(Colors.URL_COLOR);		
 			try {
@@ -280,7 +283,7 @@ public class SearchResult extends JPanel
 		        });
 	    	  
 				tmp_panel.setLayout(null);
-		    	tmp_button.setBounds(0,30,100,30);
+		    	tmp_button.setBounds(0,10,100,30);
 				tmp_panel.add(tmp_button);
 				return tmp_panel;
 	      }

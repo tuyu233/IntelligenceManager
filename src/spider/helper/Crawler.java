@@ -31,13 +31,9 @@ public class Crawler {
 	String[] website = { "www.most.gov.cn", "www.miit.gov.cn",
 			"www.sdpc.gov.cn" };
 
-	public Crawler(String key, boolean[] option) {
+	public void start(String key, boolean[] option) {
 		this.key = key;
 		this.option = option;
-		start();
-	}
-
-	public void start() {
 
 		if (option[5] == true) {
 			spider4 = Spider.create(new Ifengnews());

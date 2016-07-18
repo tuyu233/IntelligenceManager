@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import service.DataManager;
 import service.motion.Motion;
 
 import org.jfree.data.*;
@@ -63,11 +64,9 @@ public class Chart {
 	static final int HORIZONTAL = 1;
 
 	String keyword = new String();
-	Motion motion;
 
-	public Chart(String kw, Motion motion) {
-		keyword = kw;
-		this.motion = motion;
+	public Chart() {
+		keyword = DataManager.getKeyword();
 		// System.out.println(sqlop.countAllResult(keyword));
 		//barChart(SITE, "site.jpg", VERTICAL);
 		//lineChart(YEAR_gov, "year_gov.jpg");
@@ -231,11 +230,11 @@ public class Chart {
 		HashMap<String, Integer> hashmap;
 		if (type == MOTION) {
 			hashmap =new HashMap();
-			Motion t = motion;
+			int[] tmp = DataManager.getOpinionIndexDistribution();
 			for (int i=0;i<=10;i++)
-				hashmap.put(Integer.toString(i-5), (Integer)t.get_count()[i]);
+				hashmap.put(Integer.toString(i-5), (Integer)tmp[i]);
 		} else {
-			hashmap = DatabaseHelper.count(keyword);
+			hashmap = DataManager.getYearRecordNums();
 		}
 		List<Map.Entry<String, Integer>> entry = new ArrayList<Map.Entry<String, Integer>>(
 				hashmap.entrySet());
@@ -324,9 +323,10 @@ public class Chart {
 		for (Map.Entry<String, Integer> i : entry) {
 			dataset.setValue(i.getKey(), i.getValue());
 		}*/
-		dataset.setValue("政府", DatabaseHelper.count(keyword, SearchType.GOV));
-		dataset.setValue("媒体", DatabaseHelper.count(keyword, SearchType.MEDIA));
-		dataset.setValue("公众", DatabaseHelper.count(keyword, SearchType.PUBLIC));
+		int[] recordNums = DataManager.getRecordNum();
+		dataset.setValue("政府", recordNums[1]);
+		dataset.setValue("媒体", recordNums[2]);
+		dataset.setValue("公众", recordNums[3]);
 
 		return dataset;
 	}

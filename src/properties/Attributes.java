@@ -12,6 +12,8 @@ public class Attributes
 	
 	public static final String SEARCHBUTTON = "搜索";
 	
+	public static final String STOPBUTTON = "停止";
+	
 	public static final String RESULTBUTTON = "显示结果";
 	
 	public static final String SEARCHRESULTTAB = "搜索结果";

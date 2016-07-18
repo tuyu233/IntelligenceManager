@@ -107,8 +107,5 @@ public class AllData extends JPanel
 		}
 	};
 	
-	public AllData() 
-	{
-		
-	}
+	
 }
