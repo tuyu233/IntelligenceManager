@@ -24,6 +24,8 @@ public class MainWindow
 	SearchResult tab_panel1;
 	ResultStatistic tab_panel2;
 	AllData tab_panel3;
+	JButton search_button;
+	
 	public MainWindow()
 	{
 		setLookAndFeel();
@@ -81,24 +83,38 @@ public class MainWindow
 		button_panel.setLayout(new GridLayout(1,2));
 		searchBar_panel.add(button_panel);
 		
-		JButton search_button=new JButton(Attributes.SEARCHBUTTON);
+		search_button=new JButton();
+		search_button.setText(Attributes.SEARCHBUTTON);
+		search_button.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e){
+				if(Controller.isrunning){
+					search_button.setText(Attributes.SEARCHBUTTON);
+					if(getInput()!=null)
+						Controller.stopCrawl();
+				}
+				else{
+					search_button.setText(Attributes.STOPBUTTON);
+					Controller.startCrawl(getInput());
+				}
+
+				search_button.invalidate();
+				search_button.repaint();
+			}
+		});
+			
 		button_panel.add(search_button);
 		JButton result_button=new JButton(Attributes.RESULTBUTTON);
 		button_panel.add(result_button);
 		search_button.setFont(Fonts.normal);
 		result_button.setFont(Fonts.normal);
-		search_button.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				super.mouseClicked(arg0);
-				Controller.startCrawl(getInput());
-			}
-		});
+		
 		result_button.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				super.mouseClicked(arg0);
-				Controller.showResult(getInput(), tab_panel1, tab_panel2, tab_panel3);
+				if(getInput()!=null)
+					Controller.showResult(getInput(), tab_panel1, tab_panel2, tab_panel3);
 			}
 		});
 		
@@ -113,8 +129,7 @@ public class MainWindow
 		
 		//三个tab(搜索结果)
 		tab_panel1=new SearchResult();
-		JScrollPane tab1 = new JScrollPane(tab_panel1);
-		tab_pane.addTab(Attributes.SEARCHRESULTTAB, null,tab1,null);
+		tab_pane.addTab(Attributes.SEARCHRESULTTAB, null,tab_panel1,null);
 		
 		//结果统计
 		tab_panel2 = new ResultStatistic();

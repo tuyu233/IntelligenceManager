@@ -16,11 +16,21 @@ import entity.Record;
 
 public class Controller {
 	
-	public static void startCrawl(String keyword){
+	public static boolean isrunning = false;
+	private static Crawler crawler;
+	public static void startCrawl(String keyword)
+	{
+		isrunning = true;
 		boolean[] options = {true,true,true,true,false,false};
-		new Crawler(keyword, options);
+		crawler = new Crawler(keyword, options);
 	}
-
+	
+	public static void stopCrawl()
+	{
+		isrunning = false;
+		crawler.stop();
+	}
+	
 	public static void showResult(String keyword, SearchResult panel1, ResultStatistic panel2, AllData panel3){
 		List<Record> records;
 		records = DatabaseHelper.search(keyword, SearchType.GOVMEDIA);
