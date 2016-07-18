@@ -88,18 +88,21 @@ public class Motion {
 		if(posMot==0 && negMot==0)
 			return (float)0.5;
 		else 
-			return posMot/(posMot+negMot);
+			return posMot/(posMot+negMot*3);
 		
 	}
 	
 	public float getAssessmentAve(List<String> ls){
 		if(ls==null)
 			return (float)0.5;
-		int sum =0 ,len = ls.size();
+		float sum =0 ;
+		int len = ls.size();
 		for(int i=0 ;i<len;i++){
-			sum+=getAssessment(ls.get(i));
+			sum = sum + getAssessment(ls.get(i));
+			//System.out.println("i: "+i+" "+getAssessment(ls.get(i))+ " sum "+sum);
 		}
-		return (float)sum/len;
+		//System.out.println("sum: "+sum+" len: "+len);
+		return (float)(sum/len);
 	}
 	
 	
@@ -125,7 +128,7 @@ public class Motion {
 		float pos=0, neg=0, plus=1;
 		int not=0;
 		for(int i=0 , len = alwTemp.size() ;i < len ;i++){
-			System.out.println(alwTemp.get(i).sw1);
+			//System.out.println(alwTemp.get(i).sw1);
 			if(alwTemp.get(i).type==3){
 				plus=alwTemp.get(i).level;
 			}else if(alwTemp.get(i).type==2 || (alwTemp.get(i).type==1 && not==1)){
