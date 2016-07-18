@@ -144,6 +144,8 @@ public class Motion {
 	}
 
 	private ArrayList<wStruct> getSeq( ArrayList<fStruct> alTemp ){
+		if(alTemp==null)
+			return null;
 		ArrayList<wStruct> alw = new ArrayList<wStruct>();
 		for(int i = 0, len = alTemp.size(); i < len ; i++){
 			if((map.get(alTemp.get(i).sw1))!=null){
@@ -170,25 +172,20 @@ public class Motion {
 		/*
 		 * 把s这一句话的词用hanlp的分词工具分为单词的形式 
 		 */
+		if(s==null)
+			return null;
+		String s0=null;
 		ArrayList<fStruct> al = new ArrayList<fStruct>();
 		List<Term> termList = IndexTokenizer.segment(s);
-		int i=-1;
-		String s0 = null;
 		for (Term term : termList){
 			String[] sa = term.toString().split("/");
 			fStruct fSTemp = new fStruct();
 			fSTemp.sw1=sa[0];
 			fSTemp.sw2=sa[1];
-			if(sa[0].equals("的") && al!=null){
-				al.get(i).sw1+="的";
+			if(fSTemp.sw1.equals("改革")){
 				continue;
 			}
-			if(fSTemp.sw1.equals("改革"))
-				continue;
-			//System.out.println(fSTemp.sw1);
 			al.add(fSTemp);
-			s0=fSTemp.sw1;
-			i++;
 		}
 		return al;
 	}
@@ -255,6 +252,7 @@ public class Motion {
 			ds.level=0;
 			ds.type=4;
 			map.put("不", ds);
+			
 			while((sTmp1 = br6.readLine())!=null){
 				ds = new DicStruct ();
 				ds.type=5;//假设关联词
@@ -263,19 +261,35 @@ public class Motion {
 			/*
 			 * 临时添加区域
 			 */
+			addW("不是",4,0);
+			addW("非",4,0);
+			addW("并非",4,0);
 			addW("支持",1,5);
 			addW("反对",2,5);
 			addW("同意",1,5);
-			addW("好的",1,5);
 			addW("难道",4,0);
 			addW("怎么",4,0);
-			addW("对的",1,5);
+			/*
+			 * 临时删除区域
+			 */
+			removeW("建设");
+			removeW("智慧");
+			removeW("专家");
+			removeW("节约");
+			removeW("标准");
+			removeW("发达");
+			removeW("大方");
+			removeW("准绳");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	private void removeW(String s){
+		map.remove(s);
+	}
+	
 	private void addW(String s,int type,float level) {
 		// TODO Auto-generated method stub
 		DicStruct ds = new DicStruct();
