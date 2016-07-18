@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -29,9 +30,9 @@ public class ResultStatistic extends JPanel
 		module2Reset();
 		module3Reset();
 	
+		this.invalidate();
+		this.repaint();
 		this.setVisible(true);
-		//this.invalidate();
-		//this.repaint();
 	}
 	private float[] index;
 	private List<List<String>> keywords;
@@ -53,10 +54,11 @@ public class ResultStatistic extends JPanel
 	}
 	private void module1Reset()
 	{
-		label[1].setText(Float.toString(index[0]));//全网评分
-		label[3].setText(Float.toString(index[1]));//政府评分
-		label[5].setText(Float.toString(index[2]));//媒体评分
-		label[7].setText(Float.toString(index[3]));//公众评分
+		DecimalFormat df =new DecimalFormat("0.00");
+		label[1].setText(df.format(index[0]));//全网评分
+		label[3].setText(df.format(index[1]));//政府评分
+		label[5].setText(df.format(index[2]));//媒体评分
+		label[7].setText(df.format(index[3]));//公众评分
 	}
 	private void module1Setup()
 	{
