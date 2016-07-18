@@ -115,6 +115,22 @@ public class DataManager {
 		}
 		return hottestYear;
 	}
+
+	//各舆论分数段记录集
+	static private List<List<Record>> recordsOpinionIndexDistribution = null;
+	static public List<List<Record>> getRecordsOpinionIndexDistribution(){
+		if(recordsOpinionIndexDistribution == null){
+			ArrayList<List<Record>> tmp = new ArrayList<List<Record>>(11);
+			for(int i=0;i<11;i++) tmp.add(new ArrayList<Record>());
+			for (Record record : getRecordsAll()) {
+				int i = Math.round(Float.valueOf(record.getOther())*10);
+				tmp.get(i).add(record);
+			}
+			recordsOpinionIndexDistribution = tmp;
+		}
+		return recordsOpinionIndexDistribution;
+	}
+	
 	
 	//各类别舆论评分，顺序为全网、政府、媒体、公众
 	static private float[] opinionIndexes = null;
@@ -148,6 +164,33 @@ public class DataManager {
 			System.out.print(tmp[0] +" "+ tmp[1] +" "+ tmp[2] +" "+ tmp[3] + "\n");
 		}
 		return opinionIndexes;
+	}
+	
+	//舆情分数分布
+	static private int[] opinionIndexDistribution = null;
+	static public int[] getOpinionIndexDistribution(){
+		System.out.print("getOpinionIndexDistribution called\n");
+		if(opinionIndexDistribution == null){
+			opinionIndexDistribution = new int[11];
+			for(int i=0;i<11;i++) opinionIndexDistribution[i] = 0;
+			for (Record record : getRecordsAll()) {
+				opinionIndexDistribution[Math.round(Float.valueOf(record.getOther())*10)]++;
+			}
+			System.out.print("OpinionIndexDistribution: ");
+			System.out.print(opinionIndexDistribution[0] +" "+ 
+					opinionIndexDistribution[1] +" "+ 
+					opinionIndexDistribution[2] +" "+ 
+					opinionIndexDistribution[3] +" "+ 
+					opinionIndexDistribution[4] +" "+ 
+					opinionIndexDistribution[5] +" "+ 
+					opinionIndexDistribution[6] +" "+ 
+					opinionIndexDistribution[7] +" "+ 
+					opinionIndexDistribution[8] +" "+ 
+					opinionIndexDistribution[9] +" "+ 
+					opinionIndexDistribution[10]);
+			System.out.print("\n");
+		}
+		return opinionIndexDistribution;
 	}
 	
 	//各类别关键词，顺序为全网、政府、媒体、公众
@@ -194,33 +237,6 @@ public class DataManager {
 		return yearRecordNums;
 	}
 	
-	//舆情分数分布
-	static private int[] opinionIndexDistribution = null;
-	static public int[] getOpinionIndexDistribution(){
-		System.out.print("getOpinionIndexDistribution called\n");
-		if(opinionIndexDistribution == null){
-			opinionIndexDistribution = new int[11];
-			for(int i=0;i<11;i++) opinionIndexDistribution[i] = 0;
-			for (Record record : getRecordsAll()) {
-				opinionIndexDistribution[Math.round(Float.valueOf(record.getOther())*10)]++;
-			}
-			System.out.print("OpinionIndexDistribution: ");
-			System.out.print(opinionIndexDistribution[0] +" "+ 
-					opinionIndexDistribution[1] +" "+ 
-					opinionIndexDistribution[2] +" "+ 
-					opinionIndexDistribution[3] +" "+ 
-					opinionIndexDistribution[4] +" "+ 
-					opinionIndexDistribution[5] +" "+ 
-					opinionIndexDistribution[6] +" "+ 
-					opinionIndexDistribution[7] +" "+ 
-					opinionIndexDistribution[8] +" "+ 
-					opinionIndexDistribution[9] +" "+ 
-					opinionIndexDistribution[10]);
-			System.out.print("\n");
-		}
-		return opinionIndexDistribution;
-	}
-	
 	static private void reset(){
 		recordsAll = null;
 		recordsGov = null;
@@ -229,6 +245,7 @@ public class DataManager {
 		recordsGovMedia = null;
 		recordsHottestYear = null;
 		hottestYear = null;
+		recordsOpinionIndexDistribution = null;
 		opinionIndexes = null;
 		keywords = null;
 		recordNums = null;
