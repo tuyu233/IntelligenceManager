@@ -25,6 +25,7 @@ public class Controller {
 	private static Crawler crawler = new Crawler();
 	public static void startCrawl(String keyword)
 	{
+		DataManager.setKeyword(keyword);
 		isrunning = true;
 		boolean[] options = {true,true,true,true,false,false};
 		crawler.start(keyword, options);

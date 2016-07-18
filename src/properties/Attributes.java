@@ -16,6 +16,8 @@ public class Attributes
 	
 	public static final String RESULTBUTTON = "显示结果";
 	
+	public static final String RESULTBUTTON_PROCESSING = "正在处理";
+	
 	public static final String SEARCHRESULTTAB = "搜索结果";
 	
 	public static final String RESULTSTATISTIC = "结果统计";
