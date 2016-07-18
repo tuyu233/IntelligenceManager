@@ -27,7 +27,12 @@ public class DataManager {
 		return keyword;
 	}
 	static public void setKeyword(String arg){
-		if(arg != null) keyword = arg;
+		if(arg != null){
+			if(arg != keyword){
+				keyword = arg;
+				reset();
+			}
+		}
 	}
 	static public boolean haveKeyword(){
 		return keyword != null;
@@ -39,7 +44,7 @@ public class DataManager {
 		System.out.print("getRecordAll called\n");
 		if(recordsAll == null){
 			recordsAll = DatabaseHelper.search(getKeyword(), SearchType.ALL);
-			System.out.print("RecordsAll get!\n");
+			System.out.print("RecordsAll get! List size:" + recordsAll.size() +"\n");
 		}
 		return recordsAll;
 	}
@@ -91,15 +96,17 @@ public class DataManager {
 		System.out.print("getOpinionIndex called\n");
 		if(opinionIndexes == null){
 			Motion motion = new Motion();
-			float[] tmp = {
-					motion.getAssessmentAve(RecordTrans.records2strings(getRecordsAll())),
-					motion.getAssessmentAve(RecordTrans.records2strings(getRecordsGov())),
-					motion.getAssessmentAve(RecordTrans.records2strings(getRecordsMedia())),
-					motion.getAssessmentAve(RecordTrans.records2strings(getRecordsPublic()))
-			};
+			float indexAll = motion.getAssessmentAve(RecordTrans.records2strings(getRecordsAll()));
+			motion = new Motion();
+			float indexGov = motion.getAssessmentAve(RecordTrans.records2strings(getRecordsGov()));
+			motion = new Motion();
+			float indexMedia = motion.getAssessmentAve(RecordTrans.records2strings(getRecordsMedia()));
+			motion = new Motion();
+			float indexPublic = motion.getAssessmentAve(RecordTrans.records2strings(getRecordsPublic()));
+			float[] tmp = {indexAll, indexGov, indexMedia, indexPublic};
 			opinionIndexes = tmp;
 			System.out.print("OpinionIndex:");
-			System.out.print(tmp[0] + "\n");
+			System.out.print(tmp[0] +" "+ tmp[1] +" "+ tmp[2] +" "+ tmp[3] + "\n");
 		}
 		return opinionIndexes;
 	}
@@ -150,11 +157,32 @@ public class DataManager {
 			Motion motion = new Motion();
 			opinionIndexDistribution = motion.getAssessmentMap(RecordTrans.records2strings(getRecordsAll()));
 			System.out.print("OpinionIndexDistribution: ");
-			System.out.print(opinionIndexDistribution[0]);
+			System.out.print(opinionIndexDistribution[0] +" "+ 
+					opinionIndexDistribution[1] +" "+ 
+					opinionIndexDistribution[2] +" "+ 
+					opinionIndexDistribution[3] +" "+ 
+					opinionIndexDistribution[4] +" "+ 
+					opinionIndexDistribution[5] +" "+ 
+					opinionIndexDistribution[6] +" "+ 
+					opinionIndexDistribution[7] +" "+ 
+					opinionIndexDistribution[8] +" "+ 
+					opinionIndexDistribution[9] +" "+ 
+					opinionIndexDistribution[10]);
 			System.out.print("\n");
 		}
 		return opinionIndexDistribution;
 	}
 	
-	
+	static private void reset(){
+		recordsAll = null;
+		recordsGov = null;
+		recordsMedia = null;
+		recordsPublic = null;
+		recordsGovMedia = null;
+		opinionIndexes = null;
+		keywords = null;
+		recordNums = null;
+		yearRecordNums = null;
+		opinionIndexDistribution = null;
+	}
 }
