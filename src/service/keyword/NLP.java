@@ -1,7 +1,10 @@
  package service.keyword;
 
 import java.util.*;
+
 import com.hankcs.hanlp.*;
+
+import entity.Record;
 
 public class NLP 
 {
@@ -25,5 +28,13 @@ public class NLP
 				summary += "\n";
 		}
 		return summary;
+	}
+	
+	//多文本摘要
+	public static String recordsSummary(List<Record> records){
+		List<String> summaries = HanLP.extractSummary(util.RecordTrans.records2string(records), records.size()*3);
+		StringBuffer sb = new StringBuffer();
+		sb.append(summaries);
+		return sb.toString();
 	}
 }
