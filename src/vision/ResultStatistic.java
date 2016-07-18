@@ -6,8 +6,6 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -18,9 +16,6 @@ import javax.swing.border.EtchedBorder;
 
 import properties.Attributes;
 import properties.Fonts;
-import service.chart.tagcloud.Configuration;
-import service.chart.tagcloud.TagCloudGenerator;
-import service.chart.tagcloud.TagCloudHelper;
 
 public class ResultStatistic extends JPanel
 {

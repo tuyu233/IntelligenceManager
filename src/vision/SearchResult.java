@@ -131,7 +131,7 @@ public class SearchResult extends JPanel
 			line2.add(time);
 			JLabel url = new JLabel();
 			String baseUrl = resultList.get(row).getBaseUrl();
-			url.setText("<html>"+baseUrl+"<html>");
+			url.setText("<html>"+baseUrl+"<html>" + " 双击打开原网页");
 			url.setFont(Fonts.normal);
 			url.setForeground(Colors.URL_COLOR);
 			
@@ -196,7 +196,7 @@ public class SearchResult extends JPanel
 			line2.add(time);
 			JLabel url = new JLabel();
 			String baseUrl = resultList.get(row).getBaseUrl();
-			url.setText("<html>"+baseUrl+"<html>");
+			url.setText("<html>"+baseUrl+"<html>" + " 双击打开原网页");
 			url.setFont(Fonts.normal);
 			url.setForeground(Colors.URL_COLOR);		
 			try {
