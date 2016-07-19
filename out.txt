@@ -1,0 +1,258 @@
+Make report
+getRecordNum called
+getRecordAll called
+Hibernate: ALTER TABLE `record` CHANGE `content` `content` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+Hibernate: ALTER TABLE `record` CHANGE `title` `title` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+Hibernate: ALTER TABLE `record` CHANGE `author` `author` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+Hibernate: ALTER TABLE `record` CHANGE `type` `type` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+Hibernate: ALTER TABLE `record` CHANGE `other` `other` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+Hibernate: ALTER TABLE `record` CHANGE `baseUrl` `baseUrl` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+Hibernate: select record0_.id as id1_0_, record0_.baseUrl as baseUrl2_0_, record0_.content as content3_0_, record0_.title as title4_0_, record0_.author as author5_0_, record0_.saveTime as saveTime6_0_, record0_.type as type7_0_, record0_.access as access8_0_, record0_.other as other9_0_ from record record0_ where record0_.content like '%%' or record0_.title like '%%' order by record0_.saveTime desc
+RecordsAll get! List size:129
+getRecordGov called
+Hibernate: select record0_.id as id1_0_, record0_.baseUrl as baseUrl2_0_, record0_.content as content3_0_, record0_.title as title4_0_, record0_.author as author5_0_, record0_.saveTime as saveTime6_0_, record0_.type as type7_0_, record0_.access as access8_0_, record0_.other as other9_0_ from record record0_ where (record0_.content like '%%' or record0_.title like '%%') and record0_.type='政府' order by record0_.saveTime desc
+RecordsGov get!
+getRecordMedia called
+Hibernate: select record0_.id as id1_0_, record0_.baseUrl as baseUrl2_0_, record0_.content as content3_0_, record0_.title as title4_0_, record0_.author as author5_0_, record0_.saveTime as saveTime6_0_, record0_.type as type7_0_, record0_.access as access8_0_, record0_.other as other9_0_ from record record0_ where (record0_.content like '%%' or record0_.title like '%%') and record0_.type='媒体' order by record0_.saveTime desc
+RecordsMedia get!
+getRecordPublic called
+Hibernate: select record0_.id as id1_0_, record0_.baseUrl as baseUrl2_0_, record0_.content as content3_0_, record0_.title as title4_0_, record0_.author as author5_0_, record0_.saveTime as saveTime6_0_, record0_.type as type7_0_, record0_.access as access8_0_, record0_.other as other9_0_ from record record0_ where (record0_.content like '%%' or record0_.title like '%%') and record0_.type='公众' order by record0_.saveTime desc
+RecordsPublic get!
+getRecordNum called
+getRecordNum called
+getRecordAll called
+getOpinionIndexDistribution called
+getRecordAll called
+OpinionIndexDistribution: 8 0 5 4 13 35 9 10 5 7 33
+getOpinionIndexDistribution called
+getKeywords called
+getRecordAll called
+getRecordGov called
+getRecordMedia called
+getRecordPublic called
+getYearRecordNums called
+Hibernate: select record0_.id as id1_0_, record0_.baseUrl as baseUrl2_0_, record0_.content as content3_0_, record0_.title as title4_0_, record0_.author as author5_0_, record0_.saveTime as saveTime6_0_, record0_.type as type7_0_, record0_.access as access8_0_, record0_.other as other9_0_ from record record0_ where record0_.content like '%%' or record0_.title like '%%'
+Hibernate: select record0_.id as id1_0_, record0_.baseUrl as baseUrl2_0_, record0_.content as content3_0_, record0_.title as title4_0_, record0_.author as author5_0_, record0_.saveTime as saveTime6_0_, record0_.type as type7_0_, record0_.access as access8_0_, record0_.other as other9_0_ from record record0_ where (record0_.content like '%%' or record0_.title like '%%') and record0_.saveTime>=? and record0_.saveTime<? order by record0_.saveTime desc
+Hottest year keywords:[2014, 工作, 补贴, 公务, 公开, 中央, 政策, 方案]
+getOpinionIndex called
+getRecordAll called
+getRecordAll called
+getRecordGov called
+getRecordGov called
+getRecordMedia called
+getRecordMedia called
+getRecordPublic called
+getRecordPublic called
+OpinionIndex:1.2286365 4.1715937 0.25690854 0.18027544
+getRecordNum called
+getRecordNum called
+getRecordNum called
+getYearRecordNums called
+getOpinionIndexDistribution called
+getOpinionIndexDistribution called
+getOpinionIndexDistribution called
+getOpinionIndexDistribution called
+getOpinionIndexDistribution called
+getOpinionIndexDistribution called
+getOpinionIndexDistribution called
+getOpinionIndexDistribution called
+getOpinionIndexDistribution called
+getOpinionIndexDistribution called
+getOpinionIndexDistribution called
+output/template.html<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+ <meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>公车评估报告</title>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+<script data-main = "js/me.js" src="js/require.js"></script>
+
+<style type="text/css">
+body{height:50px;  padding:70px;}
+</style>
+<body>
+<div class="container">
+<div class="page-header">
+<h1>基于网络舆情的公共政策评估报告         <small>###time###</small></h1>
+</div>
+</div>
+
+<p><font face="微软雅黑"size="5">&nbsp;&nbsp;本次报告通过全网络数据采集&nbsp;采集了###numWebsite###个网站，&nbsp;分析了###numArticle###篇文章,&nbsp;###numComment###条评论，通过分词、&nbsp;聚类、&nbsp;查重、&nbsp;摘要等手段和方法，&nbsp;对各类数据进行分析形成图表，&nbsp;并最后形成报告如下。</font></p>
+<hr />
+<div id="first" ><h1 align="left">一、主体分析</h1>
+<div class="container">
+<div class="row">
+<div class="col-md-6">
+<div id="main1" style="width: 100%;height:600px;"></div>
+</div>
+<div class="col-md-6">
+<div id="main2" style="width: 100%;height:600px;"></div>
+</div>
+<div class="col-md-6">
+<div id="main3" style="width: 100%;height:600px;"></div>
+</div>
+</div>
+</div>
+</div>
+<hr />
+<div id="Second" ><br/><h1 align="left">二、主题分析（主题词）</h1><br/><ol>
+<li><font face="微软雅黑"size="5">全网：###keywordAll###</font></li>
+<li><font face="微软雅黑"size="5">政府：###keywordGov###</font></li>
+<li><font face="微软雅黑"size="5">媒体：###keywordMedia###</font></li>
+<li><font face="微软雅黑"size="5">公众：###keywordPublic###</font></li>
+<li><font face="微软雅黑"size="5">明显峰值年度以及主题词：###keywordHottestYear###</font></li>
+</ol>
+</div>
+<hr />
+<div id="Third" ><br/><h1 align="left">三、态度（情感）分析</h1><br/><ol>
+<li><font face="微软雅黑"size="5">全网舆论指数: ###indexAll###</font></li>
+<li><font face="微软雅黑"size="5">政府舆论指数: ###indexGov###</font></li>
+<li><font face="微软雅黑"size="5">媒体舆论指数: ###indexMedia###</font></li>
+<li><font face="微软雅黑"size="5">公众舆论指数: ###indexPublic###</font></li>
+</ol>
+</div>
+<hr />
+<div id="Forth" ><br/><h1 align="left">四、热点分析</h1><br/><ol>
+<li><font face="微软雅黑"size="5">极端正面观点摘要：###viewAbsPos###</font></li>
+<li><font face="微软雅黑"size="5">极端负面观点摘要：###viewAbsNeg###</font></li>
+<li><p><font face="微软雅黑"size="5">正面观点集中分数段：###indexPos###</p>   <p>观点摘要：###viewPos###</font></p></li>
+<li><p><font face="微软雅黑"size="5">负面观点集中分数段：###indexNeg###</p>   <p>观点摘要：###viewNeg###</font></p></li>
+</ol>
+</div>
+</body>
+<script type="text/javascript">
+var pipData = ###pipData###;
+ var yearData = ###yearData###;
+var motionData = ###motionData###;
+</script>
+</html>
+</body></html>----------------------------:::::::------------------------
+-----------Size:22
+//////////Not format  String///////////////
+motionData
+reportfactory.ChartData@68d0af12
+////////ddl///////////
+------------Is format  String-------
+keywordGov
+发展,工作,建设,科技,国家,创新,推进,管理,方面
+-------fin-------
+------------Is format  String-------
+keywordMedia
+公务,补贴,用车,中央,地方,问题,政府
+-------fin-------
+------------Is format  String-------
+indexPublic
+0.18027544
+-------fin-------
+------------Is format  String-------
+indexGov
+4.1715937
+-------fin-------
+------------Is format  String-------
+numComment
+50
+-------fin-------
+------------Is format  String-------
+viewAbsPos
+规划编制、重点项目、生态文明建设、公车改革等重点工作的进展情况
+深入贯彻党的十八届五中全会和中央经济工作会议、中央城市工作会议、全国发展改革工作会议精神
+全省发展改革工作会议在长沙召开
+积极推进《兵团公务用车制度改革总体方案》制定工作
+【#公车改革#全面启动】《关于全面推进公务用车制度改革的指导意见》和《中央和国家机关公务用车制度改革方案》今天下发
+省车改办（省发展改革委）、省机关事务管理局、财政厅、人力资源社会保障厅分别就全省公车改革总体方案、省级公车改革实施方案、公务交通补贴和执法执勤车辆改革政策、司勤人员规范安置等相关政策进行了解读
+会议还就进一步推进国企改革、混合所有制改革、国有企业公车改革等改革工作进行了沟通协调
+二要加快推进重大项目建设
+积极稳妥推进全省党政机关和参公事业单位公务用车制度改革工作
+推进投资项目审批流程改革
+为有序推进我省公车改革工作
+
+-------fin-------
+------------Is format  String-------
+indexNeg
+-1
+-------fin-------
+------------Is format  String-------
+keywordPublic
+车补,官员,补贴,腐败,政策,不能,领导
+-------fin-------
+------------Is format  String-------
+viewAbsNeg
+那就贪污车补.上有政策下有对策 你当上面出这些规定的时候是为老百姓吗 是真的反腐吗
+如当月车补没用完转入下个月的车不中
+
+-------fin-------
+//////////Not format  String///////////////
+pipData
+reportfactory.ChartData@6898a542
+////////ddl///////////
+------------Is format  String-------
+numWebsite
+3
+-------fin-------
+------------Is format  String-------
+numArticle
+79
+-------fin-------
+------------Is format  String-------
+indexMedia
+0.25690854
+-------fin-------
+------------Is format  String-------
+indexPos
+5
+-------fin-------
+//////////Not format  String///////////////
+yearData
+reportfactory.ChartData@106e537e
+////////ddl///////////
+------------Is format  String-------
+keywordHottestYear
+2014,工作,补贴,公务,公开,中央,政策,方案
+-------fin-------
+------------Is format  String-------
+viewNeg
+规划编制、重点项目、生态文明建设、公车改革等重点工作的进展情况
+深入贯彻党的十八届五中全会和中央经济工作会议、中央城市工作会议、全国发展改革工作会议精神
+全省发展改革工作会议在长沙召开
+积极推进《兵团公务用车制度改革总体方案》制定工作
+【#公车改革#全面启动】《关于全面推进公务用车制度改革的指导意见》和《中央和国家机关公务用车制度改革方案》今天下发
+省车改办（省发展改革委）、省机关事务管理局、财政厅、人力资源社会保障厅分别就全省公车改革总体方案、省级公车改革实施方案、公务交通补贴和执法执勤车辆改革政策、司勤人员规范安置等相关政策进行了解读
+会议还就进一步推进国企改革、混合所有制改革、国有企业公车改革等改革工作进行了沟通协调
+二要加快推进重大项目建设
+积极稳妥推进全省党政机关和参公事业单位公务用车制度改革工作
+推进投资项目审批流程改革
+为有序推进我省公车改革工作
+
+-------fin-------
+------------Is format  String-------
+indexAll
+1.2286365
+-------fin-------
+------------Is format  String-------
+time
+2016-07-19
+
+-------fin-------
+------------Is format  String-------
+keywordAll
+工作,公务,发展,中央,补贴,问题,用车,进行,政府,部门,国家,中国
+-------fin-------
+------------Is format  String-------
+viewPos
+规划编制、重点项目、生态文明建设、公车改革等重点工作的进展情况
+深入贯彻党的十八届五中全会和中央经济工作会议、中央城市工作会议、全国发展改革工作会议精神
+全省发展改革工作会议在长沙召开
+积极推进《兵团公务用车制度改革总体方案》制定工作
+【#公车改革#全面启动】《关于全面推进公务用车制度改革的指导意见》和《中央和国家机关公务用车制度改革方案》今天下发
+省车改办（省发展改革委）、省机关事务管理局、财政厅、人力资源社会保障厅分别就全省公车改革总体方案、省级公车改革实施方案、公务交通补贴和执法执勤车辆改革政策、司勤人员规范安置等相关政策进行了解读
+会议还就进一步推进国企改革、混合所有制改革、国有企业公车改革等改革工作进行了沟通协调
+二要加快推进重大项目建设
+积极稳妥推进全省党政机关和参公事业单位公务用车制度改革工作
+推进投资项目审批流程改革
+为有序推进我省公车改革工作
+
+-------fin-------
+文件输出路径:output/report.html生成成功

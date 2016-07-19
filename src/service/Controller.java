@@ -3,10 +3,13 @@ package service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import reportfactory.HtmlMaker;
 import service.chart.Chart;
 import service.chart.tagcloud.TagCloud;
+import service.keyword.NLP;
 import service.motion.Motion;
 import spider.helper.Crawler;
 import util.RecordTrans;
@@ -24,6 +27,7 @@ public class Controller {
 	private static Crawler crawler = new Crawler();
 	public static void startCrawl(String keyword)
 	{
+		DataManager.setKeyword(keyword);
 		isrunning = true;
 		boolean[] options = {true,true,true,true,false,false};
 		crawler.start(keyword, options);
@@ -42,12 +46,25 @@ public class Controller {
 		TagCloud.TagCloud(DataManager.getKeywords().get(0));
 		new Chart();
 		
-		panel1.setResult(DataManager.getRecordsGovMedia());
+		panel1.setResult(DataManager.getRecordsAll());
 		panel2.setResult(DataManager.getOpinionIndex(), DataManager.getKeywords());
 		panel3.setResult(DataManager.getRecordsAll());
+		
 	}
 	
 	public static void makeReport(){
-		
+		System.out.print("Make report\n");
+		int[] nums = new int[3];
+		nums[0] = 3;
+		nums[1] = DataManager.getRecordNum()[1]+DataManager.getRecordNum()[2];
+		nums[2] = DataManager.getRecordNum()[3];
+		List<String> views = new ArrayList<String>(6);
+		views.add(NLP.recordsSummary(DataManager.getRecordsOpinionIndexDistribution().get(10)));
+		views.add(NLP.recordsSummary(DataManager.getRecordsOpinionIndexDistribution().get(0)));
+		views.add(DataManager.getPosMax());
+		views.add(NLP.recordsSummary(DataManager.getRecordsOpinionIndexDistribution().get(10)));
+		views.add(DataManager.getNegMax());
+		views.add(NLP.recordsSummary(DataManager.getRecordsOpinionIndexDistribution().get(10)));
+		HtmlMaker.entrance(nums, DataManager.getKeywords(), DataManager.getOpinionIndex(), views);
 	}
 }

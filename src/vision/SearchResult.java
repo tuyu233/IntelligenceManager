@@ -54,8 +54,6 @@ public class SearchResult extends JPanel
 	private JTable searchResultTable;
 	private CheckBox filter = new CheckBox();
 	private JScrollPane scroll;
-	MyTableCellRenderer renderer = new MyTableCellRenderer();
-	myTableCellEditor editor = new myTableCellEditor(new JCheckBox());
 	DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
 	private void checkBoxAction() {
 		filter.checkButton().addMouseListener(new MouseAdapter() 
@@ -75,6 +73,8 @@ public class SearchResult extends JPanel
 		this.showList = filterList;
 		
 		MyTableModel newModel = new MyTableModel(filterList.size(),2);
+		MyTableCellRenderer newRenderer = new MyTableCellRenderer();
+		myTableCellEditor newEditor = new myTableCellEditor(new JCheckBox());
 		
 		searchResultTable.getTableHeader().setVisible(false);
 		searchResultTable.getTableHeader().setDefaultRenderer(headerRenderer);
@@ -82,9 +82,9 @@ public class SearchResult extends JPanel
 		searchResultTable.getColumnModel().getColumn(0).setPreferredWidth((int) (Attributes.MAIN_FRAME_WIDTH*0.89));
 		searchResultTable.setEnabled(true);
 		searchResultTable.getTableHeader().setVisible(false);
-		searchResultTable.getColumnModel().getColumn(0).setCellRenderer(renderer);
+		searchResultTable.getColumnModel().getColumn(0).setCellRenderer(newRenderer);
 		searchResultTable.getColumnModel().getColumn(1).setCellRenderer(new MyButtonRenderer());
-		searchResultTable.getColumnModel().getColumn(0).setCellEditor(editor);
+		searchResultTable.getColumnModel().getColumn(0).setCellEditor(newEditor);
 		searchResultTable.getColumnModel().getColumn(1).setCellEditor(new myButtonEditor(new JCheckBox()));
 		updateRowHeights();
 
@@ -100,8 +100,9 @@ public class SearchResult extends JPanel
 		this.resultList = resultList;
 		int resultSize=resultList.size();
 		headerRenderer.setPreferredSize(new Dimension(0,0));
-		
-		
+		MyTableCellRenderer renderer = new MyTableCellRenderer();
+		myTableCellEditor editor = new myTableCellEditor(new JCheckBox());
+		filter = new CheckBox();
 		this.setLayout(new BorderLayout());
 		searchResultTable = new JTable();
 		MyTableModel model = new MyTableModel(resultSize,2);

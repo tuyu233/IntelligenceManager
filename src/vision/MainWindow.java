@@ -25,6 +25,7 @@ public class MainWindow
 	ResultStatistic tab_panel2;
 	AllData tab_panel3;
 	JButton search_button;
+	JButton result_button;
 	
 	public MainWindow()
 	{
@@ -104,7 +105,7 @@ public class MainWindow
 		});
 			
 		button_panel.add(search_button);
-		JButton result_button=new JButton(Attributes.RESULTBUTTON);
+		result_button=new JButton(Attributes.RESULTBUTTON);
 		button_panel.add(result_button);
 		search_button.setFont(Fonts.normal);
 		result_button.setFont(Fonts.normal);
@@ -113,8 +114,22 @@ public class MainWindow
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				super.mouseClicked(arg0);
-				if(getInput()!=null)
-					Controller.showResult(getInput(), tab_panel1, tab_panel2, tab_panel3);
+				if(getInput()!=null){
+					result_button.setText(Attributes.RESULTBUTTON_PROCESSING);
+					result_button.invalidate();
+					result_button.repaint();
+					new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+							Controller.showResult(getInput(), tab_panel1, tab_panel2, tab_panel3);
+
+							result_button.setText(Attributes.RESULTBUTTON);
+							result_button.invalidate();
+							result_button.repaint();
+						}
+					}).start();
+				}
 			}
 		});
 		
