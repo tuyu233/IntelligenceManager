@@ -158,7 +158,7 @@ public class DataManager {
 			}
 			float indexPublic = sum/getRecordsPublic().size();
 			
-			float[] tmp = {indexAll, indexGov, indexMedia, indexPublic};
+			float[] tmp = {(float)(indexAll-0.5)*10, (float)(indexGov-0.5)*10, (float)(indexMedia-0.5)*10, (float)(indexPublic-0.5)*10};
 			opinionIndexes = tmp;
 			System.out.print("OpinionIndex:");
 			System.out.print(tmp[0] +" "+ tmp[1] +" "+ tmp[2] +" "+ tmp[3] + "\n");
@@ -191,6 +191,31 @@ public class DataManager {
 			System.out.print("\n");
 		}
 		return opinionIndexDistribution;
+	}
+	
+	public static String getNegMax(){
+		int[] index = getOpinionIndexDistribution();
+		int max = 0;
+		int tmp = 0;
+		for(int i=0;i<5;i++){
+			if(index[i]>max){
+				max=index[i];
+				tmp = i;
+			}
+		}
+		return Integer.toString(tmp-5);
+	}
+	public static String getPosMax(){
+		int[] index = getOpinionIndexDistribution();
+		int max = 0;
+		int tmp = 6;
+		for(int i=6;i<11;i++){
+			if(index[i]>max){
+				max=index[i];
+				tmp = i;
+			}
+		}
+		return Integer.toString(tmp-5);
 	}
 	
 	//各类别关键词，顺序为全网、政府、媒体、公众

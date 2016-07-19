@@ -1,9 +1,10 @@
 package reportfactory;
-
+//""+"\n"+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Map;
@@ -34,13 +35,26 @@ public class HtmlFile {
 			//out = new FileWriter(file);
 			out=new OutputStreamWriter(new FileOutputStream(file),"UTF8");
 			writer = new BufferedWriter(out);
-			writer.write("<!DOCTYPE html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" > <title>有关“"
-					+ keyword
-					+ "”的调查统计</title></head><body>"
-					+ "<h1 align=\"center\">有关“"
-					+ keyword
-					+ "”的统计结果报告</h1>");
-					//+ "<h1><font face=\"微软雅黑\"size=\"5\">一、信息统计结果：</font></h1><div align=\"center\">");
+			writer.write(
+			"<!DOCTYPE html>"+"\n"+
+			"<html lang=\"zh-CN\">"+"\n"+
+			"<head>"+"\n"+
+			"<meta charset=\"utf-8\">"+"\n"+
+			" <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">"+"\n"+
+			" <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"+"\n"+
+			"<title>公车评估报告</title>"+"\n"+
+			"<link href=\"css/bootstrap.min.css\" rel=\"stylesheet\">"+"\n"+
+			"<script src=\"http://libs.baidu.com/jquery/1.9.1/jquery.min.js\"></script>"+"\n"+
+			"<script data-main = \"js/me.js\" src=\"js/require.js\"></script>"+"\n"	+	
+			////write_cs_CZN
+			
+			//write_cs_own
+			"\n"
+			
+					);
+			
+			
+		
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -53,15 +67,27 @@ public class HtmlFile {
 		try {
 			if (type == ICON)
 				writer.write("<img src=\"" + info
-						+ "\" width=\"500\" height=\"400\" />");
+						+ "\" width=\"500\" height=\"400\" /><br/>");
 			else if (type == WORDS)
-				writer.write("<br/><h3 align=\"left\"><font size=\"4\">" + info
-						+ "</font><h3><br/>");
+				writer.write("<br/><h1 align=\"left\">" + info
+						+ "</h1><br/>"+"");
 		} catch (Exception e) {
 			System.out.println();
 		}
 	}
-
+	public void writemOfList(String info) {
+		try {
+			
+				writer.write(
+			"<li><font face=\"微软雅黑\"size=\"6\">"
+						+info+"</font></li>"+"\n"
+						);
+		} catch (Exception e) {
+			System.out.println();
+		}
+	}
+	
+	
 	/**
 	 * 写政府公文信息
 	 * 
@@ -96,12 +122,49 @@ public class HtmlFile {
 	public void writeinfor(String infor) {
 		try {
 
-			writer.write("<p><font face=\"微软雅黑\"size=\"3\">"+infor+"</font></p>");
+			writer.write("<p><font face=\"微软雅黑\"size=\"6\">"+infor+"</font></p>"+"\n");
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
+	
+	
+	
+	public void writeList() {
+		try {
 
+			writer.write("<ol>"+"\n");
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	
+	public void writeDev(String id) {
+		try {
+			writer.write("<div id=\""+id+"\" >");
+		} catch (Exception e) {
+			System.out.println("write dev_start_faile");
+			System.out.println(e);
+		}
+	}
+	public void writeEndDev() {
+		try {
+			writer.write("</div>"+"\n");
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	public void writeEndList() {
+		try {
+			writer.write("</ol>"+"\n");
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	
+	
 	/**
 	 * 写新闻信息
 	 * 
@@ -168,4 +231,81 @@ public class HtmlFile {
 			System.out.println(e);
 		}
 	}
+
+	public void write_first() {//用于设计页边距 和 标题
+		
+		try {
+			writer.write("<style type=\"text/css\">"+"\n"+
+					"body{height:50px;  padding:70px;}"+"\n"+
+					"</style>"+"\n"+
+					//标题部分
+					"<body>"+"\n"+
+					"<div class=\"container\">"+"\n"+
+					"<div class=\"page-header\">"+"\n"+
+					"<h1>基于网络舆情的公共政策评估报告         <small>###time###</small></h1>"+"\n"+
+					"</div>"+"\n"+
+					"</div>"+"\n"
+					+"\n"
+					);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	public void write_mainone() {
+		try {
+			writer.write(
+			"<h1 align=\"left\">一、主体分析</h1>"+"\n"+
+			"<div class=\"container\">"+"\n"+
+			"<div class=\"row\">"+"\n"+
+			"<div class=\"col-md-6\">"+"\n"+
+			"<div id=\"main1\" style=\"width: 100%;height:600px;\"></div>"+"\n"+
+			"</div>"+"\n"+
+			"<div class=\"col-md-6\">"+"\n"+
+			"<div id=\"main2\" style=\"width: 100%;height:600px;\"></div>"+"\n"+
+			"</div>"+"\n"+
+			"<div class=\"col-md-6\">"+"\n"+
+			"<div id=\"main3\" style=\"width: 100%;height:600px;\"></div>"+"\n"+
+			"</div>"+"\n"+
+			"</div>"+"\n"+
+			"</div>"+"\n"
+					);
+		} catch (Exception e) {
+			
+			System.out.println(e);
+		}
+		
+		
+	}
+
+	public void writerline() { //<hr>
+		try {
+			writer.write("<hr />"+"\n");
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+	}
+
+	public void writeLast() {
+		try {
+			writer.write(
+			"</body>"+"\n"+
+			"<script type=\"text/javascript\">"+"\n"+		
+			"var pipData = ###pipData###;"+"\n"+
+			" var yearData = ###yearData###;"+"\n"+
+			"var motionData = ###motionData###;"+"\n"+
+			"</script>"+"\n"+
+			"</html>"+"\n"	
+					);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		
+	}
+
+
 }
