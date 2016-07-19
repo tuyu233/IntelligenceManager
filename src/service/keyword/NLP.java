@@ -32,9 +32,12 @@ public class NLP
 	
 	//多文本摘要
 	public static String recordsSummary(List<Record> records){
-		List<String> summaries = HanLP.extractSummary(util.RecordTrans.records2string(records), records.size()*3);
+		List<String> summaries = HanLP.extractSummary(util.RecordTrans.records2string(records), records.size()/3);
 		StringBuffer sb = new StringBuffer();
-		sb.append(summaries);
+		for (String string : summaries) {
+			sb.append(string);
+			sb.append("\n");
+		}
 		return sb.toString();
 	}
 }

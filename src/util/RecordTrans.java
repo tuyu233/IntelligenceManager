@@ -37,4 +37,14 @@ public class RecordTrans {
 		}
 		return sb.toString();
 	}
+	
+	public static String strings2stringWithComma(List<String> strings){
+		StringBuffer sb = new StringBuffer();
+		for (String string : strings) {
+			sb.append(string);
+			if(strings.indexOf(string)==strings.size()-1) continue;
+			else sb.append(",");
+		}
+		return sb.toString();
+	}
 }

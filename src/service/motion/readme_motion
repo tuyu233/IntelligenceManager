@@ -1,8 +1,0 @@
-本包是用来计算字符串中所表达的感情的。目前有3个函数可供调用。
-
-1、计算某字符串的情感评估值 float getAssessment(String)
-	返回值为float，当返回值为1的时候表示的是绝对正面，为0的时候表示的是绝对负面
-
-2、计算输入的所有字符串的情感评估值的平均值 float getAssessmentAve(List<String>)
-
-3、计算输入的所有字符串的情感评估值的分布 int[] getAssessmentMap(List<String>)
