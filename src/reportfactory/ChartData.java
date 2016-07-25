@@ -1,5 +1,6 @@
 package reportfactory;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -49,6 +50,42 @@ public class ChartData {
 		for(int i=-5;i <= 5;i++){
 			data.pairs.add(new Pair(String.valueOf(i),DataManager.getOpinionIndexDistribution()[i+5] ));
 		}
+		return data;
+	}
+	
+	public static ChartData getTestIndexData()
+	{
+		ChartData data = new ChartData();
+		data.title = "全网舆论指数";
+		data.pairs.add(new Pair("index",DataManager.getOpinionIndex()[0]));
+		System.out.print("indexofall"+(float)(Math.round(DataManager.getOpinionIndex()[0]*100)/100));
+		return data;
+	}
+	
+	public static ChartData getGovIndexData()
+	{
+		ChartData data = new ChartData();
+		data.title = "政府舆论指数";
+		data.pairs.add(new Pair("govIndex",DataManager.getOpinionIndex()[1]));
+		System.out.print("indexofgov"+(float)(Math.round(DataManager.getOpinionIndex()[1]*100)/100));
+		return data;
+	}
+	
+	public static ChartData getMedIndexData()
+	{
+		ChartData data = new ChartData();
+		data.title = "媒体舆论指数";
+		data.pairs.add(new Pair("medIndex",DataManager.getOpinionIndex()[2]));
+		System.out.print("indexofall"+(float)(Math.round(DataManager.getOpinionIndex()[2]*100)/100));
+		return data;
+	}
+	
+	public static ChartData getPubIndexData()
+	{
+		ChartData data = new ChartData();
+		data.title = "公众舆论指数";
+		data.pairs.add(new Pair("pubIndex",DataManager.getOpinionIndex()[3]));
+		System.out.print("indexofall"+(float)(Math.round(DataManager.getOpinionIndex()[3]*100)/100));
 		return data;
 	}
 }

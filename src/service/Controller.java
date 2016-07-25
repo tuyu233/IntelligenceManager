@@ -1,5 +1,11 @@
 package service;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,5 +72,17 @@ public class Controller {
 		views.add(DataManager.getNegMax());
 		views.add(NLP.recordsSummary(DataManager.getRecordsOpinionIndexDistribution().get(10)));
 		HtmlMaker.entrance(nums, DataManager.getKeywords(), DataManager.getOpinionIndex(), views);
+		try
+		{
+			File file = new File("./output/report.html");
+			URL link = new URL("file:///"+file.getCanonicalPath());
+			Desktop.getDesktop().browse(link.toURI());	
+		}catch(IOException err)
+		{
+			err.printStackTrace();
+		}catch(URISyntaxException err)
+		{
+			err.printStackTrace();
+		}
 	}
 }

@@ -81,7 +81,13 @@ public class HtmlMaker {
 	
 	
 	
-	
+	/**
+	 * dkfsadlkfsjalfdksajlfks
+	 * @param nums 1111
+	 * @param keywords 2222
+	 * @param indexes 3333
+	 * @param views
+	 */
 	public static void entrance(int[] nums, List<List<String>> keywords, float[] indexes, List<String> views) {
 		/*Information t = Information.getInstance();
 		t.setNumOfWebsites(nums[0]);
@@ -116,6 +122,10 @@ public class HtmlMaker {
 		map.put("pipData",ChartData.getTestPipData());
 		map.put("yearData", ChartData.getTestYearData());
 		map.put("motionData",ChartData.getTestMotionData());
+		map.put("index",ChartData.getTestIndexData());
+		map.put("govIndex", ChartData.getGovIndexData());
+		map.put("medIndex", ChartData.getMedIndexData());
+		map.put("pubIndex", ChartData.getPubIndexData());
 		Date date = new Date(System.currentTimeMillis());
 		String time = String.format("%tF%n", date);
 		map.put("time", time);
