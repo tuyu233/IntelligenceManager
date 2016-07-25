@@ -230,7 +230,7 @@ public class Chart {
 		HashMap<String, Integer> hashmap;
 		if (type == MOTION) {
 			hashmap =new HashMap();
-			int[] tmp = DataManager.getOpinionIndexDistribution();
+			int[] tmp = DataManager.getAllDistribution();
 			for (int i=0;i<=10;i++)
 				dataset.addValue((Integer)tmp[i], "year", Integer.toString(i-5));
 				//hashmap.put(Integer.toString(i-5), (Integer)tmp[i]);

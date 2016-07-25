@@ -12,9 +12,11 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import properties.Configure;
 import reportfactory.HtmlMaker;
 import service.chart.Chart;
 import service.chart.tagcloud.TagCloud;
+import service.keyword.Keyword;
 import service.keyword.NLP;
 import service.motion.Motion;
 import spider.helper.Crawler;
@@ -60,18 +62,28 @@ public class Controller {
 	
 	public static void makeReport(){
 		System.out.print("Make report\n");
-		int[] nums = new int[3];
+		int[] nums = new int[5];
 		nums[0] = 3;
-		nums[1] = DataManager.getRecordNum()[1]+DataManager.getRecordNum()[2];
-		nums[2] = DataManager.getRecordNum()[3];
-		List<String> views = new ArrayList<String>(6);
-		views.add(NLP.recordsSummary(DataManager.getRecordsOpinionIndexDistribution().get(10)));
-		views.add(NLP.recordsSummary(DataManager.getRecordsOpinionIndexDistribution().get(0)));
-		views.add(DataManager.getPosMax());
-		views.add(NLP.recordsSummary(DataManager.getRecordsOpinionIndexDistribution().get(10)));
-		views.add(DataManager.getNegMax());
-		views.add(NLP.recordsSummary(DataManager.getRecordsOpinionIndexDistribution().get(10)));
-		HtmlMaker.entrance(nums, DataManager.getKeywords(), DataManager.getOpinionIndex(), views);
+		nums[1] = DataManager.getRecordNum()[0];
+		nums[2] = DataManager.getRecordNum()[1];
+		nums[3] = DataManager.getRecordNum()[2];
+		nums[4] = DataManager.getRecordNum()[3];
+		List<String> views = new ArrayList<String>(8);
+		views.add(util.RecordTrans.strings2stringWithComma(Keyword.getKeyword(DataManager.getRecordsOpinionIndexDistribution().get(10), Configure.KEYWORD_SIZE_NORMAL)));
+		views.add(util.RecordTrans.strings2stringWithComma(Keyword.getKeyword(DataManager.getRecordsOpinionIndexDistribution().get(0), Configure.KEYWORD_SIZE_NORMAL)));
+		views.add(Integer.toString(DataManager.getPosMax()));
+		views.add(util.RecordTrans.strings2stringWithComma(Keyword.getKeyword(DataManager.getRecordsOpinionIndexDistribution().get(DataManager.getPosMax()+5), Configure.KEYWORD_SIZE_NORMAL)));
+		views.add(NLP.recordsSummary(DataManager.getRecordsOpinionIndexDistribution().get(DataManager.getPosMax()+5)));
+		views.add(Integer.toString(DataManager.getNegMax()));
+		views.add(util.RecordTrans.strings2stringWithComma(Keyword.getKeyword(DataManager.getRecordsOpinionIndexDistribution().get(DataManager.getNegMax()+5), Configure.KEYWORD_SIZE_NORMAL)));
+		views.add(NLP.recordsSummary(DataManager.getRecordsOpinionIndexDistribution().get(DataManager.getNegMax()+5)));
+		HtmlMaker.entrance(
+				DataManager.getKeyword(),
+				nums,
+				DataManager.getYearRecordList(),
+				DataManager.getKeywords(),
+				DataManager.getOpinionIndex(), 
+				views);
 		try
 		{
 			File file = new File("./output/report.html");
