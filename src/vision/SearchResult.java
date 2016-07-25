@@ -58,12 +58,14 @@ public class SearchResult extends JPanel
 	private void checkBoxAction() {
 		filter.checkButton().addMouseListener(new MouseAdapter() 
 		{
+			
 			@Override
 			public void mouseClicked(MouseEvent e) 
 			{
 				super.mouseClicked(e);
-				updateTable(filter.updateList(resultList));
 				System.out.print("mouse clicked!\n");
+				updateTable(filter.updateList(resultList));
+				
 			}
 		});
 	}
@@ -103,6 +105,8 @@ public class SearchResult extends JPanel
 		MyTableCellRenderer renderer = new MyTableCellRenderer();
 		myTableCellEditor editor = new myTableCellEditor(new JCheckBox());
 		filter = new CheckBox();
+		checkBoxAction();
+		System.out.print("add filter!\n");
 		this.setLayout(new BorderLayout());
 		searchResultTable = new JTable();
 		MyTableModel model = new MyTableModel(resultSize,2);
