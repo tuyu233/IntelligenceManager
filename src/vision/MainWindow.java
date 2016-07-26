@@ -26,6 +26,7 @@ public class MainWindow
 	AllData tab_panel3;
 	JButton search_button;
 	JButton result_button;
+	JButton makeReport_button;
 	
 	public MainWindow()
 	{
@@ -59,13 +60,26 @@ public class MainWindow
 		north_panel.add(search_panel);
 		search_panel.setLayout(new BorderLayout());
 		
-		JButton makeReport_button = new JButton();
-		makeReport_button.setText(Attributes.MAKEREPORT);
+		makeReport_button = new JButton();
+		makeReport_button.setText(Attributes.REPORTBUTTON);
 		makeReport_button.setFont(Fonts.searchButton);
 		makeReport_button.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0){
-				Controller.makeReport();
+				makeReport_button.setText(Attributes.REPORTBUTTON_PROCESSING);
+				makeReport_button.invalidate();
+				makeReport_button.repaint();
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						Controller.makeReport();
+
+						makeReport_button.setText(Attributes.REPORTBUTTON);
+						makeReport_button.invalidate();
+						makeReport_button.repaint();
+					}
+				}).start();
 			}
 		});
 		search_panel.add(makeReport_button, BorderLayout.WEST);
