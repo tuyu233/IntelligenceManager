@@ -191,11 +191,9 @@ public class HtmlMaker {
 		map.put("indexAll", Float.toString(indexes[0]));
 		map.put("commentAll", posORneg(indexes[0]));
 		List<Entry<String, Float>> indexList= new ArrayList<Entry<String, Float>>(3);
-		for(int i=0;i<3;i++){
-			indexList.add(new AbstractMap.SimpleEntry<String,Float>("政府",indexes[1]));
-			indexList.add(new AbstractMap.SimpleEntry<String,Float>("媒体",indexes[2]));
-			indexList.add(new AbstractMap.SimpleEntry<String,Float>("公众",indexes[3]));
-		}
+		indexList.add(new AbstractMap.SimpleEntry<String,Float>("政府",new Float(indexes[1])));
+		indexList.add(new AbstractMap.SimpleEntry<String,Float>("媒体",new Float(indexes[2])));
+		indexList.add(new AbstractMap.SimpleEntry<String,Float>("公众",new Float(indexes[3])));
 		Collections.sort(indexList, new Comparator<Map.Entry<String, Float>>() {
 				public int compare(Map.Entry<String, Float> o1,
 						Map.Entry<String, Float> o2) {
