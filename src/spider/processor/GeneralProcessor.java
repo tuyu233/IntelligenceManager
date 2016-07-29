@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.management.JMException;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -14,6 +16,7 @@ import org.jsoup.select.Elements;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
+import us.codecraft.webmagic.monitor.SpiderMonitor;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.Html;
 import us.codecraft.webmagic.selector.HtmlNode;
@@ -80,7 +83,7 @@ public class GeneralProcessor implements PageProcessor {
 		for (String link : links) {
 			if (link.contains(domain)) {
 				page.addTargetRequest(link);
-				System.err.println(link);
+				//System.err.println(link);
 			}
 
 		}
@@ -98,6 +101,15 @@ public class GeneralProcessor implements PageProcessor {
 		// spider.addUrl("http://www.chinanews.com/gn/2016/04-08/7827816.shtml");//ok
 		// spider.addUrl("http://tech.ifeng.com/a/20160708/41635440_0.shtml");//ok
 		spider.addUrl("http://mil.news.sina.com.cn/china/2016-07-08/doc-ifxtwiht3338415.shtml");// ok
-		spider.thread(1).run();
+
+		try {
+			SpiderMonitor monitor = SpiderMonitor.instance();
+			monitor.register(spider);
+
+		} catch (JMException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		spider.thread(1).start();
 	}
 }
