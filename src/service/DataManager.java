@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.tag.Nature;
@@ -21,10 +23,11 @@ import database.SearchType;
 import entity.Record;
 
 /**
- * 该类已单例化，请调用静态方法getInstance来获取实例。
+ * 该类已静态化。
  * 该类用于暂存数据，以完成数据从计算部分到UI部分的传递。
  */
 public class DataManager {
+	
 	
 	//关键词
 	static private String keyword = null;

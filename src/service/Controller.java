@@ -19,7 +19,7 @@ import service.chart.tagcloud.TagCloud;
 import service.keyword.Keyword;
 import service.keyword.NLP;
 import service.motion.Motion;
-import spider.helper.Crawler;
+//import spider.helper.Crawler;
 import util.RecordTrans;
 import vision.AllData;
 import vision.MainWindow;
@@ -32,19 +32,19 @@ import entity.Record;
 public class Controller {
 	
 	public static boolean isrunning = false;
-	private static Crawler crawler = new Crawler();
+	//private static Crawler crawler = new Crawler();
 	public static void startCrawl(String keyword)
 	{
 		DataManager.setKeyword(keyword);
 		isrunning = true;
 		boolean[] options = {true,true,true,true,false,false};
-		crawler.start(keyword, options);
+		//crawler.start(keyword, options);
 	}
 	
 	public static void stopCrawl()
 	{
 		isrunning = false;
-		crawler.stop();
+		//crawler.stop();
 	}
 
 	public static void showResult(String keyword, SearchResult panel1, ResultStatistic panel2, AllData panel3){
