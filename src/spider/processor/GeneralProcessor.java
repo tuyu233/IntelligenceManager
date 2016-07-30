@@ -84,7 +84,15 @@ public class GeneralProcessor implements PageProcessor {
 					// System.out.println(time);
 					page.putField("time", time);
 				}
+				else{
+					int year = Calendar.getInstance().YEAR;
+					int month = Calendar.getInstance().MONTH;
+					//int day = Calendar.getInstance().;
+				}
 			}
+
+		}
+
 
 			String domain = site.getDomain();
 

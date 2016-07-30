@@ -2,7 +2,9 @@ package entity;
  
 import java.util.Date;
 
-import org.hibernate.annotations.*;;
+import org.hibernate.annotations.*;
+
+import util.EncryptUtil;;
 
 public class Record 
 {
@@ -15,6 +17,7 @@ public class Record
 	private String type;
 	private String other;
 	private int access;
+	//private String hashCode;
 	
 	public Record(){}
 	public Record(String type, String title, String content, String baseUrl, Date saveTime, String author, String other, int access){
@@ -91,4 +94,18 @@ public class Record
 	public String toString(){
 		return "[record:"+id+"]";
 	}
+	
+//	private void updateHashCode() {
+//		this.hashCode = EncryptUtil.Md5Encode(content);
+//	}
+	
+	
+	public String getHashCode() {
+		return EncryptUtil.Md5Encode(title);
+	}
+	public void setHashCode(String hashCode) {
+		//this.hashCode = hashCode;
+	}
+	
+	
 }
