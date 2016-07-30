@@ -121,6 +121,7 @@ public class TestDatabase {
 		DatabaseHelper.save(record);
 		record.setSaveTime(new Date(999000000));
 		record.setContent("buaaa");
+		record.setTitle("11");
 		DatabaseHelper.save(record);
 		
 		List<Record> list = DatabaseHelper.search("ua",SearchType.GOV);
@@ -135,6 +136,7 @@ public class TestDatabase {
 		record.setTitle("1");
 		record.setType("政府");
 		DatabaseHelper.save(record);
+		record.setTitle("2");
 		record.setContent("aaauaa");
 		DatabaseHelper.save(record);
 		long r  = DatabaseHelper.count("ua",SearchType.GOV);
@@ -151,8 +153,10 @@ public class TestDatabase {
 		DatabaseHelper.save(record);
 		record.setSaveTime(sf.parse("2010-1-2"));
 		record.setContent("2111");
+		record.setTitle("11");
 		DatabaseHelper.save(record);
 		record.setSaveTime(sf.parse("2011-1-2"));
+		record.setTitle("111");
 		record.setContent("311");
 		DatabaseHelper.save(record);
 		
@@ -201,6 +205,19 @@ public class TestDatabase {
 		List<Record> list = DatabaseHelper.search("asd sf", "", SearchType.ALL);
 		assertEquals(1, list.size());
 	}
+	
+	//@Test
+	public void testSaveAtLargeScale(){
+		Record record = new Record();
+		int count = 2000;
+		for(int i=0;i < count;i++){
+			record.setContent(i+" ");
+			record.setTitle(i+" ");
+			DatabaseHelper.save(record);
+		}
+		assertEquals(count, countAll());
+	}
+	
 	
 	private int countAll(){
 		Session session = HibernateUtil.getSession();
