@@ -106,7 +106,7 @@ public class GeneralProcessor implements PageProcessor {
 			}*/
 		}
 		
-	}
+	
 
 	@Override
 	public Site getSite() {
