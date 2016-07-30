@@ -43,6 +43,7 @@ public class CheckBox extends JPanel
 	{
 		return this.filter;
 	}
+	
 	List<Record> updateList(List<Record> resultList)
 	{
 		List<Record> filterList = new ArrayList<>();

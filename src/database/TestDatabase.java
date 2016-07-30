@@ -65,11 +65,23 @@ public class TestDatabase {
 		record.setTitle("testSave");
 		DatabaseHelper.save(record);
 		record.setTitle("aaa");
+		record.setContent("1");
 		DatabaseHelper.update(record);
 		Session session = HibernateUtil.getSession();
 		Record r = (Record) session.createQuery("from Record").setMaxResults(1).list().get(0);
 		assertEquals("aaa", r.getTitle());
 		
+	}
+	
+	@Test
+	public void testSaveUnique(){
+		Record record = new Record();
+		record.setAuthor("cznnn");
+		record.setBaseUrl("baidu.com");
+		record.setTitle("testSave");
+		DatabaseHelper.save(record);
+		DatabaseHelper.save(record);
+		assertEquals(1,countAll());
 	}
 	@Test
 	public void testHql(){
@@ -79,6 +91,7 @@ public class TestDatabase {
 		record.setTitle("1");
 		DatabaseHelper.save(record);
 		record.setTitle("2");
+		record.setContent("a");
 		DatabaseHelper.save(record);
 		
 		DatabaseHelper helper = DatabaseHelper.query(Record.class);
@@ -107,6 +120,7 @@ public class TestDatabase {
 		record.setSaveTime(new Date(1000));
 		DatabaseHelper.save(record);
 		record.setSaveTime(new Date(999000000));
+		record.setContent("buaaa");
 		DatabaseHelper.save(record);
 		
 		List<Record> list = DatabaseHelper.search("ua",SearchType.GOV);
@@ -133,13 +147,17 @@ public class TestDatabase {
 		record.setTitle("1"); 
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-mm-dd");
 		record.setSaveTime(sf.parse("2010-1-2"));
+		record.setContent("11");
 		DatabaseHelper.save(record);
 		record.setSaveTime(sf.parse("2010-1-2"));
+		record.setContent("2111");
 		DatabaseHelper.save(record);
 		record.setSaveTime(sf.parse("2011-1-2"));
+		record.setContent("311");
 		DatabaseHelper.save(record);
 		
 		Map<String,Integer> map = DatabaseHelper.count("1");
+		System.err.println(map.get("2010"));
 		assertTrue(2 == map.get("2010"));
 		assertTrue(1 == map.get("2011"));
 		
@@ -151,6 +169,7 @@ public class TestDatabase {
 		record.setTitle("asdd"); 
 		DatabaseHelper.save(record);
 		record.setTitle("asddd ssff");
+		record.setContent("buaa");
 		DatabaseHelper.save(record);
 		List<Record> list = DatabaseHelper.search("asd", "", SearchType.ALL);
 		assertEquals(2, list.size());
@@ -164,6 +183,7 @@ public class TestDatabase {
 		record.setTitle("asddd ssff");
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-mm-dd");
 		record.setSaveTime(sf.parse("2010-1-2"));
+		record.setContent("buaa");
 		DatabaseHelper.save(record);
 		List<Record> list = DatabaseHelper.search("asd", "2010", SearchType.ALL);
 		assertEquals(1, list.size());
@@ -176,6 +196,7 @@ public class TestDatabase {
 		DatabaseHelper.save(record);
 		record.setTitle("asddd ssff");
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-mm-dd");
+		record.setContent("buaa");
 		DatabaseHelper.save(record);
 		List<Record> list = DatabaseHelper.search("asd sf", "", SearchType.ALL);
 		assertEquals(1, list.size());

@@ -344,7 +344,18 @@ public class DatabaseHelper {
 		try {
 			Session session = HibernateUtil.getSession();
 			Transaction transaction = session.beginTransaction();
-			session.save(object);
+			if(object instanceof Record){
+				Record record = (Record)object;
+				int i = session.createQuery("from Record r where r.content = :content")
+						.setString("content",record.getContent()).setMaxResults(1).list().size();
+				if( i == 0){
+					session.save(object);
+				}
+			}
+			else {
+				session.save(object);
+			}
+			
 			transaction.commit();
 			session.close();
 		} catch (Exception e) {

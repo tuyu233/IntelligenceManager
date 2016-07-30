@@ -1,10 +1,13 @@
 package spider.pipeline;
 
-import spider.ResultItems;
-import spider.Task;
-import spider.pipeline.Pipeline;
-
+import java.util.List;
 import java.util.Map;
+
+import service.SiteManager;
+import us.codecraft.webmagic.ResultItems;
+import us.codecraft.webmagic.Task;
+import us.codecraft.webmagic.monitor.SpiderMonitor;
+import us.codecraft.webmagic.pipeline.Pipeline;
 
 /**
  * Write results in console.<br>
@@ -17,9 +20,14 @@ public class ConsolePipeline implements Pipeline {
 
     @Override
     public void process(ResultItems resultItems, Task task) {
-        System.out.println("get page: " + resultItems.getRequest().getUrl());
+        //System.out.println("get page: " + resultItems.getRequest().getUrl());
         //for (Map.Entry<String, Object> entry : resultItems.getAll().entrySet()) {
         //    System.out.println(entry.getKey() + ":\t" + entry.getValue());
         //}
+    	List<String> sites = resultItems.get("sites");
+    	SiteManager.addSites(sites);
+    	System.out.println(SiteManager.getRawSitesSize() + " sites get.");
+    	//System.out.println("get sites: " + sites);
+    	
     }
 }

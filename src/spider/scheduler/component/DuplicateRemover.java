@@ -1,7 +1,7 @@
 package spider.scheduler.component;
 
-import spider.Request;
-import spider.Task;
+import us.codecraft.webmagic.Request;
+import us.codecraft.webmagic.Task;
 
 /**
  * Remove duplicate requests.

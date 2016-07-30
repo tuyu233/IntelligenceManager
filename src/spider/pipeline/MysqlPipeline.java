@@ -2,9 +2,9 @@ package spider.pipeline;
 
 import service.DataManager;
 import service.motion.Motion;
-import spider.ResultItems;
-import spider.Task;
-import spider.pipeline.Pipeline;
+import us.codecraft.webmagic.ResultItems;
+import us.codecraft.webmagic.Task;
+import us.codecraft.webmagic.pipeline.Pipeline;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -17,8 +17,7 @@ import entity.Record;
 //import database.SQLop;
 
 /**
- * Write results in console.<br>
- * Usually used in test.
+ * Write results in MySQL database.<br>
  * 
  * @author code4crafter@gmail.com <br>
  * @since 0.1.0
@@ -36,7 +35,26 @@ public class MysqlPipeline implements Pipeline {
 		String other = null;
 		List<String> comments = null;
 		List<Date> times = null;
-		System.out.println("get page: " + resultItems.getRequest().getUrl());
+		
+		System.out.print("pipeline processing.\n");
+		
+		if(resultItems.get("title") != null) title = resultItems.get("title");
+		if(resultItems.get("content") != null) content = resultItems.get("content");
+		if(resultItems.get("time") != null){
+			try {
+				time = java.sql.Date.valueOf((String) resultItems.get("time"));
+			} catch (Exception e) {
+				System.out.println(e + "\n数据库存入的时间信息格式有误");
+			}
+		}
+		if(resultItems.get("url") != null) url = resultItems.get("url");
+		//if(resultItems.get("title") != null) title = resultItems.get("title");
+		//if(resultItems.get("title") != null) title = resultItems.get("title");
+		
+		DatabaseHelper.save(new Record("", title, content, url, time, "", "", 0));
+		
+		
+		/*System.out.println("get page: " + resultItems.getRequest().getUrl());
 		for (Map.Entry<String, Object> entry : resultItems.getAll().entrySet()) {
 			// String temp = entry.getValue().toString();
 			if (entry.getValue().toString() == null)
@@ -130,6 +148,6 @@ public class MysqlPipeline implements Pipeline {
 		} else if (content != null && !content.replaceAll("\n", "").equals("")){
 			other = Float.toString(Motion.getAssessment(content));
 			DatabaseHelper.save(new Record(type, title, content, url, time, author, other, 0));
-		}
+		}*/
 	}
 }

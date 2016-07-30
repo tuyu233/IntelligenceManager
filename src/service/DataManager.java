@@ -1,12 +1,21 @@
 package service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.corpus.tag.Nature;
+import com.hankcs.hanlp.seg.Segment;
+import com.hankcs.hanlp.seg.common.Term;
 import com.mysql.jdbc.Util;
 
+import service.keyword.NLP;
 import service.motion.Motion;
 import util.RecordTrans;
 import database.DatabaseHelper;
@@ -14,10 +23,11 @@ import database.SearchType;
 import entity.Record;
 
 /**
- * 该类已单例化，请调用静态方法getInstance来获取实例。
+ * 该类已静态化。
  * 该类用于暂存数据，以完成数据从计算部分到UI部分的传递。
  */
 public class DataManager {
+	
 	
 	//关键词
 	static private String keyword = null;
@@ -102,7 +112,7 @@ public class DataManager {
 	static private String hottestYear = null;
 	static public String getHottestYear(){
 		if(hottestYear == null){
-			Map<String, Integer> count = getYearRecordNums();
+			Map<String, Integer> count = DatabaseHelper.count(getKeyword());
 			int max = 0;
 			for(int i=2016;i>2000;i--){
 				int tmp = 0;
@@ -167,34 +177,63 @@ public class DataManager {
 	}
 	
 	//舆情分数分布
-	static private int[] opinionIndexDistribution = null;
-	static public int[] getOpinionIndexDistribution(){
-		System.out.print("getOpinionIndexDistribution called\n");
-		if(opinionIndexDistribution == null){
-			opinionIndexDistribution = new int[11];
-			for(int i=0;i<11;i++) opinionIndexDistribution[i] = 0;
-			for (Record record : getRecordsAll()) {
-				opinionIndexDistribution[Math.round(Float.valueOf(record.getOther())*10)]++;
-			}
-			System.out.print("OpinionIndexDistribution: ");
-			System.out.print(opinionIndexDistribution[0] +" "+ 
-					opinionIndexDistribution[1] +" "+ 
-					opinionIndexDistribution[2] +" "+ 
-					opinionIndexDistribution[3] +" "+ 
-					opinionIndexDistribution[4] +" "+ 
-					opinionIndexDistribution[5] +" "+ 
-					opinionIndexDistribution[6] +" "+ 
-					opinionIndexDistribution[7] +" "+ 
-					opinionIndexDistribution[8] +" "+ 
-					opinionIndexDistribution[9] +" "+ 
-					opinionIndexDistribution[10]);
-			System.out.print("\n");
+	static public int[] getOpinionIndexDistribution(List<Record> records){
+		int[] opinionIndexDistribution = null;
+		opinionIndexDistribution = new int[11];
+		for(int i=0;i<11;i++) opinionIndexDistribution[i] = 0;
+		for (Record record : records) {
+			opinionIndexDistribution[Math.round(Float.valueOf(record.getOther())*10)]++;
 		}
+		System.out.print("OpinionIndexDistribution: ");
+		System.out.print(opinionIndexDistribution[0] +" "+ 
+				opinionIndexDistribution[1] +" "+ 
+				opinionIndexDistribution[2] +" "+ 
+				opinionIndexDistribution[3] +" "+ 
+				opinionIndexDistribution[4] +" "+ 
+				opinionIndexDistribution[5] +" "+ 
+				opinionIndexDistribution[6] +" "+ 
+				opinionIndexDistribution[7] +" "+ 
+				opinionIndexDistribution[8] +" "+ 
+				opinionIndexDistribution[9] +" "+ 
+				opinionIndexDistribution[10]);
+		System.out.print("\n");
 		return opinionIndexDistribution;
 	}
 	
-	public static String getNegMax(){
-		int[] index = getOpinionIndexDistribution();
+	static private int[] allDistribution = null;
+	static public int[] getAllDistribution(){
+		if(allDistribution == null){
+			allDistribution = getOpinionIndexDistribution(getRecordsAll());
+		}
+		return allDistribution;
+	}
+	
+	static private int[] govDistribution = null;
+	static public int[] getGovDistribution(){
+		if(govDistribution == null){
+			govDistribution = getOpinionIndexDistribution(getRecordsGov());
+		}
+		return govDistribution;
+	}
+	
+	static private int[] mediaDistribution = null;
+	static public int[] getMediaDistribution(){
+		if(mediaDistribution == null){
+			mediaDistribution = getOpinionIndexDistribution(getRecordsMedia());
+		}
+		return mediaDistribution;
+	}
+	
+	static private int[] publicDistribution = null;
+	static public int[] getPublicDistribution(){
+		if(publicDistribution == null){
+			publicDistribution = getOpinionIndexDistribution(getRecordsPublic());
+		}
+		return publicDistribution;
+	}
+	
+	public static int getNegMax(){
+		int[] index = getAllDistribution();
 		int max = 0;
 		int tmp = 0;
 		for(int i=0;i<5;i++){
@@ -203,10 +242,10 @@ public class DataManager {
 				tmp = i;
 			}
 		}
-		return Integer.toString(tmp-5);
+		return tmp-5;
 	}
-	public static String getPosMax(){
-		int[] index = getOpinionIndexDistribution();
+	public static int getPosMax(){
+		int[] index = getAllDistribution();
 		int max = 0;
 		int tmp = 6;
 		for(int i=6;i<11;i++){
@@ -215,7 +254,7 @@ public class DataManager {
 				tmp = i;
 			}
 		}
-		return Integer.toString(tmp-5);
+		return tmp-5;
 	}
 	
 	//各类别关键词，顺序为全网、政府、媒体、公众
@@ -237,6 +276,39 @@ public class DataManager {
 		System.out.print("\n");
 		return keywords;
 	}
+	
+	static private List<List<String>> nounKeywords = null;
+	static public List<List<String>> getNounKeywords(){
+		if(nounKeywords == null){
+			List<List<String>> rawKeywords = getKeywords();
+			for (int i=0;i<rawKeywords.size();i++) {
+				rawKeywords.set(i, keepNoun(rawKeywords.get(i)));
+			}
+		}
+		return keywords;
+	}
+	
+	static private List<String> keepNoun(List<String> raw){
+		int counter = 0;
+		for (int i=0;i<raw.size();i++) {
+			Nature nature = HanLP.segment(raw.get(i)).get(0).nature;
+			if(!(nature.startsWith('n')
+					||nature.startsWith("vn")
+					||nature.startsWith("an"))){
+				raw.remove(raw.get(i));
+				i--;
+			}else {
+				counter++;
+			}
+			if(counter == 4) break;
+		}
+		if(raw.size() < 4){
+			for(int j=raw.size();j<4;j++){
+				raw.set(j, "无数据");
+			}
+		}
+		return raw;
+	}
 
 	//各类别记录数量，顺序为全网、政府、媒体、公众
 	static private int[] recordNums = null;
@@ -253,6 +325,23 @@ public class DataManager {
 	}
 	
 	//各年份记录数量
+	static private List<Map.Entry<String, Integer>> yearRecordList = null;
+	static public List<Map.Entry<String, Integer>> getYearRecordList(){
+		System.out.print("getYearRecordNums called\n");
+		if(true){//TODO 这里有一个bug，该bug表现为若这里判断条件为yearRecordList==null，则会在某些未赋值的时候不为null，导致不经过下面的运算而返回错误结果。该错误结果为按数量也就是Integer排序
+			Map<String, Integer> yearRecordMap = DatabaseHelper.count(getKeyword());
+			yearRecordList = new ArrayList<Map.Entry<String, Integer>>(
+					yearRecordMap.entrySet());
+			Collections.sort(yearRecordList, new Comparator<Map.Entry<String, Integer>>() {
+				public int compare(Map.Entry<String, Integer> o1,
+						Map.Entry<String, Integer> o2) {
+					return (o1.getKey()).toString().compareTo(o2.getKey().toString());
+				}
+			});
+		}
+		return yearRecordList;
+	}
+	
 	static private HashMap<String, Integer> yearRecordNums = null;
 	static public HashMap<String, Integer> getYearRecordNums(){
 		System.out.print("getYearRecordNums called\n");
@@ -274,7 +363,10 @@ public class DataManager {
 		opinionIndexes = null;
 		keywords = null;
 		recordNums = null;
-		yearRecordNums = null;
-		opinionIndexDistribution = null;
+		yearRecordList = null;
+		allDistribution = null;
+		govDistribution = null;
+		mediaDistribution = null;
+		publicDistribution = null;
 	}
 }
