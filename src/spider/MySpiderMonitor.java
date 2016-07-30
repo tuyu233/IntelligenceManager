@@ -25,21 +25,31 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MySpiderMonitor extends SpiderMonitor {
 	private static SpiderMonitor INSTANCE = new MySpiderMonitor();
-	MonitorSpiderListener monitorSpiderListener = new MonitorSpiderListener();
-	Map<Spider,SpiderStatusMXBean> map = new HashMap<>();
+	//private MonitorSpiderListener monitorSpiderListener = new MonitorSpiderListener();
+	Map<Spider, SpiderStatusMXBean> map = new HashMap<>();
+
 	public SpiderStatusMXBean getSpiderStatusMBean(Spider spider) {
-		if(map.containsKey(spider)){
+		if (map.containsKey(spider)) {
 			return map.get(spider);
 		}
-		spider.getSpiderListeners().add(monitorSpiderListener);
+        MonitorSpiderListener monitorSpiderListener = new MonitorSpiderListener();
+        if (spider.getSpiderListeners() == null) {
+            List<SpiderListener> spiderListeners = new ArrayList<SpiderListener>();
+            spiderListeners.add(monitorSpiderListener);
+            spider.setSpiderListeners(spiderListeners);
+        } else {
+            spider.getSpiderListeners().add(monitorSpiderListener);
+        }
 		SpiderStatusMXBean bean = new SpiderStatus(spider, monitorSpiderListener);
-		map.put(spider,bean);
+		map.put(spider, bean);
 		return bean;
 	}
+	//@Override
+    public static SpiderMonitor instance() { 
+         return INSTANCE; 
+    } 
 
-	public static SpiderMonitor instance() {
-		return INSTANCE;
-	}
+
 	public static void main(String args[]) {
 		Spider spider = Spider.create(new GeneralProcessor());
 		// spider.addUrl("http://www.most.gov.cn/kjbgz/201607/t20160707_126445.htm");
@@ -48,29 +58,25 @@ public class MySpiderMonitor extends SpiderMonitor {
 		spider.addUrl("http://mil.news.sina.com.cn/china/2016-07-08/doc-ifxtwiht3338415.shtml");// ok
 
 		try {
-			SpiderMonitor.instance().register(spider);
-//			MonitorableScheduler scheculer = (MonitorableScheduler) spider.getScheduler();
-//			System.out.println(scheculer.getLeftRequestsCount(spider));
+			 //SpiderMonitor.instance().register(spider);
+			// MonitorableScheduler scheculer = (MonitorableScheduler)
+			// spider.getScheduler();
+			// System.out.println(scheculer.getLeftRequestsCount(spider));
 			MySpiderMonitor spiderMonitor = (MySpiderMonitor) MySpiderMonitor.instance();
 			SpiderStatusMXBean bean = spiderMonitor.getSpiderStatusMBean(spider);
 			System.err.println(bean.getLeftPageCount());
 			spider.thread(1).start();
-			try {
-				while (true) {
-					Thread.sleep(1000 * 2);
-					System.err.println(bean.getLeftPageCount());
-					System.err.println(bean.getSuccessPageCount()+" "+ bean.getTotalPageCount());
-				}
 
-				
-			} catch (InterruptedException e) {
-				
-				e.printStackTrace();
+			while (true) {
+				Thread.sleep(1000 * 2);
+				System.err.println(bean.getLeftPageCount());
+				System.err.println(bean.getSuccessPageCount() + " " + bean.getTotalPageCount());
 			}
-		} catch (JMException e) {
+
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 }
