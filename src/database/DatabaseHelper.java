@@ -346,8 +346,8 @@ public class DatabaseHelper {
 			Transaction transaction = session.beginTransaction();
 			if(object instanceof Record){
 				Record record = (Record)object;
-				int i = session.createQuery("from Record r where r.content = :content")
-						.setString("content",record.getContent()).setMaxResults(1).list().size();
+				int i = session.createQuery("from Record r where r.hashCode = :hashCode")
+						.setString("hashCode",record.getHashCode()).setMaxResults(1).list().size();
 				if( i == 0){
 					session.save(object);
 				}
