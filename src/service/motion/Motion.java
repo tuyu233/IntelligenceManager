@@ -68,7 +68,8 @@ public class Motion {
 		计算输入的所有字符串的情感评估值的分布 int[] getAssessmentMap(List<String>)
 	 */
 	public static Map<String , DicStruct> map =new HashMap<String , DicStruct>();
-	
+	public static char[] sDot= new char[1000];
+	public static int kDot=0;
 	private static float posMot = 0;
 	private static float negMot = 0;
 	
@@ -134,7 +135,7 @@ public class Motion {
 		float pos=0, neg=0, plus=1;
 		int not=0;
 		for(int i=0 , len = alwTemp.size() ;i < len ;i++){
-			//System.out.println(alwTemp.get(i).sw1);
+			System.out.println(alwTemp.get(i).sw1);
 			if(alwTemp.get(i).type==3){
 				plus=alwTemp.get(i).level;
 			}else if(alwTemp.get(i).type==2 || (alwTemp.get(i).type==1 && not==1)){
@@ -147,6 +148,17 @@ public class Motion {
 				not = 0;
 			}else if(alwTemp.get(i).type==4)
 				not = 1;
+		}
+		//作为计算连续问号的motion
+		for(int i=0;i<kDot-1;i++){
+			if(sDot[i]=='？' && sDot[i+1]=='？'){
+				negMot+=10;
+				i=i+1;
+			}
+		}
+		kDot=0;
+		for(int i=0;i<1000;i++){
+			sDot[i]='\0';
 		}
 		posMot += pos;
 		negMot += neg;
@@ -175,8 +187,15 @@ public class Motion {
 	private static String[] stringIntoWord(String s){
 		/*
 		 * 把s以句号为单位分成多个字符串，返回一个String数组
+		 * 并且统计？是否相连
 		 */
-		return s.split("。|？");
+		char[] s0=s.toCharArray();
+		for (int i=0,len=s0.length;i<len;i++){
+			if(s0[i]=='。'|| s0[i]=='？' || s0[i]=='！'){
+				sDot[kDot++]=s0[i];
+			}
+		}
+		return s.split("。|？|！");
 	}
 	
 	private static ArrayList<fStruct> getWord(String s){
@@ -280,6 +299,12 @@ public class Motion {
 			addW("同意",1,5);
 			addW("难道",4,0);
 			addW("怎么",4,0);
+			addW("猪",2,9);
+			addW("狗",2,9);
+			addW("脑残",2,9);
+			addW("智障",2,9);
+			addW("凭什么",2,11);
+			
 			/*
 			 * 临时删除区域
 			 */
