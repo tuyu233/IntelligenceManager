@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class newTest {
 	public static void main(String [] args) {
 		FileInputStream file= null;
-		/*try {
+		try {
 			file = new FileInputStream ("W:/libWork/comment.txt");
 			InputStreamReader isr = new InputStreamReader(file,"gbk");
 			BufferedReader br = new BufferedReader (isr);
@@ -20,13 +20,11 @@ public class newTest {
 			}
 			file.close();
 			System.out.println( Motion.getAssessment(sFile) );
-			System.out.println( Motion.getAssessment(sFile) );
-			System.out.println( Motion.getAssessment(sFile) );
-			System.out.println( Motion.getAssessment(sFile) );
 		
 		} catch (Exception e) {
 			e.printStackTrace();
-		}*/
+		}
+		/*
 		try {
 		file = new FileInputStream ("W:/libWork/comment.txt");
 		InputStreamReader isr = null;
@@ -68,7 +66,7 @@ public class newTest {
 		
 		}catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 	}	
 	
 }
