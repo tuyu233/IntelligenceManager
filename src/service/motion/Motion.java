@@ -63,17 +63,26 @@ public class Motion {
 		计算输入的所有字符串的情感评估值的平均值 float getAssessmentAve(List<String>)
 		计算输入的所有字符串的情感评估值的分布 int[] getAssessmentMap(List<String>)
 	 */
-	Map<String , DicStruct> map =new HashMap<String , DicStruct>();
+	public static Map<String , DicStruct> map =new HashMap<String , DicStruct>();
+	public static char[] sDot= new char[1000];
+	public static int kDot=0;
+	private static float posMot = 0;
+	private static float negMot = 0;
 	
-	private float posMot = 0;
-	private float negMot = 0;
+	public Motion(){
+		DicInit();
+	}
 	
-	public float getAssessment(String s){
+	public static  float getAssessment(String s){
 		/*
 		 * 计算传入的字符串s的情感评估值
 		 */
+		if(s==null)
+			return (float)0.5;
+		posMot = 0 ;
+		negMot = 0;
 		String [] sArray = stringIntoWord(s);//分成句号为单位
-		for(int i = 0, len = sArray.length , posMot = 0 , negMot = 0 ; i < len ; i++){
+		for(int i = 0, len = sArray.length ; i < len ; i++){
 			ArrayList<fStruct> alfTemp = getWord(sArray[i]);//一句话分成单词为单位
 			ArrayList<wStruct> alwTemp = getSeq(alfTemp);//获取情感词语的顺序
 			if(alwTemp!=null)
@@ -86,16 +95,23 @@ public class Motion {
 		
 	}
 	
-	public float getAssessmentAve(List<String> ls){
-		int sum =0 ,len = ls.size();
+	public static  float getAssessmentAve(List<String> ls){
+		if(ls==null)
+			return (float)0.5;
+		float sum =0 ;
+		int len = ls.size();
 		for(int i=0 ;i<len;i++){
-			sum+=getAssessment(ls.get(i));
+			sum = sum + getAssessment(ls.get(i));
+			//System.out.println("i: "+i+" "+getAssessment(ls.get(i))+ " sum "+sum);
 		}
-		return (float)sum/len;
+		//System.out.println("sum: "+sum+" len: "+len);
+		return (float)(sum/len);
 	}
 	
 	
-	public int[] getAssessmentMap(List<String> ls){
+	public static  int[] getAssessmentMap(List<String> ls){
+		if(ls==null)
+			return null;
 		int array[]=new int[11];
 		for(int i=0;i<11;i++)
 			array[i]=0;
@@ -111,7 +127,7 @@ public class Motion {
 	}
 	
 	
-	private void getMotion(ArrayList<wStruct> alwTemp) {
+	private static  void getMotion(ArrayList<wStruct> alwTemp) {
 		float pos=0, neg=0, plus=1;
 		int not=0;
 		for(int i=0 , len = alwTemp.size() ;i < len ;i++){
@@ -129,11 +145,26 @@ public class Motion {
 			}else if(alwTemp.get(i).type==4)
 				not = 1;
 		}
+		//作为计算连续问号的motion
+		for(int i=0;i<kDot-1;i++){
+			if(sDot[i]=='？' && sDot[i+1]=='？'){
+				negMot+=10;
+				i=i+1;
+			}
+		}
+		kDot=0;
+		for(int i=0;i<1000;i++){
+			sDot[i]='\0';
+		}
 		posMot += pos;
 		negMot += neg;
 	}
 
-	private ArrayList<wStruct> getSeq( ArrayList<fStruct> alTemp ){
+	private static ArrayList<wStruct> getSeq( ArrayList<fStruct> alTemp ){
+		if(alTemp==null)
+			return null;
+		if(map.isEmpty())
+			DicInit();
 		ArrayList<wStruct> alw = new ArrayList<wStruct>();
 		for(int i = 0, len = alTemp.size(); i < len ; i++){
 			if((map.get(alTemp.get(i).sw1))!=null){
@@ -149,41 +180,46 @@ public class Motion {
 		return alw;
 	}
 	
-	private String[] stringIntoWord(String s){
+	private static String[] stringIntoWord(String s){
 		/*
 		 * 把s以句号为单位分成多个字符串，返回一个String数组
+		 * 并且统计？是否相连
 		 */
-		return s.split("。|？");
+		char[] s0=s.toCharArray();
+		for (int i=0,len=s0.length;i<len;i++){
+			if(s0[i]=='。'|| s0[i]=='？' || s0[i]=='！'){
+				sDot[kDot++]=s0[i];
+			}
+		}
+		return s.split("。|？|！");
 	}
 	
-	private ArrayList<fStruct> getWord(String s){
+	private static ArrayList<fStruct> getWord(String s){
 		/*
 		 * 把s这一句话的词用hanlp的分词工具分为单词的形式 
 		 */
+		if(s==null)
+			return null;
+		String s0=null;
 		ArrayList<fStruct> al = new ArrayList<fStruct>();
 		List<Term> termList = IndexTokenizer.segment(s);
-		int i=-1;
-		String s0 = null;
 		for (Term term : termList){
 			String[] sa = term.toString().split("/");
 			fStruct fSTemp = new fStruct();
 			fSTemp.sw1=sa[0];
 			fSTemp.sw2=sa[1];
-			if(sa[0].equals("的")){
-				al.get(i).sw1+="的";
+			if(fSTemp.sw1.equals("改革")){
 				continue;
 			}
-			if(fSTemp.sw1.equals("改革"))
-				continue;
-			//System.out.println(fSTemp.sw1);
 			al.add(fSTemp);
-			s0=fSTemp.sw1;
-			i++;
 		}
 		return al;
 	}
 	
-	protected void DicInit(){
+	protected static void DicInit(){
+		/*
+		 * 将 词典存入map中
+		 */
 		FileInputStream file1 = null,file2 = null, file3 = null, file4 =null,file5 =null,file6 = null;
 		try {
 			file1= new FileInputStream("./resource/dict/term.txt");
@@ -242,6 +278,7 @@ public class Motion {
 			ds.level=0;
 			ds.type=4;
 			map.put("不", ds);
+			
 			while((sTmp1 = br6.readLine())!=null){
 				ds = new DicStruct ();
 				ds.type=5;//假设关联词
@@ -250,20 +287,42 @@ public class Motion {
 			/*
 			 * 临时添加区域
 			 */
+			addW("不是",4,0);
+			addW("非",4,0);
+			addW("并非",4,0);
 			addW("支持",1,5);
 			addW("反对",2,5);
 			addW("同意",1,5);
-			addW("好的",1,5);
 			addW("难道",4,0);
 			addW("怎么",4,0);
-			addW("对的",1,5);
+			addW("猪",2,9);
+			addW("狗",2,9);
+			addW("脑残",2,9);
+			addW("智障",2,9);
+			addW("凭什么",2,11);
+			
+			/*
+			 * 临时删除区域
+			 */
+			removeW("建设");
+			removeW("智慧");
+			removeW("专家");
+			removeW("节约");
+			removeW("标准");
+			removeW("发达");
+			removeW("大方");
+			removeW("准绳");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	private void addW(String s,int type,float level) {
+	private static void removeW(String s){
+		map.remove(s);
+	}
+	
+	private static void addW(String s,int type,float level) {
 		// TODO Auto-generated method stub
 		DicStruct ds = new DicStruct();
 		ds.type=type;
