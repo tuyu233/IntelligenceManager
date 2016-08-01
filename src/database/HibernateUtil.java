@@ -33,7 +33,7 @@ public class HibernateUtil {
         
         Query query;
         for(String column : columns){
-        	String s = "ALTER TABLE `record` CHANGE `"+column+"` `"+column+"` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;";
+        	String s = "ALTER TABLE `record` CHANGE `"+column+"` `"+column+"` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;";
         	//System.out.println(s);
         	query = session.createSQLQuery(s);
         	query.executeUpdate();
