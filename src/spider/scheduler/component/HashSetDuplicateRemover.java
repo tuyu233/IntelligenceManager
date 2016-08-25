@@ -2,9 +2,9 @@ package spider.scheduler.component;
 
 import com.google.common.collect.Sets;
 
-import spider.Request;
-import spider.Task;
 import spider.scheduler.component.DuplicateRemover;
+import us.codecraft.webmagic.Request;
+import us.codecraft.webmagic.Task;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

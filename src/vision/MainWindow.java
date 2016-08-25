@@ -25,6 +25,8 @@ public class MainWindow
 	ResultStatistic tab_panel2;
 	AllData tab_panel3;
 	JButton search_button;
+	JButton result_button;
+	JButton makeReport_button;
 	
 	public MainWindow()
 	{
@@ -58,13 +60,26 @@ public class MainWindow
 		north_panel.add(search_panel);
 		search_panel.setLayout(new BorderLayout());
 		
-		JButton makeReport_button = new JButton();
-		makeReport_button.setText(Attributes.MAKEREPORT);
+		makeReport_button = new JButton();
+		makeReport_button.setText(Attributes.REPORTBUTTON);
 		makeReport_button.setFont(Fonts.searchButton);
 		makeReport_button.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0){
-				Controller.makeReport();
+				makeReport_button.setText(Attributes.REPORTBUTTON_PROCESSING);
+				makeReport_button.invalidate();
+				makeReport_button.repaint();
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						Controller.makeReport();
+
+						makeReport_button.setText(Attributes.REPORTBUTTON);
+						makeReport_button.invalidate();
+						makeReport_button.repaint();
+					}
+				}).start();
 			}
 		});
 		search_panel.add(makeReport_button, BorderLayout.WEST);
@@ -104,7 +119,7 @@ public class MainWindow
 		});
 			
 		button_panel.add(search_button);
-		JButton result_button=new JButton(Attributes.RESULTBUTTON);
+		result_button=new JButton(Attributes.RESULTBUTTON);
 		button_panel.add(result_button);
 		search_button.setFont(Fonts.normal);
 		result_button.setFont(Fonts.normal);
@@ -113,8 +128,22 @@ public class MainWindow
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				super.mouseClicked(arg0);
-				if(getInput()!=null)
-					Controller.showResult(getInput(), tab_panel1, tab_panel2, tab_panel3);
+				if(getInput()!=null){
+					result_button.setText(Attributes.RESULTBUTTON_PROCESSING);
+					result_button.invalidate();
+					result_button.repaint();
+					new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+							Controller.showResult(getInput(), tab_panel1, tab_panel2, tab_panel3);
+
+							result_button.setText(Attributes.RESULTBUTTON);
+							result_button.invalidate();
+							result_button.repaint();
+						}
+					}).start();
+				}
 			}
 		});
 		

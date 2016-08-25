@@ -1,53 +1,63 @@
 package spider.helper;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
-import javax.swing.*;
+import javax.management.JMException;
 
-public class test extends JFrame implements ActionListener {
-	JButton button1 = new JButton("stop");
-	JButton button0 = new JButton("start");
-	String key = "数控机床";
-	boolean[] option = { true, false, false, false, false, false };
-	Crawler crawler = new Crawler(key, option);
+import service.DataManager;
+import service.SiteManager;
+import spider.pipeline.ConsolePipeline;
+import spider.pipeline.MysqlPipeline;
+import spider.processor.GeneralProcessor;
+import spider.processor.SearchListProcessor;
+import us.codecraft.webmagic.Spider;
+import us.codecraft.webmagic.monitor.SpiderMonitor;
 
-	public test() throws HeadlessException {
-		setSize(225, 80);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		FlowLayout flowLayout = new FlowLayout();
-		setLayout(flowLayout);
-		add(button0);
-		add(button1);
-		setVisible(true);
-		button1.addActionListener(this);
-		button0.addActionListener(this);
-	}
-
-	public void actionPerformed(ActionEvent e) {
-		Object object = e.getSource();
-		if (object == button1) {
-			crawler.stop();
-			System.out.println("stop now!");
-		}
-		if (object == button0) {
-			crawler.start();
+public class Test {
+	
+	public Test(){
+		DataManager.setKeyword("公车改革");
+		String keyword = DataManager.getKeyword();
+		Spider siteSpider = Spider.create(new SearchListProcessor())
+				.addUrl("http://cn.bing.com/search?q="+ keyword +"%22+filetype%3Ahtml")
+				.addPipeline(new ConsolePipeline())
+				.thread(1);
+		
+		siteSpider.run();
+		System.out.print("寻找网站结束，共找到"+SiteManager.getSitesSize()+"个网站\n");
+		
+		List<String> sites = SiteManager.getSites();
+		LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>(sites);
+		/*Spider.create(new GeneralProcessor())
+				.addUrl("http://cn.bing.com/search?q=site%3A"+sites.get(0)+"+%22公车改革%22+filetype%3Ahtml")
+				.addPipeline(new MysqlPipeline())
+				.thread(1)
+				.start();*/
+		int spiderNum = 20;
+		Spider[] pageSpiders = new Spider[spiderNum];
+		int each = sites.size()/spiderNum + 1;
+		//每一个爬虫
+		for (int i=0;i<spiderNum;i++) {
+			//每个爬虫取each个网站，并转换为字符串数组
+			ArrayList<String> list = new ArrayList<String>();
+			for(int j=0;j<each;j++){
+				if(queue.peek() == null) break;
+				list.add("http://cn.bing.com/search?q=site%3A"+queue.poll()+"+%22"+keyword+"%22+filetype%3Ahtml");
+			}
+			//System.out.print("list built! " + list +"\n");
+			String[] urls = list.toArray(new String[list.size()]);
+			Spider.create(new GeneralProcessor())
+					.addUrl(urls)
+					.addPipeline(new MysqlPipeline())
+					.thread(2).run();
 		}
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		//new test();
-		 String urlStr=null;
-			try {
-				urlStr = URLEncoder.encode("信息系统", "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			 System.out.println(urlStr);
+		new Test();
 
 	}
 

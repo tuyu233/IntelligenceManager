@@ -1,8 +1,10 @@
 package spider.pipeline;
 
-import spider.ResultItems;
-import spider.Task;
-import spider.pipeline.Pipeline;
+import service.DataManager;
+import service.motion.Motion;
+import us.codecraft.webmagic.ResultItems;
+import us.codecraft.webmagic.Task;
+import us.codecraft.webmagic.pipeline.Pipeline;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -15,8 +17,7 @@ import entity.Record;
 //import database.SQLop;
 
 /**
- * Write results in console.<br>
- * Usually used in test.
+ * Write results in MySQL database.<br>
  * 
  * @author code4crafter@gmail.com <br>
  * @since 0.1.0
@@ -34,7 +35,26 @@ public class MysqlPipeline implements Pipeline {
 		String other = null;
 		List<String> comments = null;
 		List<Date> times = null;
-		System.out.println("get page: " + resultItems.getRequest().getUrl());
+		
+		System.out.print("pipeline processing.\n");
+		
+		if(resultItems.get("title") != null) title = resultItems.get("title");
+		if(resultItems.get("content") != null) content = resultItems.get("content");
+		if(resultItems.get("time") != null){
+			try {
+				time = java.sql.Date.valueOf((String) resultItems.get("time"));
+			} catch (Exception e) {
+				System.out.println(e + "\n数据库存入的时间信息格式有误");
+			}
+		}
+		if(resultItems.get("url") != null) url = resultItems.get("url");
+		//if(resultItems.get("title") != null) title = resultItems.get("title");
+		//if(resultItems.get("title") != null) title = resultItems.get("title");
+		
+		DatabaseHelper.save(new Record("", title, content, url, time, "", "", 0));
+		
+		
+		/*System.out.println("get page: " + resultItems.getRequest().getUrl());
 		for (Map.Entry<String, Object> entry : resultItems.getAll().entrySet()) {
 			// String temp = entry.getValue().toString();
 			if (entry.getValue().toString() == null)
@@ -115,17 +135,19 @@ public class MysqlPipeline implements Pipeline {
 			}
 
 		}
-		Record record = new Record();
 		if (comments != null) {
+			String keyword = DataManager.getKeyword() + "公众评论";
 			for (String comment : comments) {
 				//TODO 这里会出现评论重复写入数据库的情况，所以进行了修改，不知原写法作用何在故没有删去，若没用可及时删去 by qiji
 				//for (Date atime : times){
-					DatabaseHelper.save(new Record("公众", title, comment, url, times.get(comments.indexOf(comment)), author, other, 0));
-					//TODO 这里能不能将评论所在文章标题写入title？
+				other = Float.toString(Motion.getAssessment(comment));
+				DatabaseHelper.save(new Record("公众", keyword, comment, url, times.get(comments.indexOf(comment)), author, other, 0));
+				//TODO 这里能不能将评论所在文章标题写入title？
 				//}
 			}
 		} else if (content != null && !content.replaceAll("\n", "").equals("")){
+			other = Float.toString(Motion.getAssessment(content));
 			DatabaseHelper.save(new Record(type, title, content, url, time, author, other, 0));
-		}
+		}*/
 	}
 }

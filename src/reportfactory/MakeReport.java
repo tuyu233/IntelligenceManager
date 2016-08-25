@@ -16,9 +16,10 @@ public class MakeReport {
 
 	String keyword = null;
 	String filePath = null;
-	Information t = Information.getInstance();
+	Information t;
 
 	public MakeReport(String keyword, String filePath) {
+		t = Information.getInstance();
 		this.keyword = keyword;
 		this.filePath = filePath;
 		excute();
@@ -27,43 +28,101 @@ public class MakeReport {
 	public void excute() {
 
 		HtmlFile file = new HtmlFile(filePath, keyword);
+		file.write_first();
+		//the first part
+		file.writeinfor("&nbsp;&nbsp;"+
+		"本次报告通过qiji全网络数据采集&nbsp;采集了"+
+			t.getNumOfWebsites()	+
+		"个网站，&nbsp;分析了"+
+			t.getNumOfArticles()	+
+		"篇文章,"+t.getComments()+
+		"&nbsp;条评论，通过分词、&nbsp;聚类、&nbsp;查重、&nbsp;摘要等手段和方法，&nbsp;对各类数据进行分析形成图表，&nbsp;并最后形成报告如下。"
 
-		file.writeStatistics("1、舆论统计", WORDS);
-		file.writeStatistics(t.getSource_jpg(), ICON);
-		file.writeStatistics(t.getMotion_jpg(), ICON);
-		file.writeStatistics(t.getYear_comments_jpg(), ICON);
-
-		file.writeStatistics("2、主题分析", WORDS);
-		file.writeinfor("不同主体关注的主题:");
-		String str="";
-		if (t.getGov_theme() != null) {
-			for (int i = 0; i < t.getGov_theme().size(); i++) {
-				str=str+t.getGov_theme().get(i)+" ";
+				);
+		file.writerline(); //hr
+		file.writeDev("first");
+		file.write_mainone();
+		file.writeEndDev();
+		
+		file.writerline(); //hr
+		file.writeDev("Second");
+		file.writeStatistics("二、主题分析（主题词）", WORDS);
+		List<List<String>> topic =null;
+		
+		try {
+			if(t.getHot_theme()!=null){
+				topic = t.getHot_theme();
 			}
-			file.writeinfor("政府："+str);
-		}	
-		str="";
-		if (t.getMedia_theme() != null) {
-			for (int i = 0; i < t.getMedia_theme().size(); i++) {
-				str=str+t.getMedia_theme().get(i)+" ";
+			if(topic.size()<5){
+				System.out.println("主题元素数量类型不够");
 			}
-			file.writeinfor("媒体："+str);
-		}	
-		str="";
-		if (t.getPublic_theme() != null) {
-			for (int i = 0; i < t.getPublic_theme().size(); i++) {
-				str=str+t.getPublic_theme().get(i)+" ";
-			}
-			file.writeinfor("公众："+str);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 		
-		file.writeinfor("明显峰值年度以及主题:");
-		str="";
-		if (t.getYear_theme() != null) {
-			for (int i = 0; i < t.getYear_theme().size(); i++)
-				str=str+t.getYear_theme().get(i)+" ";
-			file.writeinfor(str);
+		for (int i = 0; i < 5; i++) {
+			
+			String str="";
+			if(topic!=null && i<=(topic.size()-1))
+			{
+				List<String> in = topic.get(i);
+				for (int j = 0; j < in.size(); j++) {
+					str=str+in.get(j)+" ";
+				}
+			}
+			switch (i) {
+			case 0:{
+				file.writeinfor("全网："+str);
+				break;
+			}
+			case 1:{
+				file.writeinfor("政府："+str);
+				break;
+			}
+			case 2:{
+				file.writeinfor("媒体："+str);
+				break;
+			}
+			case 3:{
+				file.writeinfor("公众："+str);
+				break;
+			}
+			case 4:{
+				file.writeinfor("明显峰值年度以及主题："+str);
+				break;
+			}
 		}
+		}		
+		file.writeEndDev();
+
+		file.writerline(); //hr
+		file.writeDev("Third");
+		file.writeStatistics("三、态度（情感）分析", WORDS);
+		file.writeList();
+		file.writemOfList("全网整体的舆论指数:" + t.getGlobal_attitude());
+		file.writemOfList("政府官网态度指数:" + t.getGov_attitude());
+		file.writemOfList("媒体的满意度:" + t.getMedia_attitude());
+		file.writemOfList("公众的满意度:" + t.getPublic_attitude());
+		
+		file.writeEndList();
+		file.writeEndDev();
+		
+		file.writerline(); //hr
+		file.writeDev("Forth");
+		file.writeStatistics("四、热点分析", WORDS);
+		file.writeList();
+		file.writemOfList("热点主题");
+		file.writemOfList("集中度较高的观点" );
+		file.writeEndList();
+		file.writeEndDev();
+		
+		file.writeLast();
+		
+		
+		
+		/*
+		
 		
 		file.writeStatistics("3、态度分析", WORDS);
 		file.writeinfor("全网整体的舆论指数:" + t.getGlobal_attitude());
@@ -82,8 +141,11 @@ public class MakeReport {
 		if (t.getOther() != null) {
 			for (int i = 0; i < t.getOther().size(); i++)
 				file.writeinfor(t.getOther().get(i));
-		}
+		}*/
+		
 		file.finish();
+		System.out.println("fin_write");
+		
 	}
 
 	/**
@@ -113,12 +175,13 @@ public class MakeReport {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Information t = Information.getInstance();
-		t.setGlobal_attitude("globalattitude");
-		Information tt = Information.getInstance();
-		tt.setGov_attitude("govattitude");
-		// t.setHot_theme("hottheme");
-		tt.setMedia_attitude("mediaattitude");
-		new MakeReport("test123", ".\\output\\1.html");
+//		t.setGlobal_attitude("globalattitude");
+//		Information tt = Information.getInstance();
+//		tt.setGov_attitude("govattitude");
+//		// t.setHot_theme("hottheme");
+//		tt.setMedia_attitude("mediaattitude");
+		
+		new MakeReport("test123", ".\\output\\2.html");
 
 	}
 
