@@ -16,14 +16,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import entity.Record;
+import properties.Configure;
 
 public class TestDatabase {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		
+
 	}
- 
+
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 	}
@@ -44,21 +45,59 @@ public class TestDatabase {
 		record.setBaseUrl("baidu.com");
 		record.setTitle("testSave");
 		DatabaseHelper.save(record);
-		assertEquals(1,countAll());
+		assertEquals(1, countAll());
 	}
+
 	@Test
-	public void testDelete(){
+	public void testDelete() {
 		Record record = new Record();
 		record.setAuthor("czn");
 		record.setBaseUrl("baidu.com");
 		record.setTitle("testSave");
 		DatabaseHelper.save(record);
 		DatabaseHelper.delete(record);
-		assertEquals(0,countAll());
+		assertEquals(0, countAll());
 	}
-	
+
+	//@Test
+	public void testConcurrent() {
+		int threadCount = 50;
+		int saveCount = 1000;
+		SaveThread threads[] = new SaveThread[threadCount];
+		for(int i=0; i < threadCount;i++){
+			threads[i] = new SaveThread(saveCount);
+		}
+		for(SaveThread thread : threads){
+			thread.start();
+		}
+		while(true){
+			boolean find = false;
+			for(SaveThread thread : threads){
+				if(thread.isAlive())find = true;
+			}
+			if(!find)break;
+		}
+		assertEquals(threadCount*saveCount, countAll());
+	}
+
+	private class SaveThread extends Thread {
+
+		int count = 100;
+		public SaveThread(int count) {
+			this.count = count;
+		}
+		@Override
+		public void run() {
+			Record record = new Record();
+			for (int i = 0; i < count; i++) {
+				record.setTitle(String.valueOf(Math.random()));
+				DatabaseHelper.save(record);
+			}
+		}
+	}
+
 	@Test
-	public void testUpdate(){
+	public void testUpdate() {
 		Record record = new Record();
 		record.setAuthor("cznnn");
 		record.setBaseUrl("baidu.com");
@@ -70,21 +109,25 @@ public class TestDatabase {
 		Session session = HibernateUtil.getSession();
 		Record r = (Record) session.createQuery("from Record").setMaxResults(1).list().get(0);
 		assertEquals("aaa", r.getTitle());
-		
+
 	}
-	
+
 	@Test
-	public void testSaveUnique(){
+	public void testSaveUnique() {
 		Record record = new Record();
 		record.setAuthor("cznnn");
 		record.setBaseUrl("baidu.com");
 		record.setTitle("testSave");
 		DatabaseHelper.save(record);
 		DatabaseHelper.save(record);
-		assertEquals(1,countAll());
+		//System.err.println(countAll());
+		int exp = 1;
+		if(!Configure.DATABASE_SAVE_REMOVE_DUPLICATION)exp = 2;
+		assertEquals(exp, countAll());
 	}
+
 	@Test
-	public void testHql(){
+	public void testHql() {
 		Record record = new Record();
 		record.setAuthor("cznnn");
 		record.setBaseUrl("baidu.com");
@@ -93,24 +136,25 @@ public class TestDatabase {
 		record.setTitle("2");
 		record.setContent("a");
 		DatabaseHelper.save(record);
-		
+
 		DatabaseHelper helper = DatabaseHelper.query(Record.class);
-		helper.where(new Pair("title",1));
-		assertEquals(1,helper.list().size());
-		
+		helper.where(new Pair("title", 1));
+		assertEquals(1, helper.list().size());
+
 		helper = DatabaseHelper.query(Record.class);
-		assertEquals(2,helper.list().size());
-		
+		assertEquals(2, helper.list().size());
+
 		helper = DatabaseHelper.query(Record.class);
-		helper.orderBy("title",SortOrder.asc);
-		assertEquals("1",((Record)(helper.list().get(0))).getTitle());
-		
+		helper.orderBy("title", SortOrder.asc);
+		assertEquals("1", ((Record) (helper.list().get(0))).getTitle());
+
 		helper = DatabaseHelper.query(Record.class);
-		helper.orderBy("title",SortOrder.desc);
-		assertEquals("2",((Record)(helper.list().get(0))).getTitle());
+		helper.orderBy("title", SortOrder.desc);
+		assertEquals("2", ((Record) (helper.list().get(0))).getTitle());
 	}
+
 	@Test
-	public void testSearch1(){
+	public void testSearch1() {
 		Record record = new Record();
 		record.setAuthor("cznnn");
 		record.setBaseUrl("baidu.com");
@@ -123,12 +167,13 @@ public class TestDatabase {
 		record.setContent("buaaa");
 		record.setTitle("11");
 		DatabaseHelper.save(record);
-		
-		List<Record> list = DatabaseHelper.search("ua",SearchType.GOV);
+
+		List<Record> list = DatabaseHelper.search("ua", SearchType.GOV);
 		assertEquals(2, list.size());
-	}	
+	}
+
 	@Test
-	public void testCount(){
+	public void testCount() {
 		Record record = new Record();
 		record.setAuthor("cznnn");
 		record.setBaseUrl("baidu.com");
@@ -139,14 +184,14 @@ public class TestDatabase {
 		record.setTitle("2");
 		record.setContent("aaauaa");
 		DatabaseHelper.save(record);
-		long r  = DatabaseHelper.count("ua",SearchType.GOV);
+		long r = DatabaseHelper.count("ua", SearchType.GOV);
 		assertEquals(2, r);
 	}
-	
+
 	@Test
-	public void testCountByYear() throws ParseException{
+	public void testCountByYear() throws ParseException {
 		Record record = new Record();
-		record.setTitle("1"); 
+		record.setTitle("1");
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-mm-dd");
 		record.setSaveTime(sf.parse("2010-1-2"));
 		record.setContent("11");
@@ -159,18 +204,18 @@ public class TestDatabase {
 		record.setTitle("111");
 		record.setContent("311");
 		DatabaseHelper.save(record);
-		
-		Map<String,Integer> map = DatabaseHelper.count("1");
-		System.err.println(map.get("2010"));
+
+		Map<String, Integer> map = DatabaseHelper.count("1");
+		//System.err.println(map.get("2010"));
 		assertTrue(2 == map.get("2010"));
 		assertTrue(1 == map.get("2011"));
-		
+
 	}
-	
+
 	@Test
-	public void testSearch2(){
+	public void testSearch2() {
 		Record record = new Record();
-		record.setTitle("asdd"); 
+		record.setTitle("asdd");
 		DatabaseHelper.save(record);
 		record.setTitle("asddd ssff");
 		record.setContent("buaa");
@@ -178,11 +223,11 @@ public class TestDatabase {
 		List<Record> list = DatabaseHelper.search("asd", "", SearchType.ALL);
 		assertEquals(2, list.size());
 	}
-	
+
 	@Test
-	public void testSearch3() throws ParseException{
+	public void testSearch3() throws ParseException {
 		Record record = new Record();
-		record.setTitle("asdd"); 
+		record.setTitle("asdd");
 		DatabaseHelper.save(record);
 		record.setTitle("asddd ssff");
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-mm-dd");
@@ -192,11 +237,11 @@ public class TestDatabase {
 		List<Record> list = DatabaseHelper.search("asd", "2010", SearchType.ALL);
 		assertEquals(1, list.size());
 	}
-	
+
 	@Test
-	public void testSearch4() throws ParseException{
+	public void testSearch4() throws ParseException {
 		Record record = new Record();
-		record.setTitle("asdd"); 
+		record.setTitle("asdd");
 		DatabaseHelper.save(record);
 		record.setTitle("asddd ssff");
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-mm-dd");
@@ -205,21 +250,20 @@ public class TestDatabase {
 		List<Record> list = DatabaseHelper.search("asd sf", "", SearchType.ALL);
 		assertEquals(1, list.size());
 	}
-	
-	//@Test
-	public void testSaveAtLargeScale(){
+
+	// @Test
+	public void testSaveAtLargeScale() {
 		Record record = new Record();
 		int count = 2000;
-		for(int i=0;i < count;i++){
-			record.setContent(i+" ");
-			record.setTitle(i+" ");
+		for (int i = 0; i < count; i++) {
+			record.setContent(i + " ");
+			record.setTitle(i + " ");
 			DatabaseHelper.save(record);
 		}
 		assertEquals(count, countAll());
 	}
-	
-	
-	private int countAll(){
+
+	private int countAll() {
 		Session session = HibernateUtil.getSession();
 		int r = session.createQuery("from Record").list().size();
 		return r;

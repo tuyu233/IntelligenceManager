@@ -17,7 +17,6 @@
 		<property name="type" column="type"></property>
 		<property name="access" column="access"></property>
 		<property name="other" column="other"></property>
-		<property name="hashCode" column="hashCode"></property>
 
 	</class>
    

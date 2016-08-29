@@ -5,7 +5,7 @@ import java.util.List;
 
 import entity.Record;
 
-public class RecordTrans {
+public class Transform {
 
 	/**
 	 * Extract the content from records
@@ -38,6 +38,11 @@ public class RecordTrans {
 		return sb.toString();
 	}
 	
+	/**
+	 * Trans List<String> to one String with comma
+	 * @param strings
+	 * @return
+	 */
 	public static String strings2stringWithComma(List<String> strings){
 		StringBuffer sb = new StringBuffer();
 		for (String string : strings) {
@@ -46,5 +51,9 @@ public class RecordTrans {
 			else sb.append(",");
 		}
 		return sb.toString();
+	}
+	
+	public static boolean containsPartOfKeyword(String origin, String keyword){
+		return origin.matches(".*["+keyword+"].*");
 	}
 }

@@ -7,6 +7,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -14,22 +15,39 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import database.DatabaseHelper;
 import entity.Record;
+import properties.Attributes;
 import properties.Fonts;
 
 
 public class AllData extends JPanel
 {
 	private List<Record> resultList;
+	JPanel panelTop = null;
+	JButton buttonDeleteAll = null;
+	
+	public AllData(){
+		panelTop = new JPanel();
+		this.add(panelTop);
+		panelTop.setLayout(new BorderLayout());
+		buttonDeleteAll = new JButton(Attributes.BUTTON_DELETE_ALL);
+		buttonDeleteAll.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent arg0){
+				DatabaseHelper.clear(Record.class);
+			}
+		});
+		panelTop.add(buttonDeleteAll,BorderLayout.EAST);
+	}
+	
 	public void setResult(List<Record> resultList)
 	{
 		this.resultList = resultList;
-		
+		this.setLayout(new BorderLayout());
 		int resultsize = resultList.size();//TODO
 		
 		final MyTableModel model = new MyTableModel(resultsize, 7);
 		table = new JTable(model);
-		this.setLayout(new BorderLayout());
 		this.add(table.getTableHeader(),BorderLayout.PAGE_START);
 		this.add(table,BorderLayout.CENTER);
 		table.getColumnModel().getColumn(0).setPreferredWidth(3);

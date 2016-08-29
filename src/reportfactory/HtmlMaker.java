@@ -150,7 +150,7 @@ public class HtmlMaker {
 		map.put("thirdIndex", indexAllList.get(2).getKey());
 		map.put("govPaper", Integer.toString(nums[2]));
 		map.put("govPercent", Float.toString(nums[2]*100.0f/nums[1]));
-		map.put("medPaper", Integer.toString(nums[2]));
+		map.put("medPaper", Integer.toString(nums[3]));
 		map.put("medPercent", Float.toString(nums[3]*100.0f/nums[1]));
 		map.put("pubPaper", Integer.toString(nums[4]));
 		map.put("pubPercent", Float.toString(nums[4]*100.0f/nums[1]));
@@ -175,16 +175,16 @@ public class HtmlMaker {
 		map.put("thirdPubPercent", Float.toString(indexPublicList.get(2).getValue()*100.0f/nums[4]));
 		map.put("thirdPubIndex", indexPublicList.get(2).getKey());
 
-		map.put("keywordAll", util.RecordTrans.strings2stringWithComma(keywords.get(0)));
-		map.put("keywordGov", util.RecordTrans.strings2stringWithComma(keywords.get(1)));
-		map.put("keywordMedia", util.RecordTrans.strings2stringWithComma(keywords.get(2)));
-		map.put("keywordPublic", util.RecordTrans.strings2stringWithComma(keywords.get(3)));
-		map.put("keywordHottestYear", util.RecordTrans.strings2stringWithComma(keywords.get(4)));
+		map.put("keywordAll", util.Transform.strings2stringWithComma(keywords.get(0)));
+		map.put("keywordGov", util.Transform.strings2stringWithComma(keywords.get(1)));
+		map.put("keywordMedia", util.Transform.strings2stringWithComma(keywords.get(2)));
+		map.put("keywordPublic", util.Transform.strings2stringWithComma(keywords.get(3)));
+		map.put("keywordHottestYear", util.Transform.strings2stringWithComma(keywords.get(4)));
 		String string = null;
 		for(int i=1;i<=4;i++){
 			for(int j=1;j<=4;j++){
 				string = "t" + Integer.toString(i) + Integer.toString(j);
-				map.put(string, DataManager.getNounKeywords().get(i).get(j));
+				map.put(string, DataManager.getNounKeywords().get(i).get(j-1));
 			}
 		}
 		
@@ -213,11 +213,9 @@ public class HtmlMaker {
 		map.put("posWord", views.get(0));
 		map.put("negWord", views.get(1));
 		map.put("indexPos", views.get(2));
-		map.put("posTypicalWord", views.get(3));
-		map.put("viewPos", views.get(4));
-		map.put("indexNeg", views.get(5));
-		map.put("negTypicalWord", views.get(6));
-		map.put("viewNeg", views.get(7));
+		map.put("viewPos", views.get(3));
+		map.put("indexNeg", views.get(4));
+		map.put("viewNeg", views.get(5));
 		map.put("pipData",ChartData.getTestPipData());
 		map.put("yearData", ChartData.getTestYearData());
 		map.put("motionData",ChartData.getTestMotionData(DataManager.getAllDistribution()));

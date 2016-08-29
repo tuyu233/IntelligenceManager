@@ -31,7 +31,10 @@ public class Keyword {
 		for(int i = 0;i<keywords.size();i++){
 			if(keywords.get(i).contains("公车")
 					||keywords.get(i).contains("改革")
-					||keywords.get(i).contains("车改")){
+					||keywords.get(i).contains("车改")
+					||keywords.get(i).contains("记者")
+					||keywords.get(i).contains("中国")
+					||keywords.get(i).contains("公务")){
 				keywords.remove(i);
 				i--;
 			}

@@ -12,7 +12,9 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
 
+import properties.Configure;
 import entity.Record;
+import service.DataManager;
 import util.ClassUtil;
  
 
@@ -340,22 +342,26 @@ public class DatabaseHelper {
 	 * save object to database
 	 * @param object
 	 */
-	public static void save(Object object){
+	public static synchronized void save(Object object){
 		try {
 			Session session = HibernateUtil.getSession();
 			Transaction transaction = session.beginTransaction();
-			if(object instanceof Record){
+			if(object instanceof Record && Configure.DATABASE_SAVE_REMOVE_DUPLICATION){
 				Record record = (Record)object;
-				int i = session.createQuery("from Record r where r.hashCode = :hashCode")
+				/*int i = session.createQuery("from Record r where r.hashCode = :hashCode")
 						.setString("hashCode",record.getHashCode()).setMaxResults(1).list().size();
-				if( i == 0){
-					session.save(object);
+				if( i != 0){
+					System.err.print("重复内容，放弃写入");
+					return;
+				}*/
+				String hash = record.getHashCode();
+				if(DataManager.isDuplicate(hash)){
+					System.err.print("重复内容，放弃写入");
+					return;
 				}
 			}
-			else {
-				session.save(object);
-			}
-			
+			DataManager.countPipelinePlus();
+			session.save(object);
 			transaction.commit();
 			session.close();
 		} catch (Exception e) {

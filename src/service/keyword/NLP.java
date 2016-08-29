@@ -2,6 +2,9 @@
 
 import java.util.*;
 
+import properties.Configure;
+import service.motion.Motion;
+
 import com.hankcs.hanlp.*;
 
 import entity.Record;
@@ -21,9 +24,9 @@ public class NLP
 			if(length < 30)
 				summary += (input[i]);
 			else if(i < 2 || i == input.length - 1)
-				summary += (HanLP.getSummary(input[i], length / 2));
+				summary += (HanLP.getSummary(input[i], length ));
 			else 
-				summary += (HanLP.getSummary(input[i], length / 5));
+				summary += (HanLP.getSummary(input[i], length /2));
 			if(!summary.equals(""))
 				summary += "\n";
 		}
@@ -31,12 +34,18 @@ public class NLP
 	}
 	
 	//多文本摘要
-	public static String recordsSummary(List<Record> records){
-		List<String> summaries = HanLP.extractSummary(util.RecordTrans.records2string(records), records.size()/3);
+	public static String recordsSummary(List<Record> records,int level){
+		List<String> summaries = HanLP.extractSummary(util.Transform.records2string(records), Configure.SUMMARY_SIZE);
 		StringBuffer sb = new StringBuffer();
+		System.out.println("当前的level:"+level);
 		for (String string : summaries) {
-			sb.append(string);
-			sb.append("\n");
+			/*System.out.print("String = "+string+"level=");
+			System.out.println((int)(Motion.getAssessment(string)*10)-6);*/
+			if((level==5 && (int)(Motion.getAssessment(string)*10)>5)||(level==-5 && (int)(Motion.getAssessment(string)*10)<5)){
+				System.out.println(string);
+				sb.append(string);
+				sb.append("\n");
+			}
 		}
 		return sb.toString();
 	}

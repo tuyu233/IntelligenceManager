@@ -1,5 +1,10 @@
 package vision;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+
 import service.chart.tagcloud.TagCloudHelper;
 import spider.helper.Crawler;
 
@@ -11,6 +16,17 @@ public class Main
 	 */
 	public Main() 
 	{
+		//控制台信息输出到out.txt
+	    /*File f=new File("./output/out.txt");
+	    try {
+			f.createNewFile();
+			FileOutputStream fileOutputStream = new FileOutputStream(f);
+			PrintStream printStream = new PrintStream(fileOutputStream);
+			System.setOut(printStream);
+			System.setErr(printStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
 		try 
 		{
 			MainWindow window = new MainWindow();

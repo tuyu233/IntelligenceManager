@@ -68,7 +68,7 @@ public class Motion {
 		计算输入的所有字符串的情感评估值的分布 int[] getAssessmentMap(List<String>)
 	 */
 	public static Map<String , DicStruct> map =new HashMap<String , DicStruct>();
-	public static char[] sDot= new char[1000];
+	public static char[] sDot= new char[65530];
 	public static int kDot=0;
 	private static float posMot = 0;
 	private static float negMot = 0;
@@ -77,13 +77,13 @@ public class Motion {
 		DicInit();
 	}
 	
-	public static  float getAssessment(String s){
+	public static synchronized float getAssessment(String s){
 		/*
 		 * 计算传入的字符串s的情感评估值
 		 */
 		if(s==null)
 			return (float)0.5;
-		posMot = 0 ;
+		posMot = 0;
 		negMot = 0;
 		String [] sArray = stringIntoWord(s);//分成句号为单位
 		for(int i = 0, len = sArray.length ; i < len ; i++){
@@ -135,7 +135,7 @@ public class Motion {
 		float pos=0, neg=0, plus=1;
 		int not=0;
 		for(int i=0 , len = alwTemp.size() ;i < len ;i++){
-			System.out.println(alwTemp.get(i).sw1);
+			//System.out.println(alwTemp.get(i).sw1);
 			if(alwTemp.get(i).type==3){
 				plus=alwTemp.get(i).level;
 			}else if(alwTemp.get(i).type==2 || (alwTemp.get(i).type==1 && not==1)){

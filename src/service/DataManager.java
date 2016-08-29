@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import properties.Configure;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.tag.Nature;
@@ -17,7 +20,7 @@ import com.mysql.jdbc.Util;
 
 import service.keyword.NLP;
 import service.motion.Motion;
-import util.RecordTrans;
+import util.Transform;
 import database.DatabaseHelper;
 import database.SearchType;
 import entity.Record;
@@ -27,7 +30,42 @@ import entity.Record;
  * 该类用于暂存数据，以完成数据从计算部分到UI部分的传递。
  */
 public class DataManager {
+	static private int count1 = 0;
+	static public void count1Plus(){
+		count1++;
+	}
+	static public int getCount1(){
+		return count1;
+	}
+	static public void resetCount1(){
+		count1= 0;
+	}
 	
+
+	static private int countPipeline = 0;
+	static public void countPipelinePlus(){
+		countPipeline++;
+	}
+	static public int getCountPipeline(){
+		return countPipeline;
+	}
+	static public void resetCountPipeline(){
+		countPipeline= 0;
+	}
+	
+	static private HashSet<String> titlesHash = null;
+	static public boolean isDuplicate(String toCheck){
+		if(titlesHash == null){
+			titlesHash.add(toCheck);
+			return false;
+		}
+		if(titlesHash.contains(toCheck)){
+			return true;
+		}else{
+			titlesHash.add(toCheck);
+			return false;
+		}
+	}
 	
 	//关键词
 	static private String keyword = null;
@@ -109,6 +147,18 @@ public class DataManager {
 		return recordsHottestYear;
 	}
 	
+	//返回从参数中随机选取的少量records
+	static public List<Record> reduceRecords(List<Record> origin, int reductTo){
+		int size = origin.size();
+		if(size <= reductTo) return origin;
+		
+		List<Record> reduced = new ArrayList<Record>();
+		for(int i=0;i<reductTo;i++){
+			reduced.add(origin.get((int) (Math.random()*size)));
+		}
+		return reduced;
+	}
+	
 	static private String hottestYear = null;
 	static public String getHottestYear(){
 		if(hottestYear == null){
@@ -148,25 +198,42 @@ public class DataManager {
 		System.out.print("getOpinionIndex called\n");
 		if(opinionIndexes == null){
 			float sum = 0;
+			
+			float indexAll = 0.5f;
+			if(getRecordsAll().size() != 0) {
+			sum = 0;
 			for (Record record : getRecordsAll()) {
 				sum += Float.valueOf(record.getOther());
 			}
-			float indexAll = sum/getRecordsAll().size();
+			indexAll = sum/getRecordsAll().size();
+			}
+
+			float indexGov = 0.5f;
+			if(getRecordsGov().size() != 0) {
 			sum = 0;
 			for (Record record : getRecordsGov()) {
 				sum += Float.valueOf(record.getOther());
 			}
-			float indexGov = sum/getRecordsGov().size();
+			indexGov = sum/getRecordsGov().size();
+			}
+
+			float indexMedia = 0.5f;
+			if(getRecordsMedia().size() != 0) {
 			sum = 0;
 			for (Record record : getRecordsMedia()) {
 				sum += Float.valueOf(record.getOther());
 			}
-			float indexMedia = sum/getRecordsMedia().size();
+			indexMedia = sum/getRecordsMedia().size();
+			}
+
+			float indexPublic = 0.5f;
+			if(getRecordsPublic().size() != 0) {
 			sum = 0;
 			for (Record record : getRecordsPublic()) {
 				sum += Float.valueOf(record.getOther());
 			}
-			float indexPublic = sum/getRecordsPublic().size();
+			indexPublic = sum/getRecordsPublic().size();
+			}
 			
 			float[] tmp = {(float)(indexAll-0.5)*10, (float)(indexGov-0.5)*10, (float)(indexMedia-0.5)*10, (float)(indexPublic-0.5)*10};
 			opinionIndexes = tmp;
@@ -263,32 +330,46 @@ public class DataManager {
 		System.out.print("getKeywords called\n");
 		if(keywords == null){
 			keywords = new ArrayList<List<String>>();
-			keywords.add(service.keyword.Keyword.getKeyword(getRecordsAll(), properties.Configure.KEYWORD_SIZE_WHOLEWEB));
-			keywords.add(service.keyword.Keyword.getKeyword(getRecordsGov(), properties.Configure.KEYWORD_SIZE_NORMAL));
-			keywords.add(service.keyword.Keyword.getKeyword(getRecordsMedia(), properties.Configure.KEYWORD_SIZE_NORMAL));
-			keywords.add(service.keyword.Keyword.getKeyword(getRecordsPublic(), properties.Configure.KEYWORD_SIZE_NORMAL));
-			List<String> tmp = service.keyword.Keyword.getKeyword(getRecordsHottestYear(), properties.Configure.KEYWORD_SIZE_NORMAL);
+			keywords.add(service.keyword.Keyword.getKeyword(reduceRecords(getRecordsAll(), Configure.REDUCE_RECORD_SIZE_KEYWORDS), properties.Configure.KEYWORD_SIZE_WHOLEWEB));
+			keywords.add(service.keyword.Keyword.getKeyword(reduceRecords(getRecordsGov(), Configure.REDUCE_RECORD_SIZE_KEYWORDS), properties.Configure.KEYWORD_SIZE_NORMAL));
+			keywords.add(service.keyword.Keyword.getKeyword(reduceRecords(getRecordsMedia(), Configure.REDUCE_RECORD_SIZE_KEYWORDS), properties.Configure.KEYWORD_SIZE_NORMAL));
+			keywords.add(service.keyword.Keyword.getKeyword(reduceRecords(getRecordsPublic(), Configure.REDUCE_RECORD_SIZE_KEYWORDS), properties.Configure.KEYWORD_SIZE_NORMAL));
+			List<String> tmp = service.keyword.Keyword.getKeyword(reduceRecords(getRecordsHottestYear(), Configure.REDUCE_RECORD_SIZE_KEYWORDS), properties.Configure.KEYWORD_SIZE_NORMAL);
 			tmp.add(0, getHottestYear());
 			keywords.add(tmp);
+			
+			System.out.print("keywords:\n");
+			for(List<String> each:keywords){
+				System.out.print(each);
+				System.out.print("\n");
+			}
 		}
-		System.out.print("Hottest year keywords:");
-		System.out.print(keywords.get(4));
-		System.out.print("\n");
 		return keywords;
 	}
 	
 	static private List<List<String>> nounKeywords = null;
 	static public List<List<String>> getNounKeywords(){
 		if(nounKeywords == null){
-			List<List<String>> rawKeywords = getKeywords();
+			List<List<String>> rawKeywords = (List<List<String>>) ((ArrayList<List<String>>)getKeywords()).clone();
 			for (int i=0;i<rawKeywords.size();i++) {
 				rawKeywords.set(i, keepNoun(rawKeywords.get(i)));
 			}
+			nounKeywords = rawKeywords;
+			System.out.print("noun keywords:\n");
+			for(List<String> each:nounKeywords){
+				System.out.print(each);
+				System.out.print("\n");
+			}
 		}
-		return keywords;
+		return nounKeywords;
 	}
 	
 	static private List<String> keepNoun(List<String> raw){
+		if(raw.size() == 0){
+			List<String> tmp = new ArrayList<String>();
+			for(int i=0;i<4;i++) tmp.add("无数据");
+			return tmp;
+		}
 		int counter = 0;
 		for (int i=0;i<raw.size();i++) {
 			Nature nature = HanLP.segment(raw.get(i)).get(0).nature;
@@ -304,7 +385,7 @@ public class DataManager {
 		}
 		if(raw.size() < 4){
 			for(int j=raw.size();j<4;j++){
-				raw.set(j, "无数据");
+				raw.add("无数据");
 			}
 		}
 		return raw;
@@ -352,6 +433,9 @@ public class DataManager {
 	}
 	
 	static private void reset(){
+		count1 = 0;
+		countPipeline = 0;
+		titlesHash = null;
 		recordsAll = null;
 		recordsGov = null;
 		recordsMedia = null;
@@ -361,12 +445,13 @@ public class DataManager {
 		hottestYear = null;
 		recordsOpinionIndexDistribution = null;
 		opinionIndexes = null;
-		keywords = null;
-		recordNums = null;
-		yearRecordList = null;
 		allDistribution = null;
 		govDistribution = null;
 		mediaDistribution = null;
 		publicDistribution = null;
+		keywords = null;
+		recordNums = null;
+		yearRecordList = null;
+		yearRecordNums = null;
 	}
 }

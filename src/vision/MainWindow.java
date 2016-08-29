@@ -8,22 +8,27 @@ import java.io.IOException;
 
 import javax.swing.*;
 
+import org.apache.commons.collections.functors.WhileClosure;
+
 import properties.Attributes;
 import properties.Fonts;
 import service.Controller;
+import service.DataManager;
 import service.chart.tagcloud.Configuration;
 import service.chart.tagcloud.TagCloud;
 import service.chart.tagcloud.TagCloudGenerator;
 import service.chart.tagcloud.TagCloudHelper;
+import spider.monitor.MonitorManager;
 
 
 public class MainWindow  
 {
 	static JFrame mainFrame;
-	JTextField searchBar_textField;
 	SearchResult tab_panel1;
 	ResultStatistic tab_panel2;
 	AllData tab_panel3;
+	JLabel searchStatus;
+	JTextField searchBar_textField;
 	JButton search_button;
 	JButton result_button;
 	JButton makeReport_button;
@@ -88,6 +93,11 @@ public class MainWindow
 		search_panel.add(searchBar_panel,BorderLayout.EAST);
 		searchBar_panel.setLayout(new BoxLayout(searchBar_panel,BoxLayout.X_AXIS));
 		
+		searchStatus = new JLabel();
+		searchStatus.setFont(Fonts.searchBar);
+		searchBar_panel.add(searchStatus);
+		searchStatus.setVisible(false);
+		
 		searchBar_textField=new JTextField("公车改革");
 		searchBar_panel.add(searchBar_textField);
 		searchBar_textField.setFont(Fonts.searchBar);
@@ -104,13 +114,51 @@ public class MainWindow
 			@Override
 			public void mouseClicked(MouseEvent e){
 				if(Controller.isrunning){
-					search_button.setText(Attributes.SEARCHBUTTON);
-					if(getInput()!=null)
-						Controller.stopCrawl();
+					stopSearch();
 				}
 				else{
-					search_button.setText(Attributes.STOPBUTTON);
-					Controller.startCrawl(getInput());
+					if(getInput()!=null){
+						search_button.setText(Attributes.STOPBUTTON);
+						searchBar_textField.setVisible(false);
+						searchStatus.setVisible(true);
+						new Thread(new Runnable() {
+							
+							@Override
+							public void run() {
+								Controller.isrunning = true;
+								Controller.startCrawl(getInput());
+							}
+						}).start();
+						
+						new Thread(new Runnable() {
+							
+							@Override
+							public void run() {
+								MonitorManager monitor = MonitorManager.getInstance();
+								do{
+									if(monitor.getStatus().equals(Attributes.SPIDER_DONE)){
+										stopSearch();
+										break;
+									}
+									searchStatus.setText(monitor.getStatus());
+									try {
+										Thread.sleep(500);
+									} catch (InterruptedException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}while(Controller.isrunning);
+								JOptionPane.showMessageDialog(
+										null,
+										"搜索结束！\n共扫描了"+String.valueOf(monitor.getTotal())+"个页面"
+												+ "\n成功下载"+String.valueOf(DataManager.getCountPipeline())
+												+ "页",
+										"搜索结束",
+										JOptionPane.WARNING_MESSAGE);
+
+							}
+						}).start();
+					}
 				}
 
 				search_button.invalidate();
@@ -194,6 +242,13 @@ public class MainWindow
 	//拿到输入框里的内容
 	public String getInput(){
 		return searchBar_textField.getText();
+	}
+	
+	private void stopSearch(){
+		search_button.setText(Attributes.SEARCHBUTTON);
+		Controller.stopCrawl();
+		searchBar_textField.setVisible(true);
+		searchStatus.setVisible(false);
 	}
 	
     private static void setLookAndFeel() {

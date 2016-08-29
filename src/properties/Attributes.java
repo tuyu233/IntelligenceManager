@@ -22,6 +22,8 @@ public class Attributes
 	
 	public static final String REPORTBUTTON_PROCESSING = "正在生成";
 	
+	public static final String BUTTON_DELETE_ALL = "删除所有数据";
+	
 	public static final String SEARCHRESULTTAB = "搜索结果";
 	
 	public static final String RESULTSTATISTIC = "结果统计";
@@ -45,5 +47,9 @@ public class Attributes
 	public static final String KEYWORD = "关键词";
 	
 	public static final String CHART = "统计图表";
+	
+	public static final String SPIDER_NOT_RUNNING = "爬虫正在准备...";
+	
+	public static final String SPIDER_DONE = "爬取结束";
 			
 }

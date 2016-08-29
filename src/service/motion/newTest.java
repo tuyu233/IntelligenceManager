@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.ArrayList;
 public class newTest {
 	public static void main(String [] args) {
-		FileInputStream file= null;
+		System.out.println(Motion.getAssessment("第一批公务用车改革完成后"));
+		/*FileInputStream file= null;
 		try {
 			file = new FileInputStream ("W:/libWork/comment.txt");
 			InputStreamReader isr = new InputStreamReader(file,"gbk");
@@ -23,7 +24,7 @@ public class newTest {
 		
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 		/*
 		try {
 		file = new FileInputStream ("W:/libWork/comment.txt");
